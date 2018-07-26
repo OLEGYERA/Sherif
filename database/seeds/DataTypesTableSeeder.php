@@ -52,6 +52,20 @@ class DataTypesTableSeeder extends Seeder
                 'description'           => '',
             ])->save();
         }
+
+        $dataType = $this->dataType('slug', 'products');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'Products',
+                'display_name_singular' => __('Product'),
+                'display_name_plural'   => __('Products'),
+                'icon'                  => 'voyager-bag',
+                'model_name'            => 'App\\Product',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
     }
 
     /**
