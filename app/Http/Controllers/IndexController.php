@@ -10,4 +10,8 @@ class IndexController extends Controller
     public function getIndex(){
         return view('index');
     }
+
+    public function getSection(){
+    	return view('section');
+    }
 }
