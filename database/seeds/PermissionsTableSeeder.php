@@ -34,5 +34,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('settings');
 
         Permission::generateFor('Products');
+
+        Permission::generateFor('Categories');
     }
 }

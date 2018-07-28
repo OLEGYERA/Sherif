@@ -43,7 +43,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-images',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 5,
+                'order'      => 6,
             ])->save();
         }
 
@@ -90,7 +90,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-tools',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 9,
+                'order'      => 7,
             ])->save();
         }
 
@@ -170,14 +170,14 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-settings',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 14,
+                'order'      => 8,
             ])->save();
         }
 
         $menuItem = MenuItem::firstOrNew([
             'menu_id' => $menu->id,
             'title'   => __('Products'),
-            'url'     => '',
+            'url'     => 'admin/products',
             'route'   => 'voyager.products.index',
         ]);
         if (!$menuItem->exists) {
@@ -186,7 +186,23 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-bag',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 15,
+                'order'      => 5,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Categories'),
+            'url'     => 'admin/categories',
+            'route'   => 'voyager.categories.index',
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-categories',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 4,
             ])->save();
         }
     }
