@@ -1,6 +1,5 @@
 @extends("layouts.app")
 @section("css_files")
-
     loadCSS("assets/_header.css");//Header Styles (compress & paste to header after release)
     @if($is_admin)
         loadCSS("assets/css/_header_admin.css");              //Header Styles (compress & paste to header after release)
