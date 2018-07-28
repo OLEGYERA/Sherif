@@ -37,12 +37,15 @@ body textarea:required:valid {
 		margin: 0 5.222222%;
 		padding:0;
 	}
+
 		.sherif_left_column{
 			width: 300px;
 		}
+
 		.sherif_right_column{
 			width: 17.3333333%;
 		}
+
 		.sherif_center_column{
 			width: 62.223333%;
 		}
@@ -53,12 +56,13 @@ body textarea:required:valid {
 			justify-content: space-between;
 			align-items: center;
 		}
-			.flex_row_mobile .mobile_toggle{
-				color: rgb(33, 57, 81);
-			    font-family: "OpenSansBold";
-			    font-weight: 900;
-			    font-size: 1.3em;
-			}
+
+		.flex_row_mobile .mobile_toggle{
+			color: rgb(33, 57, 81);
+			font-family: "OpenSansBold";
+			font-weight: 900;
+			font-size: 1.3em;
+		}
 
 
 		.toggle_mobile_info,
@@ -70,16 +74,7 @@ body textarea:required:valid {
 	    .mobile_toggle{
 	    	display: none;
 	    }
-
-
 /*End FlexBox Grid*/
-
-
-
-
-
-
-
 
 /*Main Sherif-Home*/
 	.sherif_home_main{
@@ -230,7 +225,7 @@ body textarea:required:valid {
 						display: flex;
 					} 
 						.sherif_home_main-box_message-send textarea{
-						    min-width: 82%;
+						    min-width: 86%;
     						max-width: 84%;	
 						    min-height: 100%;
 						    max-height: 100%;
@@ -254,126 +249,6 @@ body textarea:required:valid {
 
 		/**/
 
-	/*Start Slider*/
-		.slider{
-		position: relative;
-		width: 100%;
-		overflow-x: hidden;
-		}
-
-		.owl-stage{
-			display: flex;
-			flex-direction: row;
-		}
-		.owl-nav,.owl-dots{
-			position: absolute;
-			width: 100%;
-			color:#c2c2c2;
-			font-size:3em;
-		}
-		.owl-nav{
-			top:40%;
-		}
-
-		.owl-nav svg:hover{
-			color: #fff;
-		}
-
-		.owl-dot:hover{
-			background-color: #fff;
-		}
-
-		.owl-dots{
-			display: flex;
-			justify-content: center;
-			bottom:2%; 
-		}
-
-		.owl-dot{
-		    margin: 6px;
-		    width: 12px;
-		    height: 12px;
-		    border-radius: 50%;
-		    background-color: #c2c2c2;
-		    cursor: pointer;
-		    transition: background-color .35s ease;
-		}
-		.owl-dot.active{
-			background-color: #fff;
-		}
-		.owl-prev, .owl-next{
-		    cursor: pointer;
-		    position: absolute;
-		    width: 50px;
-		    height: 50px;
-		    border-radius: 50%;
-		    background-color: rgba(255, 255, 255, 0.82);
-		    border: 2px solid #213951;
-		    margin: 0 15px
-		}
-			.owl-prev svg, .owl-next svg{
-				position: absolute;
-			    right: 9px;
-			    font-size: 1em;
-			    color: #213951;
-			}
-		.owl-next{
-			right: 0;
-		}
-		.owl-prev svg{
-			right: 13px;
-		}
-		.slide{
-			color: #fff;
-			position: relative;
-			padding: 2px;
-		}
-
-		.sherif_home_main-box_slider .slide-content{
-   			height: 17vw;
-		    position: relative;
-		    z-index: 1;
-		    background-repeat: no-repeat;
-		    background-position: center center;
-		    background-size: 100%;
-		    border:1px solid #000;
-		}
-	/*End Slider*/
-
-	/* Box brand start*/
-		
-		.sherif_home_main-box_brand {
-		    display: flex;
-		    flex-wrap: wrap;
-		    align-items: center;
-		    margin-top: 20px;
-		}
-			.sherif_home_main-box_brand-brands,.link_arrow{
-				width: 15%;
-			    margin: 0 0.833333%;
-			    margin-bottom: 5px;
-				
-			}
-				.link_arrow h4 {
-					color: #213951;
-					text-decoration: underline;
-					white-space: nowrap;
-				}
-				.link_arrow {
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-    				padding-left: 6px;
-					
-				}
-					.link_arrow-pic {
-						padding-left: 10px;
-					}
-						.link_arrow-pic svg{
-							color: #213951;
-							font-size: 2em;
-						}
-	/*End Box brand */	
 	
 	/*Sherif Right bar*/
 		.sherif_home_main-box-right_bar {
@@ -418,12 +293,12 @@ body textarea:required:valid {
 
 					}
 					.button_top {
-						background-image: url(img/icons/button_direction_top.png);
+						background-image: url(../../img/icons/button_direction_top.png);
 						background-repeat: no-repeat;
 						background-position: center;
 					}
 					.button_bot {
-						background-image: url(img/icons/button_direction_bot.png);
+						background-image: url(../../img/icons/button_direction_bot.png);
 						background-repeat: no-repeat;
 						background-position: center;
 					}
@@ -486,6 +361,8 @@ body textarea:required:valid {
 			}
 			
 			.sherif_home_main-box-right_bar-pick_up-pic.stock h4 {
+				font-family: "OpenSansBold", sans-serif;
+    			font-weight: 700;
 				color: #e00000;
 				font-weight: bold;
 				text-transform: uppercase;
@@ -497,19 +374,21 @@ body textarea:required:valid {
 			}
 
 			.sherif_home_main-mobile_bar-articles_reviews h3 {
-			    margin-top: 2%;
-			    padding-bottom: 2%;
-			    padding-top: 3%;
+			    padding-top: 5%;
+			    padding-bottom: 6%;
+			    border-top: 1px solid #dedcdd;
+			    /* padding-top: 3%; */
 			    text-align: left;
+			    margin: 0;
 			    font-size: 2em;
 			    font-family: "OpenSansBold", sans-serif;
-    			font-weight: 700;
+			    font-weight: 700;
 			}
 			
 			.dropdown-icon {
 				display: none;
 				float: right;
-				font-size: 0.9em;
+				font-size: 0.6em;
 			}
 
 			.sherif_home_main-box-right_bar-pick_up-pic {
@@ -697,6 +576,7 @@ body textarea:required:valid {
 			    margin: 5px 0 15px;
 			    text-align: center;
 			    color: #043651;
+
 			}
 				.sherif_home_main-box_scroll{
 				    overflow: auto;
@@ -854,247 +734,6 @@ body textarea:required:valid {
 								    top: 9px;
 								    left: 7px;
 								}
-		
-
-/*Maket modifications for product that has a discout*/
-	.sherif-product-discount{
-
-	}
-		.sherif-product_content_discount{
-		    width: 85%;
-		    position: absolute;
-		    left: 0;
-		    top: 200px;
-			display: flex;
-			-webkit-flex-direction: row;
-			-moz-flex-direction: row;
-			-ms-flex-direction: row;
-			-o-flex-direction: row;
-			flex-direction: row;
-			justify-content: center;	
-		}
-			.sherif-product_content_discount_amount{
-				background-color: #fcff59;
-				display: flex;
-				align-items: center;
-				padding: 0px 10px 0px 10px;
-				color: #e00000;
-				font-size: 1.5em;
-    			height: 2em;
-			}
-			.sherif-product_content_discount_date{
-				background-color: #fcff59;
-				opacity: 0.8;
-			    font-size: 0.8em;
-				color: #304658;
-				padding: 5px 0px 0px 5px;
-				border-right: 3px solid #6e7e8e;
-				
-			}
-
-/*Maket modifications for product that is out of stock*/
-	.sherif-product-out-of-stock{
-
-	}
-		.notify-sherif-product{
-			text-transform: uppercase;
-			text-decoration: underline;
-			color: #3e5368;
-			width: 40%;
-				margin-right: 30px;
-			}
-			.disabled{
-				color: #dedcdd;
-				border-color: #dedcdd;
-			margin: 0px;
-		}
-
-	/*Sherif Home Novelties*/
-
-
-		.sherif_home_main_novelties{
-
-		}
-			.sherif_home_main_novelties_title{
-				margin:30px 0 15px;
-				width: 100%;
-			}
-				.sherif_home_main_novelties_items{
-				    overflow: hidden;
-				    display: flex;
-				    width: 100%;
-				    flex-direction: row;
-				    flex-wrap: nowrap;
-				    justify-content: space-between;
-				    margin-bottom: 70px;
-				}
-					.sherif_home_main_novelties_items .sherif-product{
-						margin: 0 0.7333%;
-						min-width: 15.29999%;
-					}
-
-
-
-/*Sherif home footer*/
-	.sherif_home_footer{
-		height: 100%;
-		color: #213951;
-		background-color: #dedcdd;
-		font-size: 14px;
-    	line-height: 1.3;
-	}
-		/*Classes for row and column orientation*/
-		.flex-row{
-			display: flex;
-			flex-direction: row;
-			box-sizing: border-box;
-		}
-		.flex-column{
-			display: flex;
-			margin: 0px;
-			flex-direction: column;
-			box-sizing: border-box;
-			justify-content: flex-start;
-			align-items: flex-start;
-		}
-	
-
-		.sherif_mobile_wrap{
-			width: 65%;
-    		display: flex;
-			font-weight: 900;
-		}
-	/*Footer content*/
-		.sherif_home_footer_content {
-			padding-top: 30px;
-		    border-bottom: 1px solid #213951;
-		    padding-bottom: 30px;
-		}
-
-			.sherif_home_footer_contacts{
-			    width: 35%;
-			}
-				.sherif_home_footer_contacts_contact{
-					
-				}
-					.sherif_home_footer_contacts_contact_phone{
-						display: flex;
-						position: relative;
-						justify-content: space-between;
-						box-sizing: border-box;
-						width: 47.9%;
-						font-weight: 900;
-					}
-						.sherif_home_footer_contacts_contact_logo{
-							width: 170px;
-						    height: 100px;
-						    margin-bottom: 35px;
-						    margin-top: 20px;
-						}
-						.sherif_home_footer_contacts_contact_phone_number{
-							list-style: none;
-							padding: 0 0 0 10px;
-						}
-						.sherif_home_footer_contacts_contact_form{
-							margin-top: 60px;
-    						margin-bottom: 10px;					
-    					}
-							.sherif_home_footer_contacts_contact_form input[type=email]{
-								border: 1px solid #213951;
-								width: 135px;
-								height: 35px;
-								padding: 5px 0 5px 10px;
-							}
-							.sherif_home_footer_contacts_contact_form input[type=submit]{
-								border: 1px solid #213951;
-								width: 120px;
-								height: 35px;
-								background-color: #213951;
-								color: #fff;
-								margin-right: 15px;
-							}
-					.sherif_home_footer_contacts_contact_email{
-						display: flex;
-						justify-content: space-between;
-						margin-right: 50px;
-						box-sizing: border-box;
-						font-weight: 900;
-						position: relative;
-					}
-					.social{
-						margin-top: 25px;
-					}
-					.social img{
-						width: 53px;
-					    height: 53px;
-					    margin-right: 30px;
-					}
-
-					.sherif_home_footer_map_row{
-						display: none;
-					}
-
-
-			.sherif_home_footer_content_nav{
-				display: flex;
-				flex-wrap: wrap;
-				box-sizing: border-box;
-				width: 55.36666%;
-			}
-				.sherif_home_footer_content_nav_scheldue{
-					width: 35%;
-   					margin-right: 13%;
-					margin-bottom: 20px;
-				}
-					
-					.sherif_home_footer_content_nav_scheldue td{
-						padding-left: 5px;
-						text-align: right;
-					}
-				.sherif_home_footer_content_nav_account{
-					width: 35%;
-   					margin-right: 13%;
-				}
-				.sherif_home_footer_content_nav_info{
-					width: 40%;
-				}
-				.sherif_home_footer_content_nav_additional{
-					width: 40%;
-				}
-			.sherif_home_footer_map{
-			    display: flex;
-			    justify-content: flex-start;
-			    align-items: center;
-			    box-sizing: border-box;
-			    padding-top: 7px;
-			    height: 17vw;
-			    width: 56.3%;
-			}
-				.sherif_home_footer_map img{
-					width: 100%;
-				}
-		/*Footer rights*/
-		.sherif_home_footer_rights{
-			display: flex;
-			justify-content: center;
-			padding: 15px 0;
-			box-sizing: border-box;
-		}
-
-		/*Titles and links in footer*/
-		.sherif_home_footer_content_title{
-			color: #e00000;
-			padding-bottom: 10px;
-			font-family: "OpenSansBold", "OpenSansRegular";
-		}
-			.sherif_home_footer_content_title svg{
-				font-size: 1.7em;
-			    margin-top: -5px;
-			}
-		.sherif_home_footer_content_link{
-			color: #213951;
-			text-decoration: underline;
-		}
 
 
 	/*SHERIF VIDEO BLOG*/
@@ -1174,7 +813,6 @@ body textarea:required:valid {
             padding: 10px 35px;
 				}
 		.tab-content{
-			background-color: #f2f2f2;
 		}
 			.video-blog_review{
 				display: flex;
@@ -1214,6 +852,7 @@ body textarea:required:valid {
 						.video-blog_review_more{
 							font-size: 10pt;
 							font-family: "OpenSansBold";
+							text-decoration: underline;
 						}
 			.video-blog_contact{
 				display: flex;
@@ -1265,7 +904,7 @@ body textarea:required:valid {
 			color: #2e445a;
 			font-size: 13px;
 			border-radius:8px;
-			padding:10px 5px 8px;
+			padding:8px 5px 8px;
 			position: relative;
 			text-transform:uppercase;
 			background-color: #ffffff;
@@ -1286,7 +925,7 @@ body textarea:required:valid {
 			    position: absolute;
 			    font-size: 1.4em;
 			    top: 9px;
-			    left: 10px;
+			    left: 15px;
 			}
 			.video-blog-btn strong{
 				padding-left: 55px;
@@ -1294,7 +933,6 @@ body textarea:required:valid {
 	.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
 	    color: #213951;
 	    cursor: default;
-	    background-color: #f2f2f2;
 	    border: 1px solid #213951;
 	    border-bottom-color: transparent;
 	}
@@ -1337,87 +975,88 @@ body textarea:required:valid {
 
 /*End Mobile Ads*/
 
-
-/*SHERIF SECTION*/
-	.sherif_home_main-box_section{
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		box-sizing: border-box;
+/* New Code */
+/*Sherif blog*/
+.sherif_blog{
+		color: #213951;
 	}
-		.sherif_home_main-box_section_itm{
+		.sherif_blog_link{
+			color: #213951;
+			text-decoration: underline;
+			padding-right: 5px;
+		}
+		.sherif_blog_content_tabs_link{
+			color: #213951;
+		}
+		.sherif_blog_content_tabs_content_link{
+			color: #213951;
+			text-decoration: underline;
+		}
+
+		.sherif_blog_breadcrumb{
+			list-style: none;
+			font-size: 20px;
+			font-family: "OpenSansRegular";
 			display: flex;
-			flex: 30%;
-			flex-direction: column;
+			flex-direction: row;
+			align-items: baseline;
+			margin-top: 10px;
+			padding-left: 0px;
+		}
+			.urhere{
+				color: #8f9ba7;
+				font-size: 16px;
+			}
+		.sherif_blog_title{
+			font-weight: 700;
+		    font-size: 1.9em;
+		    font-family: "OpenSansBold","OpenSansRegular", sans-serif;
+		
+		}
+		.sherif_blog_tab_content {
+			margin: 2% 0;
+		}
+		.sherif_blog_content_tabs_content_title{
+			font-family: "OpenSansBold", "OpenSansRegular", sans-serif;
+		    font-size: 18px;
+		    color: #e0000f;
+		}
+		
+		
+		.sherif_blog_content_tabs_content_stats{
+			margin-left: 5px;
+			margin-right: 10px;
+		}     
+				.nav-tabs{
+			border-bottom: 1px solid #213951;
+			display: flex;
 			justify-content: center;
-			align-items: center;
-			border: 1px solid #172c41;
-			border-radius: 2px;
-			box-sizing: border-box;
-			margin: 0 30px 35px 0;
+			flex: auto;
 		}
-		.sherif_home_main-box_section_itm a{
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			padding: 0 18px;
-			width: 100%;
-    		height: 100%;
-		}
-			.sherif_home_main-box_section_itm:nth-child(3n){
-				margin: 0 0 35px 0;
+			.nav>li>a{
+				padding: 10px 35px;
 			}
-
-			.sherif_home_main-box_section_itm a{
-				color: #172c41;
+			.sherif_blog_content_tabs_link{
+				
 			}
-			.sherif-section_itm-img_box{
-				display: flex;
-				justify-content: space-around;
-				align-items: center;
-				box-sizing: border-box;
+			.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+				border: 1px solid #213951;
+				border-bottom-color: transparent;
 			}
-				.sherif-section_itm-img{
-					width: auto;
-					height: 9vw;
-					margin-bottom: 15px;
-					margin-top: 50px;
+				.sherif_blog_content_tabs_itm{
+					font-size: 18px;
+					color: #8f9ba7;
 				}
-			.section-title{
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				text-align: center;
-				color: #172c41;
-				font-size: 24px;
-				margin-bottom: 20px;
-			}
-			.section-number{
-				color: #687889;
-				font-size: 20px;
-			}
-	.sherif-section_tags{
-		margin: 0 5.222222%;
-	}
-	.tags{
-		list-style: none;
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-		padding-left: 0px;
-		margin-bottom: 40px;
-	}
-	.tags a{
-		color: #172c41;
-		padding: 0 3px;
-	}
+					.sherif_blog_content_tabs_img{
+						width: 16vw;
+						margin-top: 20px;
+						margin-right: 1.7vw;
+					}
 
-	span.category-link {
-		font-family: "OpenSansBold", "OpenSansSerif";
-	}
-
-	/*Pagination*/
-	.pagination-sherif {
+		.borders{
+			border-bottom: 1px solid #213951;
+		}
+		.pagination-sherif {
 		    display: inline-block;
 		    padding-left: 0px;
 		}
@@ -1438,41 +1077,26 @@ body textarea:required:valid {
 				.pagination-sherif a.active-sherif:before, .pagination-sherif a.active-sherif:after, .pagination-sherif a.active-sherif-dots:after {
 				    content: " ... ";
 				}
-	/*Breadcrumbs*/
-	ul.sherif-breadcrumb {
-	    padding: 8px 16px;
-	    list-style: none;
-	    color: #172c41;
-	    font-family: "OpenSansRegular";
-		font-size: 17px;
-		display: flex;
-		flex-direction: row;
-		align-items: baseline;
-		padding-left: 0px;
-	}
-		ul.sherif-breadcrumb li {
-			
-		}
-			ul.sherif-breadcrumb li+li:before {
-			    padding: 8px;
-			    color: #172c41;
-			    content: "/\00a0";
+
+			div.row.borders {
+				display: flex;
+				justify-content: flex-start;
 			}
-			ul.sherif-breadcrumb li span{
-				color: #8f9ba7;
-				font-size: 16px;
+
+			.nav-tabs>li {
+			    float: left;
+			    width: 19%;
+			    text-align: center;
+			    font-family: "OpenSansBold", "OpenSansRegular", sans-serif;
+			    margin-bottom: -1px;
 			}
-		ul.sherif-breadcrumb li a {
-			color: #172c41;
-			text-decoration: underline;
-		}
 
-		.pagination-sherif.tags-sherif a{
-			text-decoration: none;
-		}
+			.sherif_blog_content_tabs_content_text {
+				font-size: 1.1em;
+			}
 
-		nav ul.pagination-sherif.tags-sherif {
-			display: none;
-			flex-wrap: wrap;
-		}
-
+			.nav>li>a {
+			    position: relative;
+			    display: block;
+			    padding: 10px 15px;
+			}

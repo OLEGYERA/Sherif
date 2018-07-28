@@ -57,6 +57,9 @@
         @yield("main_content")
     </div>
     @yield("additional_content")
+    @section("company_text")
+        @include("layouts.shoptext")
+    @show
     @yield("bottom_alert")
 </main>
 
@@ -80,11 +83,9 @@
         ms.href=hf;document.getElementsByTagName("head")[0].appendChild(ms);
     }
     loadCSS("assets/libs/animate/animate.css"); //Load Libs CSS: Animate CSS
-    loadCSS("assets/_header.css");              //Header Styles (compress & paste to header after release)
     loadCSS("assets/libs/Owl-Carusel/owl.carousel.min.css");
-    loadCSS("assets/_main.css");                //User Styles: Main
-    loadCSS("assets/_media.css");               //User Styles: Media
     loadCSS("assets/_fonts.css");
+    @yield("css_files")
 </script>
 
 <!-- Load CSS compiled without Bootstrap & Header styles (after release) -->

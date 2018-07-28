@@ -46,7 +46,11 @@ body textarea:required:valid {
 		.sherif_center_column{
 			width: 62.223333%;
 		}
-
+		.flex_row_mobile.footer{
+			width:100%;
+			display: flex;
+			justify-content: flex-start;
+		}
 		.flex_row_mobile{
 			width:100%;
 			display: flex;
@@ -418,12 +422,12 @@ body textarea:required:valid {
 
 					}
 					.button_top {
-						background-image: url(img/icons/button_direction_top.png);
+						background-image: url(../../img/icons/button_direction_top.png);
 						background-repeat: no-repeat;
 						background-position: center;
 					}
 					.button_bot {
-						background-image: url(img/icons/button_direction_bot.png);
+						background-image: url(../../img/icons/button_direction_bot.png);
 						background-repeat: no-repeat;
 						background-position: center;
 					}
@@ -934,169 +938,6 @@ body textarea:required:valid {
 					}
 
 
-
-/*Sherif home footer*/
-	.sherif_home_footer{
-		height: 100%;
-		color: #213951;
-		background-color: #dedcdd;
-		font-size: 14px;
-    	line-height: 1.3;
-	}
-		/*Classes for row and column orientation*/
-		.flex-row{
-			display: flex;
-			flex-direction: row;
-			box-sizing: border-box;
-		}
-		.flex-column{
-			display: flex;
-			margin: 0px;
-			flex-direction: column;
-			box-sizing: border-box;
-			justify-content: flex-start;
-			align-items: flex-start;
-		}
-	
-
-		.sherif_mobile_wrap{
-			width: 65%;
-    		display: flex;
-			font-weight: 900;
-		}
-	/*Footer content*/
-		.sherif_home_footer_content {
-			padding-top: 30px;
-		    border-bottom: 1px solid #213951;
-		    padding-bottom: 30px;
-		}
-
-			.sherif_home_footer_contacts{
-			    width: 35%;
-			}
-				.sherif_home_footer_contacts_contact{
-					
-				}
-					.sherif_home_footer_contacts_contact_phone{
-						display: flex;
-						position: relative;
-						justify-content: space-between;
-						box-sizing: border-box;
-						width: 47.9%;
-						font-weight: 900;
-					}
-						.sherif_home_footer_contacts_contact_logo{
-							width: 170px;
-						    height: 100px;
-						    margin-bottom: 35px;
-						    margin-top: 20px;
-						}
-						.sherif_home_footer_contacts_contact_phone_number{
-							list-style: none;
-							padding: 0 0 0 10px;
-						}
-						.sherif_home_footer_contacts_contact_form{
-							margin-top: 60px;
-    						margin-bottom: 10px;					
-    					}
-							.sherif_home_footer_contacts_contact_form input[type=email]{
-								border: 1px solid #213951;
-								width: 135px;
-								height: 35px;
-								padding: 5px 0 5px 10px;
-							}
-							.sherif_home_footer_contacts_contact_form input[type=submit]{
-								border: 1px solid #213951;
-								width: 120px;
-								height: 35px;
-								background-color: #213951;
-								color: #fff;
-								margin-right: 15px;
-							}
-					.sherif_home_footer_contacts_contact_email{
-						display: flex;
-						justify-content: space-between;
-						margin-right: 50px;
-						box-sizing: border-box;
-						font-weight: 900;
-						position: relative;
-					}
-					.social{
-						margin-top: 25px;
-					}
-					.social img{
-						width: 53px;
-					    height: 53px;
-					    margin-right: 30px;
-					}
-
-					.sherif_home_footer_map_row{
-						display: none;
-					}
-
-
-			.sherif_home_footer_content_nav{
-				display: flex;
-				flex-wrap: wrap;
-				box-sizing: border-box;
-				width: 55.36666%;
-			}
-				.sherif_home_footer_content_nav_scheldue{
-					width: 35%;
-   					margin-right: 13%;
-					margin-bottom: 20px;
-				}
-					
-					.sherif_home_footer_content_nav_scheldue td{
-						padding-left: 5px;
-						text-align: right;
-					}
-				.sherif_home_footer_content_nav_account{
-					width: 35%;
-   					margin-right: 13%;
-				}
-				.sherif_home_footer_content_nav_info{
-					width: 40%;
-				}
-				.sherif_home_footer_content_nav_additional{
-					width: 40%;
-				}
-			.sherif_home_footer_map{
-			    display: flex;
-			    justify-content: flex-start;
-			    align-items: center;
-			    box-sizing: border-box;
-			    padding-top: 7px;
-			    height: 17vw;
-			    width: 56.3%;
-			}
-				.sherif_home_footer_map img{
-					width: 100%;
-				}
-		/*Footer rights*/
-		.sherif_home_footer_rights{
-			display: flex;
-			justify-content: center;
-			padding: 15px 0;
-			box-sizing: border-box;
-		}
-
-		/*Titles and links in footer*/
-		.sherif_home_footer_content_title{
-			color: #e00000;
-			padding-bottom: 10px;
-			font-family: "OpenSansBold", "OpenSansRegular";
-		}
-			.sherif_home_footer_content_title svg{
-				font-size: 1.7em;
-			    margin-top: -5px;
-			}
-		.sherif_home_footer_content_link{
-			color: #213951;
-			text-decoration: underline;
-		}
-
-
 	/*SHERIF VIDEO BLOG*/
 	.sherif_home_main_video-blog{
 		color: #213951;
@@ -1336,143 +1177,4 @@ body textarea:required:valid {
 	}
 
 /*End Mobile Ads*/
-
-
-/*SHERIF SECTION*/
-	.sherif_home_main-box_section{
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		box-sizing: border-box;
-	}
-		.sherif_home_main-box_section_itm{
-			display: flex;
-			flex: 30%;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			border: 1px solid #172c41;
-			border-radius: 2px;
-			box-sizing: border-box;
-			margin: 0 30px 35px 0;
-		}
-		.sherif_home_main-box_section_itm a{
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			padding: 0 18px;
-			width: 100%;
-    		height: 100%;
-		}
-			.sherif_home_main-box_section_itm:nth-child(3n){
-				margin: 0 0 35px 0;
-			}
-
-			.sherif_home_main-box_section_itm a{
-				color: #172c41;
-			}
-			.sherif-section_itm-img_box{
-				display: flex;
-				justify-content: space-around;
-				align-items: center;
-				box-sizing: border-box;
-			}
-				.sherif-section_itm-img{
-					width: auto;
-					height: 9vw;
-					margin-bottom: 15px;
-					margin-top: 50px;
-				}
-			.section-title{
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				text-align: center;
-				color: #172c41;
-				font-size: 24px;
-				margin-bottom: 20px;
-			}
-			.section-number{
-				color: #687889;
-				font-size: 20px;
-			}
-	.sherif-section_tags{
-		margin: 0 5.222222%;
-	}
-	.tags{
-		list-style: none;
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-		padding-left: 0px;
-		margin-bottom: 40px;
-	}
-	.tags a{
-		color: #172c41;
-		padding: 0 3px;
-	}
-
-	span.category-link {
-		font-family: "OpenSansBold", "OpenSansSerif";
-	}
-
-	/*Pagination*/
-	.pagination-sherif {
-		    display: inline-block;
-		    padding-left: 0px;
-		}
-			.pagination-sherif li {
-			    float: left;
-			    padding: 8px 3px;
-			    list-style: none;
-			}
-			.pagination-sherif a{
-				color: #213951;
-				text-decoration: underline;
-				font-size: 14px;
-			}
-			.pagination-sherif a.active-sherif, .pagination-sherif a.active-sherif-dots {
-			    color: #e2e0e1;
-			    text-decoration: none;
-			}
-				.pagination-sherif a.active-sherif:before, .pagination-sherif a.active-sherif:after, .pagination-sherif a.active-sherif-dots:after {
-				    content: " ... ";
-				}
-	/*Breadcrumbs*/
-	ul.sherif-breadcrumb {
-	    padding: 8px 16px;
-	    list-style: none;
-	    color: #172c41;
-	    font-family: "OpenSansRegular";
-		font-size: 17px;
-		display: flex;
-		flex-direction: row;
-		align-items: baseline;
-		padding-left: 0px;
-	}
-		ul.sherif-breadcrumb li {
-			
-		}
-			ul.sherif-breadcrumb li+li:before {
-			    padding: 8px;
-			    color: #172c41;
-			    content: "/\00a0";
-			}
-			ul.sherif-breadcrumb li span{
-				color: #8f9ba7;
-				font-size: 16px;
-			}
-		ul.sherif-breadcrumb li a {
-			color: #172c41;
-			text-decoration: underline;
-		}
-
-		.pagination-sherif.tags-sherif a{
-			text-decoration: none;
-		}
-
-		nav ul.pagination-sherif.tags-sherif {
-			display: none;
-			flex-wrap: wrap;
-		}
 

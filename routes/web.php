@@ -12,8 +12,12 @@
 */
 
 Route::get('/', 'IndexController@getIndex')->name('index');
-
+Route::get('/contacts', 'IndexController@getContacts')->name('contacts');
+Route::get('/blog', 'IndexController@getBLog')->name('blog');
+Route::get('/income', 'IndexController@getIncome')->name('income');
 Route::get('/section', 'IndexController@getSection')->name('section');
+Route::get('/article', 'IndexController@getArticle')->name('article');
+Route::get('/ordering', 'IndexController@getOrdering')->name('ordering');
 
 
 Route::group(['prefix' => 'admin'], function () {

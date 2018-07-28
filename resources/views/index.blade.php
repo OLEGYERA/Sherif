@@ -1,9 +1,24 @@
 @extends("layouts.app")
+@section("css_files")
+
+    loadCSS("assets/_header.css");//Header Styles (compress & paste to header after release)
+    @if($is_admin)
+        loadCSS("assets/css/_header_admin.css");              //Header Styles (compress & paste to header after release)
+    @endif
+    loadCSS("assets/_main.css");                //User Styles: Main
+    @if($is_admin)
+        loadCSS("assets/css/_main_admin.css");                //User Styles: Main
+    @endif
+        loadCSS("assets/_media.css");               //User Styles: Media
+    @if($is_admin)
+        loadCSS("assets/css/_media_admin.css");               //User Styles: Media
+    @endif
+
+@endsection
 
 @section("main_column")
     <div class="sherif_center_column">
-        <!-- include home_messages -->
-        @include("layouts.partials.home_messages")
+        @include("layouts.chat")
         <div class="sherif_home_main-box_slider slider">
             <!--Slide start-->
             <div class="slide item">
@@ -421,6 +436,77 @@
     </div>
 @endsection
 
+@section("right_side_bar")
+    <div class="sherif_right_column">
+        <div class="sherif_home_main-box-right_bar">
+            <!-- Air Show -->
+            <div class="sherif_home_main-box-right_bar-advertising">
+                <a href="#" style="background-image:url({{asset('/assets/img/pic/Air_Show.jpg')}});" class="sherif_home_main-box-right_bar-advertising-pic"  >
+                </a>
+                <a href="#" style="background-image:url({{asset('/assets/img/pic/Air_Show.jpg')}});" class="sherif_home_main-box-right_bar-advertising-pic"  >
+                </a>
+            </div>
+            <!-- Already viewed -->
+            <div class="sherif_home_main-right_bar-viewed">
+                <h3>Вы просматривали</h3>
+                <button class="sherif_home_main-right_bar-viewed-button button_top"></button>
+                <div class="sherif_home_main-right_bar-viewed-trade_item">
+                    <div class="sherif_home_main-right_bar-viewed-trade_item-pic">
+                        <img src="{{asset('/assets/img/recommended/icon2.png')}}" alt="" >
+                    </div>
+                    <div class="sherif_home_main-right_bar-viewed-trade_item-description">
+                        <div class="sherif_home_main-right_bar-viewed-trade_item-description-top">
+                            <h5>Костюм Полиция нового образца, тип А </h5>
+                            <p>Артикул: 30700А</p>
+                        </div>
+                        <div class="sherif_home_main-right_bar-viewed-trade_item-description_bot">
+                            <h5>Цена:870.00 грн</h5>
+                            <h4><strong>Цена:870.00 грн</strong></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="sherif_home_main-right_bar-viewed-trade_item">
+                    <div class="sherif_home_main-right_bar-viewed-trade_item-pic">
+                        <img src="{{asset('/assets/img/recommended/icon1.png')}}" alt="" >
+                    </div>
+                    <div class="sherif_home_main-right_bar-viewed-trade_item-description">
+                        <div class="sherif_home_main-right_bar-viewed-trade_item-description-top">
+                            <h5>Костюм Полиция нового образца, тип А </h5>
+                            <p>Артикул: 30700А</p>
+                        </div>
+                        <div class="sherif_home_main-right_bar-viewed-trade_item-description_bot">
+                            <h5>Цена:870.00 грн</h5>
+                            <h4><strong>Цена:870.00 грн</strong></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="sherif_home_main-right_bar-viewed-trade_item">
+                    <div class="sherif_home_main-right_bar-viewed-trade_item-pic">
+                        <img src="{{asset('/assets/img/recommended/icon3.png')}}" alt="" >
+                    </div>
+                    <div class="sherif_home_main-right_bar-viewed-trade_item-description">
+                        <div class="sherif_home_main-right_bar-viewed-trade_item-description-top">
+                            <h5>Костюм Полиция нового образца, тип А </h5>
+                            <p>Артикул: 30700А</p>
+                        </div>
+                        <div class="sherif_home_main-right_bar-viewed-trade_item-description_bot">
+                            <h5>Цена:870.00 грн</h5>
+                            <h4><strong>Цена:870.00 грн</strong></h4>
+                        </div>
+                    </div>
+                </div>
+                <button class="sherif_home_main-right_bar-viewed-button button_bot"></button>
+            </div>
+            <!-- Pick up goods -->
+            <div class="sherif_home_main-box-right_bar-pick_up">
+                <a href="" style="background-image: url({{asset('/assets/img/pic/pick_up.jpg')}});" class="sherif_home_main-box-right_bar-pick_up-pic">
+                    <img src="{{asset('/assets/img/icons/pick_up-icon.png')}}" alt="">
+                    <h4>Подобрать товары по цвету</h4>
+                </a>
+            </div>
+        </div>
+    </div>
+@endsection
 
 @section("main_content")
     <div class="sherif_home_main-incision">
@@ -1185,11 +1271,4 @@
         </div>
     </div>
 
-    <div class="sherif_home_main_bottom-info">
-        <div class="sherif_row">
-            <div class="bottom-info_text">
-                Интернет-магазини Шериф. Если вас интересуют товары для военных и охраны, путешествий и туризма, охоты и рыбалки, а также подарки, вы попали по адресу. Именно этими товарами торгует наш интернет-магазин. Кроме указанного, мы предлагаем товары для развлечений, очень активного отдыха и проведения (организации) праздников. Вы можете подобрать сценарий для профессионального фейверка, который проведут наши специалисты на вашем мероприяти, будь то свадьба, новогодний праздник, день рождения, корпоративный вечер или День города. Мы занимаемся этим более 20 лет. Крупными разделами в интернет магазине являются: туристические товары, туристические ножы и оптика. У нас вы так же можете купить надувные лодки, рюкзаки (тактические и туристические) и множество другого полезного снаряжения. Имеется также категория посвященная одежде для охоты и туризма. Военнослужащим и охранным агенствам представляем разделы бронежилеты, шлемы и каски, наколенники и налокотники, ремни и перчатки тактические, защитные очки и маски, чехлы и кобуры. Наши товары мы отправляем по всей территории Украины. Центральный офис находится в Днепропетровске, на ул.Артема (Сечевых Стрельцов), д.9, - магазин Шериф. Для отпраки товаров по Украине мы рекомендуем покупателю оператора доставки "Новая почта", но при этом не ограничиваем выбор службы. Вы можете назвать любую другую компанию (Гюнсел, Автолюкс, ТНТ, Спецсвязь и т.д.) и товар будет отправлен Вам согласно оформленному заказу в любой крупный город и по области (Киев, Херсон, Одесса, Запорожье, Харьков, Львов и т.п.). Если выбранный Вами артикул вы найдете в другом магазине дешевле, сообщите, пожалуйста, нам. Мы постараемся подкорректировать прайс с учетом ваших "находок" в интернете и сделать так, чтобы цена была приемлемой для Вас. На все товары<br />Источник: http://sherif.ua/
-            </div>
-        </div>
-    </div>
 @endsection

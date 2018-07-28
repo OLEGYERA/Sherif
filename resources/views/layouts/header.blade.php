@@ -24,6 +24,18 @@
             </div>
             <!-- End Mobile -->
             <div class="sherif_home_header-navigation_arrange">
+                @if($is_admin)
+                    <div class="sherif_home_header-navigation-menu sherif_home_header-navigation_service">
+                        <span>$ {{substr($uah_to_usd,0,5)}}</span>
+                        <span>€ {{substr($uah_to_eur,0,5)}}</span>
+                        <span class="toggle-bg">
+									<input type="radio" name="toggle" value="off">
+									<input type="radio" name="toggle" value="on">
+									<span class="switch"></span>
+								</span>
+                        <span class="toggle-label">управление</span>
+                    </div>
+                @endif
                 <div class="sherif_home_header-navigation-menu sherif_home_header-navigation-menu_arrange">
                     <a href="#">Оплата и доставка</a>
                     <a href="#">Контакты</a>

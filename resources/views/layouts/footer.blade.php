@@ -140,4 +140,29 @@
     <div class="sherif_home_footer_rights flex-row">
         ЧП "Шериф", 1991-2018
     </div>
+    @if($is_admin)
+        <div class="sherif_home_header-navigation">
+            <div class="sherif_row">
+                <div class="sherif_home_header-navigation_arrange">
+                    <div class="sherif_home_header-navigation-menu sherif_home_footer-navigation_service">
+                        <span>$ {{substr($uah_to_usd,0,5)}}</span>
+                        <span>€ {{substr($uah_to_eur,0,5)}}</span>
+                        <span class="toggle-bg footer-service-icon">
+									<input type="radio" name="toggle" value="off">
+									<input type="radio" name="toggle" value="on">
+									<span class="switch"></span>
+								</span>
+                        <span class="toggle-label">управление</span>
+                        <div class="footer-service-info">
+                            <span><i class="fas fa-eye footer-service-icon"></i>20000/20 посетителей всего/сегодня</span>
+                            <span><i class="fas fa-globe footer-service-icon"></i>ваш IP:8.8.8.8</span>
+                            <span><i class="fas fa-calendar-alt footer-service-icon"></i>01.01.2018 - проиндексировано google</span>
+                            <span><i class="far fa-user footer-service-icon"></i>панель администратора</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </footer>
