@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class IndexController extends Controller
 {
     //variable to show admin's part
-    public $is_admin = true;
+    public $is_admin = false;
 
     //exchange rate
     public $uah_to_usd = 0;
@@ -69,5 +69,11 @@ class IndexController extends Controller
     }
     public function getOrdering(){
         return $this->viewMaker('ordering');
+    }
+    public function getCatalog(){
+        return $this->viewMaker('catalog');
+    }
+    public function getStock(){
+        return $this->viewMaker('stock');
     }
 }

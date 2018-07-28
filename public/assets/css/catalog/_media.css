@@ -3,8 +3,8 @@
 @media only screen and (max-width : 1800px) {
 	
 	/*Header*/
-		.sherif_home_header-navigation-menu_arrange {
-		    margin-left: -9%;
+		.sherif_home_header-navigation-menu_arrange{
+			margin-left: 19.5%;
 		}
 
 
@@ -65,42 +65,23 @@
 			}
 	/*End Footer*/
 
-	/* Header Service */
-	.sherif_home_header-navigation_arrange {
-	    display: flex;
-	    justify-content: flex-start;
-	    width: 100%;
-	}
-	
-	.sherif_home_header-navigation-menu_arrange {
-	    margin-left: 0;
-	}
-	.sherif_home_header-navigation-menu_admin-service {
-	    margin-right: 20px;
-	}
-	.sherif_home_header-navigation-menu.sherif_home_header-navigation-menu_arrange {
-		margin-right: 10%;
-	}
-
-	.sherif_home_header-navigation_service {
-   		 width: 23%;
-	}
-
-	/* Footer Service*/
-	.footer-service-info {
-	    width: 75%;
-	}
-
-	.sherif_home_footer-navigation_service span {
-	    margin-right: 2%;
-	}
-	
-	.sherif_home_header-navigation-menu a {
-	    margin-right: 25px;
-	}
-
 	/* Писать ниже */
-		
+	.sherif-product-buttons_click-btn{
+		margin-bottom: 1vw;
+	}
+	.sherif-catalog_bottom .sherif-catalog_sort{
+		font-size: 13px;
+	}
+	.sherif-catalog_bottom .sherif-catalog_sort_date, .sherif-catalog_bottom .sherif-catalog_sort_amount{
+		margin-right: 1vw;
+	}
+	.sherif-product_content_discount_date{
+		font-size: 11px;
+	}
+
+	.sherif-btn {
+	    font-size: 0.7em;
+	}
 }
 
 @media only screen and (max-width : 1650px) {
@@ -151,8 +132,7 @@
 	/*End Sherif Flexbox Grid*/
 
 	.sherif-product{
-		min-width: 30.11111%;
-    	margin: 0 2.3888%;
+		min-width: 32.11111%;
 	}
 
 	.sherif_home_main-box-right_bar-pick_up-pic h4{
@@ -226,28 +206,32 @@
    							padding: 20px 0;
 						}
 	/*End Footer*/
-	/* Header Service */
-	.sherif_home_header-navigation-menu_arrange {
-	    margin-left: 0;
-	}
-	.sherif_home_header-navigation-menu_admin-service {
-	    margin-right: 20px;
-	}
-	.sherif_home_header-navigation-menu.sherif_home_header-navigation-menu_arrange {
-	    margin-right: 2%;
-	}
 
-	.sherif_home_header-navigation_service {
-   		 width: 23%;
+	/* Писать ниже */
+
+	.sherif-btn {
+		padding: 5% 0 0 15%;
+	}
+	.sherif-product .hiden {
+    font-size: 11px;
+
+}
+
+	.sherif-catalog_bottom .sherif-catalog_sort{
+		font-size: 0.6vw;
+	}
+	.sherif-catalog_bottom .sherif-catalog_sort_date, .sherif-catalog_bottom .sherif-catalog_sort_amount{
+		margin-right: 5px;
+	}
+	.pagination-sherif li a{
+		font-size: 0.6vw;
 	}
 	
-	.sherif_home_header-navigation-menu.sherif_home_header-navigation-menu_admin-service {
-		width: 16%;
+	.sherif-product_content_discount_date{
+		font-size: 11px;
 	}
-	/* Footer Service*/
-	/* Писать ниже */
-	.sherif_home_main-new_goods-content .panel-body .link_box {
-	    margin-left: 0.9%;
+	.sherif-btn{
+		font-size: 0.6em;
 	}
 }
 
@@ -302,47 +286,42 @@
 			}
 	/*End Footer*/
 
-	/* Header Service */
-	.sherif_home_header-navigation-menu_arrange {
-	    margin-left: 0;
-	}
-	.sherif_home_header-navigation-menu.sherif_home_header-navigation-menu_arrange {
-	    margin-right: 2%;
-	}
-
-	.sherif_home_header-navigation_service {
-   		 width: 23%;
-	}
-	
-	.sherif_home_header-navigation-menu.sherif_home_header-navigation-menu_admin-service {
-		width: 18%;
-	}
-
-	.sherif_home_header-navigation-menu a {
-	    margin-right: 15px;
-	}
-
-	.sherif_home_header-navigation-menu_admin-service {
-	    margin-right: 0;
-	}
-
-	.sherif_home_header-navigation_arrange * {
-		font-size: 0.95em;
-	}
-
-		.sherif_home_header-navigation-menu a {
-		    font-size: 1em;
-		}
-
-	/* Footer Service */
-	.footer-service-info {
-	    width: 74.5%;
-	}
-	.sherif_home_footer-navigation_service span {
-	    margin-right: 2%;
-	}
-	
 	/* Писать ниже */
+	.panel-footer .filter-btn{
+		font-size: 15px;
+	}
+	.sherif-catalog_sort{
+		font-size: 12px
+	}
+	.sherif-catalog_sort_date, .sherif-catalog_sort_amount{
+		margin-right: 5px;}
+
+	.sherif-btn{
+		font-size: 9px;
+		padding: 6% 0 0 19%;
+	}
+	.sherif-btn strong{
+		padding-left:20px;
+			font-size:9px;
+	}
+	.pagination-sherif li a{
+		font-size: 0.6vw;
+	}
+	.sherif-catalog_bottom .sherif-catalog_sort{
+		font-size: 0.57vw;
+	}
+	.sherif-product .hiden {
+		font-size: 0.7vw;
+		width: 101%;
+	}
+	
+	.sherif-product_content_discount_date{
+		font-size: 9.1px;
+	}
+
+	.notoneclick {
+		height: 65px;
+	}
 }
 
 @media only screen and (max-width : 1366px) {
@@ -422,53 +401,63 @@
 			.sherif_home_main-box_brand-brands img {
 			    width: 95%;
 			}
-	.sherif_home_main-box_slider .slide-content {
-	    height: 14.2vw;
-	}
-	.sherif_home_main-box_scroll .sherif-product-buttons{
-		flex-wrap: wrap;
-    	justify-content: space-around;
-    	margin: 10px 0 30px 0px;
-	}
+
 	/*Info*/
 	.sherif_home_main_bottom-info {
 	    line-height: 1.3em;
 	}
-	
-	/* Header Service */
-	.sherif_home_header-navigation_arrange {
-	    display: flex;
-	    justify-content: flex-start;
-	    width: 100%;
-	}
-	
-	.sherif_home_header-navigation-menu_arrange {
-	    margin-left: 0;
-	}
-	
-
-	.sherif_home_header-navigation_service {
-   		 width: 23%;
-	}
-
-	/* Footer Service*/
-	.footer-service-info {
-	    width: 75%;
-	}
-
-	.sherif_home_footer-navigation_service span {
-	    margin-right: 2%;
-	}
-	
-	.sherif_home_header-navigation-menu a {
-	    margin-right: 15px;
-	}
 
 	/* Писать ниже */
-
-	.sherif_home_main-new_goods-content .panel-body .link_box {
-	    margin-left: 1.1%;
+	
+	.sherif_catalog_content .sherif-product{
+		width: 14.6vw;
 	}
+
+	.sherif-btn {
+	    padding: 6% 0 0 5%;
+	}
+
+	
+		.sherif-catalog_bottom {
+		flex-direction: column;
+}
+	.sherif-catalog_bottom .sherif-catalog_sort{
+		justify-content: space-between;
+		font-size: 14px;
+	}
+	
+	.pagination-sherif li a{
+		font-size: 14px;
+	}
+	
+	.sherif-product_content_discount{
+		margin-top: -40px;
+		font-size: 14px;
+	}
+	.sherif-product_content_discount_date{
+		font-size: 10px;
+	}
+	
+	.sherif-product-buttons{
+		flex-direction: column;
+	}
+	.sherif-btn{
+		width: 90%;
+		height: 40px;
+		font-size: 14px;
+	}
+	.sherif-btn strong{
+		padding-left: 48px;
+			font-size: 13px;
+	}
+	.hiden{
+		margin-top: 10px;
+	}
+	.sherif-catalog_sort{
+	justify-content: space-between;
+	}
+
+
 }
 
 @media only screen and (max-width : 1300px) {
@@ -559,8 +548,24 @@
 	/*End Footer*/
 
 	/* Писать ниже */
+	.sherif_catalog_content .sherif-product{
+		width: 15.9vw;
+	}
+	.sherif-product-buttons_click-btn strong{
+		font-size: 12px;
+	}
+	.sherif-btn strong{
+		font-size: 13px;
+		padding-left: 55px;
+	}
 	
+	.sherif-product_content_discount_date {
+	font-size: 10px;
+	}
 
+	.sherif-product .hiden {
+		    font-size: 0.6em;
+	}
 }
 
 @media only screen and (max-width : 1180px) {
@@ -680,7 +685,12 @@
 		}
 	/*End Sherif Flexbox Grid*/
 
+.sherif_left_column, .sherif_right_column {
 
+    width: 20.033333%;
+	display: none;
+
+}
 	/*Message Box*/
 		.sherif_home_main-box_message-get,
 		.sherif_home_main-box_message-send
@@ -732,7 +742,7 @@
 
 	/*Mobile Ads*/
 		.sherif_home_main-mobile_bar{
-			display: flex;
+			display: none;
 		}
 		.sherif_home_mobile_ads{
 			width: 100%;
@@ -743,9 +753,10 @@
 				height: 20vw;
 			    width: 48.5%;
 			    background-position-y: 20%;
+				display: none;
 			}
 		.sherif_main_looked{
-			display: block;
+			display: none;
 		}
 
 			
@@ -753,7 +764,7 @@
 
 			.color_pick{
 				width: 100%;
-			    display: flex;
+			    display: none;
 			    justify-content: center;
 			}
 				.color_pick a{
@@ -896,9 +907,44 @@
 		/*End Footer*/
 		
 		/* Писать ниже */
-		.sherif_left_column, .sherif_right_column {
-		    display:none;
-		}
+	.sherif_catalog_content .sherif-product {
+	    width: 30%;
+	    margin-bottom: 3%;
+	}
+								.sherif-btn span{
+									  position: absolute;
+								    height: 250%;
+								    top: -20px;
+								    left: -50px;
+								    transform: rotate(20deg);
+								    background-color: #e00000;
+								    width: calc(100% / 3);
+								}
+								.sherif-btn svg{
+								 	color: #ffffff;
+								    position: absolute;
+								    font-size: 1.4em;
+								    top: 9px;
+								    left: 7px;
+								}
+	               .sherif-btn strong{
+								    font-size: 1.4em;
+									 margin-left: 3vw;
+								}
+	.btn-sherif-product.btn-hide {
+	display: block;
+}
+	
+	#link1.collapse{
+	display: none;
+}
+	#link1.collapse.in{
+	display: block;
+}
+
+.sherif-btn {
+   padding: 3% 0 0 1%;
+}
 }
 
 @media only screen and (max-width : 980px) {
@@ -946,10 +992,7 @@
 	/*Recommended*/
 		.sherif_home_main-box_recommended h3{
 		}
-			.sherif-product {
-			    min-width: 31%;
-			    margin: 0px 1.6%;
-			}
+			
 
 			.sherif_home_main-box_recommended .sherif-btn strong {
 			    font-size: 1.1em;
@@ -1028,7 +1071,30 @@
 			
 	/*End Footer*/
 
-	/* Писать ниже */ 
+	/* Писать ниже */
+	.sherif-btn span{
+		  position: absolute;
+	    height: 250%;
+	    top: -20px;
+	    left: -2vw;
+	    transform: rotate(20deg);
+	    background-color: #e00000;
+	    width: calc(100% / 3);
+	}
+	.sherif-btn svg{
+	 	color: #ffffff;
+	    position: absolute;
+	    font-size: 1.4em;
+	    top: 9px;
+	    left: 7px;
+	}
+		.sherif-btn strong{
+	    font-size: 1.3em;
+		  margin-left: 10px;
+	}
+	.sherif-btn {
+	    padding: 5% 0 0 0;
+	}
 }
 
 @media only screen and (max-width : 750px) {
@@ -1076,6 +1142,14 @@
 	/*End Footer*/
 
 	/* Писать ниже */
+	.sherif-btn strong{
+		font-size: 2vw;
+		margin-left: 5px;
+		}
+
+		.sherif-product .hiden {
+		    width: 101%;
+		}
 }
 
 @media only screen and (max-width : 650px) {
@@ -1194,9 +1268,6 @@
 	    text-align: center;
 	}
 
-	.sherif_home_main-box_recommended.sherif_main_looked h3 {
-        border-top: 1px solid #dedcdd;
-    }
 	
 	/*End Main*/
 
@@ -1336,8 +1407,63 @@
 	/*End Footer*/
 
 	/*Продолжать Ниже*/
-}
+	ul.sherif-breadcrumb li{
+	   font-size: 12px;
+		margin-top: 15px
+	}
+	ul.sherif-breadcrumb li span{
+				color: #8f9ba7;
+				font-size: 13px;
+			}
+	.sherif-btn {
+	    padding: 4% 0 0 13%;
+	}
 
+	.sherif_catalog_content .sherif-product {
+	    width: 45%;
+	    margin: 0;
+	    margin-bottom: 3%;
+	}
+		
+}
+@media only screen and (max-width : 600px) {
+	.sherif-btn strong {
+	    font-size: 0.7em;
+	    padding-left: 6vw;
+	}
+	.sherif-btn svg{
+		font-size: 15px;
+		margin-left: -2px;
+		}
+	.sherif-catalog_bottom .sherif-catalog_sort, .sherif-catalog_sort{
+		font-size: 10px;
+	}
+	.sherif-catalog_bottom .sherif-catalog_sort_date, .sherif-catalog_sort_date{
+		align-items: center;
+	}
+
+	.sherif-product-buttons_click-btn {
+    font-size: 1vw;
+}
+	.sherif-product-buttons_click-btn strong{
+    font-size: 2.5vw;
+}
+	.hiden p{
+		font-size: 9px;
+		line-height: 0.9;
+	}
+	.sherif-product_content_discount_date{
+		font-size: 8px
+	}
+
+	.sherif-btn {
+	    padding: 5% 0 0 15%;
+	}
+	.sherif-catalog_bottom .form-group {
+	    margin-bottom: 0px;
+	    display: flex;
+	}
+}
 @media only screen and (max-width : 420px) {
 	/*Header*/
 	
@@ -1378,10 +1504,6 @@
 	/*End Header*/
 
 	/*main*/
-
-	.sherif-product {
-	    min-width: 100%;
-	}
 
 	.sherif_home_main-box_recommended h3 {
 	    padding-top: 5%;
@@ -1441,6 +1563,88 @@
 
 	/*Продолжать Ниже*/
 
+	.sherif-btn span{
+	 left: -8px;
+	}
+
+	.sherif-btn svg{
+		font-size: 1.3em;
+	}
+    .sherif-btn strong{
+	    font-size: 0.8em;
+		margin-left: 0;
+	}
+	.sherif-product_content_discount_date{
+		font-size: 0.6em;
+	}
+
+	.sherif-btn {
+	    height: 35px;
+	    padding: 6% 0 0 15%;
+	}
+	
+	.sherif-product-buttons_click-btn {
+	    font-size: 0.7em;
+	}
+
+		.sherif-product-buttons_click-btn strong {
+		    font-size: 1em;
+		}
+	.sherif-catalog_sort_look {
+		display: none;
+	}
+
+	.sherif-product_content_current-price {
+	    font-size: 0.9em;
+	}
+
+	.sherif-catalog_sort_date,
+	.sherif-catalog_sort_amount {
+		display: flex;
+    	flex-direction: row;
+    	margin-top: 10px;
+	}
+
+	.sorting {
+	    display: flex;
+	    flex-direction: column;
+	    justify-content: flex-start;
+	    align-items: flex-start;
+	}
+
+	.sherif-product_content-img_box img {
+	    height: auto;
+	    width: 100%;
+	    max-width: 100%;
+	}
+	
+	.sherif-catalog_bottom .form-group {
+	    margin-bottom: 0px;
+	    display: flex;
+	}
+
+	.sherif-catalog_bottom .sherif-catalog_sort_date,
+	.sherif-catalog_sort_amount {
+		display: flex;
+    	flex-direction: row;
+    	margin-top: 10px;
+	}
+
+	.sherif-catalog_bottom .sherif-catalog_sort_amount {
+		margin-bottom: 10px;
+	}
+
+	.sherif_catalog_content {
+	    margin-top: 4%;
+	}
+
+	.sherif-product-buttons.notoneclick {
+		height: 60px
+	}
+
+	.sherif-product .hiden {
+	    width: 101.2%;
+	}
 }
 
 

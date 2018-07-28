@@ -1,0 +1,411 @@
+/*SHERIF catalog*/
+.btn-hide{
+	display: none;
+	background-color: #fff;
+	border: 1px solid #213951;
+	border-radius: 4px;
+  display:flex;
+	flex-direction: row;
+	justify-content: center;
+}
+.sherif_row-btn{
+	 display:flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.btn-sherif-product.btn-hide{
+	width: 200px;
+	padding: 5px 30px;
+}
+.btn-sherif-product.btn-hide {
+	display: none;
+}
+.sorting{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+}
+#link1{
+	display: none;
+}
+.sherif-catalog_sort{
+	display: flex;
+	flex-direction: row;
+	/*align-items: ;*/
+	color: #000;;
+	justify-content: flex-end;
+	font-size: 14px;
+	font-family: "OpenSansRegular";
+}
+.sherif-catalog_sort label{
+	margin-right: 4px;
+	margin-top: 2px;
+	font-weight: 500; 
+}
+.sherif-catalog_sort select{
+	border: 1px solid #215931;
+  border-radius: 5px;
+	height: 25px;
+}
+.sherif-catalog_sort_date select{
+  border-bottom-right-radius: 0;
+	border-top-right-radius: 0;
+	
+}
+.sherif-catalog_sort_date button{
+  border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+	border: 1px solid #215931;
+	background-color: #fff;
+	height: 25px;
+}
+.form-group {
+	margin-bottom: 0;
+}
+
+	.sherif-catalog_sort_date{
+    display: flex;
+		flex-direction: row;
+		align-items: center;
+		margin-right: 30px;
+	}
+	.sherif-catalog_sort_amount{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		margin-right: 30px;
+	}
+	.sherif-catalog_sort_look{
+    display: flex;
+		flex-direction: row;
+		align-items: center;
+		height: auto;
+	}
+		.looks{
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: space-between;
+			align-items: center;
+			width: 31px;
+			height: 30px;
+			margin: 5px;
+		}	
+		.looks:hover .looks-itm1, .looks:hover .looks-itm2, .looks:hover .looks-itm3{
+			background-color: #213951;
+		}
+			.looks-itm1{
+				width: 6px;
+				height: 6px;
+				background-color: #dedcdd;
+				margin: 0.11px;
+			}
+			.looks-itm2{
+				width: 8px;
+				height: 8px;
+				background-color: #dedcdd;
+				margin: 0.2px;
+			}
+			.looks-itm3{
+				width: 20px;
+				height: 8px;
+				background-color: #dedcdd;
+				margin: 0;
+			}
+.sherif_catalog_content {
+	margin-top: 1%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.sherif-catalog_bottom{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+.sherif-catalog_bottom .sherif-catalog_sort_date button{
+	height: 25px;
+	margin-bottom: 1px;
+}
+	/*Pagination*/
+	.pagination-sherif {
+		    display: inline-block;
+		    padding-left: 0;
+		}
+			.pagination-sherif li {
+			    float: left;
+			    padding: 8px 3px;
+			    list-style: none;
+			}
+			.pagination-sherif a{
+				color: #213951;
+				text-decoration: underline;
+				font-size: 14px;
+			}
+			.pagination-sherif a.active-sherif, .pagination-sherif a.active-sherif-dots {
+			    color: #e2e0e1;
+			    text-decoration: none;
+			}
+				.pagination-sherif a.active-sherif:before, .pagination-sherif a.active-sherif:after, .pagination-sherif a.active-sherif-dots:after {
+				    content: " ... ";
+				}
+
+	/*Breadcrumbs*/
+	ul.sherif-breadcrumb {
+	    padding: 8px 16px;
+	    list-style: none;
+	    color: #172c41;
+	    font-family: "OpenSansRegular";
+		font-size: 20px;
+		display: flex;
+		flex-direction: row;
+		align-items: baseline;
+		padding-left: 0;
+	}
+		ul.sherif-breadcrumb li {
+			
+		}
+			ul.sherif-breadcrumb li+li:before {
+			    padding: 8px;
+			    color: #172c41;
+			    content: "/\00a0";
+			}
+			ul.sherif-breadcrumb li span{
+				color: #8f9ba7;
+				font-size: 16px;
+			}
+		ul.sherif-breadcrumb li a {
+			color: #172c41;
+			text-decoration: underline;
+		}
+
+/*Maket modifications for product that has a discout*/
+	.sherif-product-discount{
+
+	}
+		.sherif-product_content_discount{
+		    width: 85%;
+		    position: absolute;
+		    left: 0;
+		    top: 200px;
+			display: flex;
+			-webkit-flex-direction: row;
+			-moz-flex-direction: row;
+			-ms-flex-direction: row;
+			-o-flex-direction: row;
+			flex-direction: row;
+			justify-content: center;	
+		}
+			.sherif-product_content_discount_amount{
+				background-color: #fcff59;
+				display: flex;
+				align-items: center;
+				padding: 0 10px 0 10px;
+				color: #e00000;
+				font-size: 1.5em;
+    			height: 2em;
+			}
+			.sherif-product_content_discount_date{
+				background-color: #fcff59;
+				opacity: 0.8;
+			    font-size: 0.8em;
+				color: #304658;
+				padding: 5px 0 0 5px;
+				border-right: 3px solid #6e7e8e;
+				
+			}
+
+/*Maket modifications for product that is out of stock*/
+	.sherif-product-out-of-stock{
+
+	}
+		.notify-sherif-product{
+			text-transform: uppercase;
+			text-decoration: underline;
+			color: #3e5368;
+			width: 40%;
+			margin-right: 30px;
+		}
+		.disabled{
+			color: #dedcdd;
+			border-color: #dedcdd;
+			margin: 0;
+		}
+
+	/*Sherif Home Novelties*/
+		.sherif_home_main_novelties{
+
+		}
+			.sherif_home_main_novelties_title{
+				margin:30px 0 15px;
+				width: 100%;
+			}
+				.sherif_home_main_novelties_items{
+				    overflow: hidden;
+				    display: flex;
+				    width: 100%;
+				    flex-direction: row;
+				    flex-wrap: nowrap;
+				    justify-content: space-between;
+				    margin-bottom: 70px;
+				}
+					.sherif_home_main_novelties_items .sherif-product{
+						margin: 0 0.7333%;
+						min-width: 15.29999%;
+					}
+
+
+
+		.sherif-product .hiden{
+			display: none;
+			color: #213951;
+			line-height: 0.5;
+			font-size: 14px;
+			padding:inherit;
+			padding-bottom: 15px;
+			padding-top: 15px;
+		}
+		.sherif-product .hiden p{
+			font-family: "OpenSansBold";
+		}
+		.sherif-product .hiden span{
+			font-family: "OpenSansRegular";
+		}
+		.sherif-product:hover{
+			box-shadow: 5px 5px 20px grey;
+			border-bottom: 0 solid #fff;
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+			
+		}
+		.sherif-product:hover .hiden{
+			display: block;
+			position: absolute;
+			border: 1px solid #213951;
+			border-top: 0 solid white;
+			margin: -5px 0 0 -11px;
+			background-color: #fff;
+			z-index: 100;
+			border-radius: 1px; 
+			border-bottom-left-radius: 4px;
+			border-bottom-right-radius: 4px;
+			transition: 1s ease-in-out;
+			box-shadow: 5px 21px 20px grey;
+			
+		}
+
+		.icon::before {
+		    display: inline-block;
+		    font-style: normal;
+		    font-variant: normal;
+		    text-rendering: auto;
+		    -webkit-font-smoothing: antialiased;
+		  }
+
+
+		#accordion-catalog .panel{
+			background-color: transparent;
+			box-shadow: none;
+			border-bottom: 1px solid #dedcdd;
+		}
+
+		.panel-group .panel-heading + .panel-collapse > .panel-body{
+			border: 0 solid transparent;
+		}
+		#accordion-catalog .panel-heading, #accordion-catalog.panel-group .panel-heading + .panel-collapse > .panel-body{
+			margin-bottom: -20px;
+			font-family: "OpenSansBold";
+		}
+		#accordion-catalog a{
+			color: #213951;
+			text-decoration: underline;
+		}
+		.colors{
+			width: 100%;;
+			height: 35px;
+			padding-left: 10px;
+			color: #fff;
+			text-shadow: -2px 1px 10px grey;
+			margin-bottom: -20px;
+			border-radius: 10px;
+			display: flex;
+			flex-direction: row;
+			align-items: center
+		}
+		.colors input[type="checkbox"]{
+			margin-bottom: 6px;
+			margin-right: 10px;
+		}
+		div.colors:nth-child(25){
+			color: #213951;
+		}
+		.panel-footer{
+			display: flex;
+			padding: 0;
+			height: 50px;
+		}
+		.filter-btn{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			width: 100vw;
+			background-color: #213951;
+			padding: 29px 0;
+		}
+		.filter-btn:hover{
+			background-color: #dedcdd;
+		}
+
+		  .circle-arrow::before {
+		    font-family: "Font Awesome 5 Free"; content: "\f35b";
+		  }
+		  .collapsed .circle-arrow::before {
+		    font-family: "Font Awesome 5 Free"; content: "\f358";
+		  }
+
+		.sherif-catalog .sherif-breadcrumb{
+			font-size: 14px;
+			margin-bottom: 0;
+			margin-top: -30px;
+		}
+
+		.panel-title p {
+			margin-bottom: 1vw;
+		}
+
+		#link1 .panel-title p {
+		    margin-bottom: 2vw;
+		}
+
+		.form-group.sort {
+			display: flex;
+		}
+
+		.sherif-catalog_bottom .form-group {
+		    margin-bottom: 0;
+		    display: flex;
+		}
+
+		.sherif_home_main-box-right_bar-pick_up {
+			margin-top: 20px;
+		}
+
+		.sherif-product .hiden {
+		    width: 101%;
+		}
+
+		.sherif-catalog_sort_look{
+	    	display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+			.sherif-catalog_sort_look img {
+				width: 27px;
+				margin-right: 5px;
+			}	
