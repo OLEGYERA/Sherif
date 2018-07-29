@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class IndexController extends Controller
 {
     //variable to show admin's part
-    public $is_admin = false;
+    public $is_admin = true;
 
     //exchange rate
     public $uah_to_usd = 0;
