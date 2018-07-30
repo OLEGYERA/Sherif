@@ -24,7 +24,7 @@
             </div>
             <!-- End Mobile -->
             <div class="sherif_home_header-navigation_arrange">
-                @if($is_admin)
+                @if(isset($is_admin))
                     <div class="sherif_home_header-navigation-menu sherif_home_header-navigation_service">
                         <span>$ {{substr($uah_to_usd,0,5)}}</span>
                         <span>€ {{substr($uah_to_eur,0,5)}}</span>
