@@ -43,7 +43,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-images',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 6,
+                'order'      => 7,
             ])->save();
         }
 
@@ -90,7 +90,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-tools',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 7,
+                'order'      => 8,
             ])->save();
         }
 
@@ -170,7 +170,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-settings',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 8,
+                'order'      => 9,
             ])->save();
         }
 
@@ -203,6 +203,22 @@ class MenuItemsTableSeeder extends Seeder
                 'color'      => null,
                 'parent_id'  => null,
                 'order'      => 4,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Currencies'),
+            'url'     => 'admin/currencies',
+            'route'   => 'voyager.currencies.index',
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-dollar',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 6,
             ])->save();
         }
     }

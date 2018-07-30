@@ -61,7 +61,7 @@ class DataTypesTableSeeder extends Seeder
                 'display_name_plural'   => __('Products'),
                 'icon'                  => 'voyager-bag',
                 'model_name'            => 'App\\Product',
-                'controller'            => '',
+                'controller'            => '\\App\\Http\\Controllers\\Voyager\\ProductsController',
                 'generate_permissions'  => 1,
                 'description'           => '',
             ])->save();
@@ -75,6 +75,20 @@ class DataTypesTableSeeder extends Seeder
                 'display_name_plural'   => __('Categories'),
                 'icon'                  => 'voyager-categories',
                 'model_name'            => 'App\\Category',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+
+        $dataType = $this->dataType('slug', 'currencies');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'Currencies',
+                'display_name_singular' => __('Currency'),
+                'display_name_plural'   => __('Currencies'),
+                'icon'                  => 'voyager-dollar',
+                'model_name'            => 'App\\Currency',
                 'controller'            => '',
                 'generate_permissions'  => 1,
                 'description'           => '',

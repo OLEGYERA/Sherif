@@ -16,6 +16,7 @@ class DataRowsTableSeeder extends Seeder
         $roleDataType = DataType::where('slug', 'roles')->firstOrFail();
         $productsDataType = DataType::where('slug', 'products')->firstOrFail();
         $categoriesDataType = DataType::where('slug', 'categories')->firstOrFail();
+        $currenciesDataType = DataType::where('slug', 'currencies')->firstOrFail();
 
         $dataRow = $this->dataRow($userDataType, 'id');
         if (!$dataRow->exists) {
@@ -376,7 +377,7 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'number',
                 'display_name' => __('voyager::seeders.data_rows.id'),
                 'required'     => 1,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 0,
                 'add'          => 0,
@@ -406,7 +407,7 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'text',
                 'display_name' => __('voyager::seeders.data_rows.slug'),
                 'required'     => 0,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
@@ -445,11 +446,11 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 5,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'price_eur');
+        $dataRow = $this->dataRow($productsDataType, 'EUR');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => __('Price EUR'),
+                'display_name' => __('EUR'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -460,11 +461,11 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 6,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'price_usd');
+        $dataRow = $this->dataRow($productsDataType, 'USD');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => __('Price USD'),
+                'display_name' => __('USD'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -475,11 +476,11 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 7,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'price_uah');
+        $dataRow = $this->dataRow($productsDataType, 'UAH');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => __('Price UAH'),
+                'display_name' => __('UAH'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -496,7 +497,7 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'number',
                 'display_name' => __('Profitability'),
                 'required'     => 0,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
@@ -508,10 +509,10 @@ class DataRowsTableSeeder extends Seeder
         $dataRow = $this->dataRow($productsDataType, 'color');
         if (!$dataRow->exists) {
             $dataRow->fill([
-                'type'         => 'text',
+                'type'         => 'color',
                 'display_name' => __('Color'),
                 'required'     => 0,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
@@ -563,6 +564,126 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 0,
                 'details'      => '',
                 'order'        => 13,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'product_belongsto_category_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Category'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '{"model":"App\\\Category","table":"Categories","type":"belongsTo","column":"category","key":"id","label":"name","pivot_table":"Categories","pivot":"0","taggable":"0"}',
+                'order'        => 14,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'URL');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('URL'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 14,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'description');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'rich_text_box',
+                'display_name' => __('Description'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 15,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'publication');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'checkbox',
+                'display_name' => __('Publication'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 0,
+                'details'      => '{"on":"Yes","off":"No"}',
+                'order'        => 16,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'characteristics');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'rich_text_box',
+                'display_name' => __('Characteristics'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 17,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'price_final');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('Final Price'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 18,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'product_hasone_currency_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Currencies'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '{"model":"App\\\Currency","table":"Currencies","type":"belongsTo","column":"currency_final","key":"id","label":"name","pivot_table":"Categories","pivot":"0","taggable":"0"}',
+                'order'        => 19,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'currency_final');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Currency Final'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 19,
             ])->save();
         }
 
@@ -657,6 +778,83 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 1,
                 'details'      => '{"model":"App\\\Category","table":"Categories","type":"belongsTo","column":"category","key":"id","label":"name","pivot_table":"Categories","pivot":"0","taggable":"0"}',
                 'order'        => 14,
+            ])->save();
+        }
+
+        /* Currencies */
+        $dataRow = $this->dataRow($currenciesDataType, 'id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('ID'),
+                'required'     => 1,
+                'browse'       => 0,
+                'read'         => 0,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 1,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($currenciesDataType, 'name');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Name'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 2,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($currenciesDataType, 'rate');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('Rate'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 3,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($currenciesDataType, 'created_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('voyager::seeders.data_rows.created_at'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 4,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($currenciesDataType, 'updated_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('voyager::seeders.data_rows.updated_at'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 5,
             ])->save();
         }
 
