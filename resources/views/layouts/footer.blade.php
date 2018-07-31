@@ -140,7 +140,7 @@
     <div class="sherif_home_footer_rights flex-row">
         ЧП "Шериф", 1991-2018
     </div>
-    @if($is_admin)
+    @if(isset($is_admin))
         <div class="sherif_home_header-navigation">
             <div class="sherif_row">
                 <div class="sherif_home_header-navigation_arrange">

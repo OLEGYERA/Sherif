@@ -24,7 +24,7 @@
             </div>
             <!-- End Mobile -->
             <div class="sherif_home_header-navigation_arrange">
-                @if($is_admin)
+                @if(isset($is_admin))
                     <div class="sherif_home_header-navigation-menu sherif_home_header-navigation_service">
                         <span>$ {{substr($uah_to_usd,0,5)}}</span>
                         <span>€ {{substr($uah_to_eur,0,5)}}</span>
@@ -111,7 +111,7 @@
                             </div>
                             <div class="sherif_home_header-content_buyer-basket_info">
                                 <h4 class="price">5300 <span class="currency"> грн</span></h4>
-                                <a href="#" class="sherif_issue_purchase">ОФОРМИТЬ</a>
+                                <a href="#myModal"  class="sherif_issue_purchase" data-toggle="modal">ОФОРМИТЬ</a>
                             </div>
                         </div>
                         <div class="sherif_home_header-content_buyer-compare">
@@ -184,4 +184,5 @@
             </div>
         </div>
     </div>
+    @include("layouts.basket")
 </header>

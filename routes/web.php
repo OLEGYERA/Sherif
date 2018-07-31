@@ -18,8 +18,15 @@ Route::get('/income', 'IndexController@getIncome')->name('income');
 Route::get('/section', 'IndexController@getSection')->name('section');
 Route::get('/article', 'IndexController@getArticle')->name('article');
 Route::get('/ordering', 'IndexController@getOrdering')->name('ordering');
+Route::get('/catalog', 'IndexController@getCatalog')->name('catalog');
+Route::get('/stock', 'IndexController@getStock')->name('stock');
 
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
+
+Auth::routes();
+Route::get('/account', 'Account\AccountController@index')->name('account');
+
+Route::post('/account/savepersonal','Account\AccountController@store')->name('saveUserPersonal');

@@ -70,4 +70,10 @@ class IndexController extends Controller
     public function getOrdering(){
         return $this->viewMaker('ordering');
     }
+    public function getCatalog(){
+        return $this->viewMaker('catalog');
+    }
+    public function getStock(){
+        return $this->viewMaker('stock');
+    }
 }
