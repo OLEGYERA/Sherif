@@ -52,6 +52,10 @@
                             <img class="img-responsive flip logo hidden-xs animated fadeIn" src="{{ Voyager::image($admin_logo_img) }}" alt="Logo Icon">
                             @endif
                         </div>
+                        <div class="animated fadeIn">
+                            <h1>{{ Voyager::setting('admin.title', 'Voyager') }}</h1>
+                            <p>{{ Voyager::setting('admin.description', __('voyager::login.welcome')) }}</p>
+                        </div>
                     </div> <!-- .logo-title-container -->
                 </div>
             </div>
@@ -97,7 +101,7 @@
                 </ul>
               </div>
               @endif
-              <p><a href="{{route('voyager.password.request')}}">{{  __('voyager::auth.forgotten_password?') }}</a></p>
+
             </div> <!-- .login-container -->
 
         </div> <!-- .login-sidebar -->
@@ -118,6 +122,7 @@
     });
     email.focus();
     document.getElementById('emailGroup').classList.add("focused");
+
     // Focus events for email and password fields
     email.addEventListener('focusin', function(e){
         document.getElementById('emailGroup').classList.add("focused");
@@ -125,12 +130,14 @@
     email.addEventListener('focusout', function(e){
        document.getElementById('emailGroup').classList.remove("focused");
     });
+
     password.addEventListener('focusin', function(e){
         document.getElementById('passwordGroup').classList.add("focused");
     });
     password.addEventListener('focusout', function(e){
        document.getElementById('passwordGroup').classList.remove("focused");
     });
+
 </script>
 </body>
 </html>
