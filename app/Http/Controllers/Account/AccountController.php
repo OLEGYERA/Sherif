@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Account;
 
 use App\Models\UserPersonal;
-use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 
 class AccountController extends Controller
@@ -31,14 +31,19 @@ class AccountController extends Controller
     public function index()
     {
         $user = Auth::user();
+        if (!$user->userpersonal) {
+            $userpersonal = UserPersonal::findOrNew($user->id);
+            $userpersonal->user_id = $user->id;
+            $userpersonal->sex = 'М';
+            $userpersonal->save();
+        }
         $sexvalues = ['М', 'Ж'];
-
         return view('frontend.account.account')->with([
             'user' => $user,
             'sexvalues' => $sexvalues,
             'is_admin' => true,
             'uah_to_eur'=>32,
-            'uah_to_usd'=>27
+            'uah_to_usd'=>27,
 
         ]);
     }
@@ -87,6 +92,35 @@ class AccountController extends Controller
         }
     }
 
+
+    public function storePassword(Request $request)
+    {
+        $json = array();
+
+        $user = Auth::user();
+        $json['request'] = $request->all();
+
+        if($request->get('new_password') != $request->get('new_password_2')) {
+            $json['error'] = 'Пароли не совпадают!';
+            return json_encode($json);
+        } elseif (strlen($request->get('new_password') ) <=3 ) {
+            if($request->get('new_password') != $request->get('new_password_2')) {
+                $json['error'] = 'Длинна пароля должна быть более 3 символов!';
+                return json_encode($json);
+            }
+        }
+
+        if (Hash::check($request->get('old_password'), Auth::user()->password)) {
+            $user->password = bcrypt($request->get('new_password'));
+            if($user->save()) {
+                $json['success'] = 'Пароль сохранен!';
+                return json_encode($json);
+            };
+        } else {
+            $json['error'] = 'Старый и  новый пароль не совпадают!';
+            return json_encode($json);
+        }
+    }
     private function _uploadMiniature($file)
     {
         $path = public_path('/storage');
