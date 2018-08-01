@@ -1,5 +1,13 @@
 @extends('layouts.app')
+@section("css_files")
+    loadCSS("assets/_header.css");//Header Styles (compress & paste to header after release)
 
+    loadCSS("assets/_main.css");                //User Styles: Main
+    loadCSS("assets/css/section/_main.css");                //User Styles: Main
+
+    loadCSS("assets/css/section/_media.css");               //User Styles: Media
+
+@endsection
 @section('main_column')
 <div class="container">
     <div class="row">

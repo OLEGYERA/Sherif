@@ -67,7 +67,41 @@
             }
         }
 
+
+        function savePasswords(e) {
+            e.preventDefault();
+
+
+            $.ajax({
+                url: '/account/saveuserpassword',
+                dataType: 'text',
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data:  $('#changepassword').serialize(),
+                type: 'POST',
+                headers: { 'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content') },
+                success: function( data, textStatus, jQxhr ){
+                    var json = $.parseJSON(data);
+                    if (json.success) {
+                        toastr.success(json.success);
+                        $("#changepassword").trigger('reset');
+
+                    }
+                    if (json.error) {
+                        toastr.error(json.error);
+                    }
+
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log( errorThrown );
+                }
+            });
+
+            e.preventDefault();
+        }
+
         $('#savePersonalForm').submit( savePersonal );
+        $('#savepasswordbtn').click( savePasswords );
 
         $("#inputImg").fileinput({
             showUpload: false,

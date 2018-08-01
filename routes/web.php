@@ -30,3 +30,4 @@ Auth::routes();
 Route::get('/account', 'Account\AccountController@index')->name('account');
 
 Route::post('/account/savepersonal','Account\AccountController@store')->name('saveUserPersonal');
+Route::post('/account/saveuserpassword','Account\AccountController@storePassword')->name('saveUserPassword');

@@ -21,15 +21,19 @@
             var ms=document.createElement("link");ms.rel="stylesheet";
             ms.href=hf;document.getElementsByTagName("head")[0].appendChild(ms);
         }
-        loadCSS("assets/account.css");
+        loadCSS("/assets/libs/toastr/toastr.min.css");
         loadCSS("/assets/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css");
         loadCSS("/assets/libs/bootstrap-file-input/css/fileinput.min.css");
+        loadCSS("assets/account.css");
+
+
     </script>
     <!-- Load Scripts -->
     <script>var scr = {"scripts":[
             {"src" : "/assets/libs/moment/moment-with-locales.min.js", "async" : false},
             {"src" : "/assets/libs/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js", "async" : false},
             {"src" : "/assets/libs/bootstrap-file-input/js/fileinput.min.js", "async" : false},
+            {"src" : "/assets/libs/toastr/toastr.min.js", "async" : false},
             {"src" : "/assets/js/account.js", "async" : false},
         ]};!function(t,n,r){"use strict";var c=function(t){if("[object Array]"!==Object.prototype.toString.call(t))return!1;for(var r=0;r<t.length;r++){var c=n.createElement("script"),e=t[r];c.src=e.src,c.async=e.async,n.body.appendChild(c)}return!0};t.addEventListener?t.addEventListener("load",function(){c(r.scripts);},!1):t.attachEvent?t.attachEvent("onload",function(){c(r.scripts)}):t.onload=function(){c(r.scripts)}}(window,document,scr);
     </script>
@@ -43,7 +47,7 @@
 
     <!--SHERIF CABINET-->
         <input id="user_id" type="hidden" value="{{$user->id}}">
-        <input id="user_id" type="hidden" value="{{$user->id}}">
+
         <ul class="sherif-breadcrumb">
             <li><a href="index.html">Главная</a></li>
             <li><span>Вы здесь <i class="fas fa-arrow-right"></i></span>Кабинет покупателя</li>
@@ -91,12 +95,12 @@
                                     </div>
                                     <div class="cabinet_profile_info_data_change-password">
                                         <p>Изменить пароль:</p>
-                                        <form class="cabinet_profile_info_data_change-password" action="">
-                                            <input type="password" placeholder="Старый пароль">
-                                            <input type="password" placeholder="Новый пароль">
-                                            <input type="password" placeholder="Подтвердить новый пароль">
+                                        <form id="changepassword" class="cabinet_profile_info_data_change-password" action="">
+                                            <input name="old_password" type="password" placeholder="Старый пароль">
+                                            <input name="new_password" type="password" placeholder="Новый пароль">
+                                            <input name="new_password_2" type="password" placeholder="Подтвердить новый пароль">
                                             <div class="cabinet_profile_btn">
-                                                <a href="#">СОХРАНИТЬ</a>
+                                                <a id="savepasswordbtn" type="submit" href="#">СОХРАНИТЬ</a>
                                                 <a href="#">ОТМЕНИТЬ</a>
                                             </div>
                                         </form>
@@ -523,13 +527,19 @@
                 <div class="form-group col-sm-6">
                     <label for="user-name">Пол</label><br/>
                     <select id="user-sex" name="sex" data-sex="" class="form-control">
-                        @foreach ($sexvalues as $value)
-                            <option value="{{ $value }}"
-                                    @if ($value == old('sex', $user->userpersonal->sex))
-                                    selected="selected"
-                                    @endif
-                            >{{ $value }}</option>
-                        @endforeach
+                        @if ($user->userpersonal->sex)
+                            @foreach ($sexvalues as $value)
+                                <option value="{{ $value }}"
+                                        @if ($value == old('sex', $user->userpersonal->sex))
+                                        selected="selected"
+                                        @endif
+                                >{{ $value }}</option>
+                            @endforeach
+                        @else
+                            @foreach ($sexvalues as $value)
+                                <option value="{{ $value }}">{{ $value }}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
                 <div class="form-group col-sm-6">
@@ -572,8 +582,5 @@
         @endcomponent
     </div>
 
-<script type="text/javascript">
-
-</script>
 @endsection
 

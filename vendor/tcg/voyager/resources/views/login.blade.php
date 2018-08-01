@@ -101,7 +101,7 @@
                 </ul>
               </div>
               @endif
-
+                <p><a href="{{route('voyager.password.request')}}">{{  __('voyager::auth.forgotten_password?') }}</a></p>
             </div> <!-- .login-container -->
 
         </div> <!-- .login-sidebar -->
