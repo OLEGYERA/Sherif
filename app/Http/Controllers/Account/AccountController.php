@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 
 class AccountController extends Controller
@@ -101,24 +100,25 @@ class AccountController extends Controller
         $user = Auth::user();
         $json['request'] = $request->all();
 
-        if($request->get('new_password') != $request->get('new_password_2')) {
+        if($request->get('old_password') != $request->get('new_password')) {
             $json['error'] = 'Пароли не совпадают!';
             return json_encode($json);
-        } elseif (strlen($request->get('new_password') ) <=3 ) {
+        } elseif (strlen($request->get('new_password_2') ) <=3 ) {
             if($request->get('new_password') != $request->get('new_password_2')) {
                 $json['error'] = 'Длинна пароля должна быть более 3 символов!';
                 return json_encode($json);
             }
         }
 
-        if (Hash::check($request->get('old_password'), Auth::user()->password)) {
-            $user->password = bcrypt($request->get('new_password'));
-            if($user->save()) {
+        if (bcrypt($request->get('old_password') == Auth::user()->password)) {
+            $user->password = bcrypt($request->get('new_password_2'));
+
+            if($user->save() == true) {
                 $json['success'] = 'Пароль сохранен!';
                 return json_encode($json);
             };
         } else {
-            $json['error'] = 'Старый и  новый пароль не совпадают!';
+            $json['error'] = 'Пароль неверен!';
             return json_encode($json);
         }
     }
