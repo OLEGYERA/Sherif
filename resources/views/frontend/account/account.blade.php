@@ -527,7 +527,7 @@
                 <div class="form-group col-sm-6">
                     <label for="user-name">Пол</label><br/>
                     <select id="user-sex" name="sex" data-sex="" class="form-control">
-                        @if ($user->userpersonal->sex)
+                        @if (isset($user->userpersonal->sex))
                             @foreach ($sexvalues as $value)
                                 <option value="{{ $value }}"
                                         @if ($value == old('sex', $user->userpersonal->sex))

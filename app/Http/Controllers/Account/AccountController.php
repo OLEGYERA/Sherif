@@ -37,6 +37,7 @@ class AccountController extends Controller
             $userpersonal->sex = 'М';
             $userpersonal->save();
         }
+
         $sexvalues = ['М', 'Ж'];
         return view('frontend.account.account')->with([
             'user' => $user,
