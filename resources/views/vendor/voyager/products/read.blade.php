@@ -90,6 +90,10 @@
                                         <td>{{$dataTypeContent->vendor_code}}</td>
                                     </tr>
                                     <tr>
+                                        <td><b>{{$dataType->readRows[23]->display_name}}</b></td>
+                                        <td>{{$dataTypeContent->code}}</td>
+                                    </tr>
+                                    <tr>
                                         <td><b>{{$dataType->readRows[11]->display_name}}</b></td>
                                         <td>
                                         @php $rowDetails = json_decode($dataType->readRows[11]->details);
@@ -129,6 +133,34 @@
                                                 {{ $dataTypeContent->{$dataType->readRows[14]->field} }}
                                                 @endif
                                             @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{{$dataType->readRows[20]->display_name}}</b></td>
+                                        <td>
+                                        @php $rowDetails = json_decode($dataType->readRows[20]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[20]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
+                                        @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{{$dataType->readRows[22]->display_name}}</b></td>
+                                        <td>
+                                        @php $rowDetails = json_decode($dataType->readRows[22]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[22]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
+                                        @endif
                                         </td>
                                     </tr>
                                 </tbody>

@@ -94,6 +94,48 @@ class DataTypesTableSeeder extends Seeder
                 'description'           => '',
             ])->save();
         }
+
+        $dataType = $this->dataType('slug', 'product-statuses');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'product_statuses',
+                'display_name_singular' => __('Product Status'),
+                'display_name_plural'   => __('Product Statuses'),
+                'icon'                  => '',
+                'model_name'            => 'App\\ProductStatus',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+
+        $dataType = $this->dataType('slug', 'product-labels');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'product-labels',
+                'display_name_singular' => __('Product Label'),
+                'display_name_plural'   => __('Product Labels'),
+                'icon'                  => '',
+                'model_name'            => 'App\\ProductLabel',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+        
+        $dataType = $this->dataType('slug', 'subcategories');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'Subcategories',
+                'display_name_singular' => __('Subcategory'),
+                'display_name_plural'   => __('Subcategories'),
+                'icon'                  => 'voyager-categories',
+                'model_name'            => 'App\\Subcategory',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
     }
 
     /**

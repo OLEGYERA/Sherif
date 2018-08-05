@@ -153,11 +153,14 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.read";
         }
 
-
         /* Currency displaying */
-        $currency = Currency::where('id', '=', $dataTypeContent->currency_final)->first(); //retrieve currency object
-        
-        $currency_name = $currency->name;
+        if($dataTypeContent->currency_final) {
+            $currency = Currency::where('id', '=', $dataTypeContent->currency_final)->first(); //retrieve currency object
+            $currency_name = $currency->name;
+        } else {
+            $currency_name = '';
+        }
+       
 
         
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name);
@@ -222,18 +225,25 @@ class ProductsController extends VoyagerBaseController
 
         $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
 
-        
         /* Final price convertation */
-        $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
-        
-        $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
+        if($request->currency_final) {
+            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
+
+            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
+            
+            $request->merge(['price_final' => $price_final]);
+        }
         
         /* URL Generating */
-        $URL = $slug . '/' . $request->slug; 
+        $URL = $request->root() . '/' . $slug . '/' . $request->slug; 
+
+        /* Code generating */
+        $code = $request->category . '-' . $id;
 
         /* Merging request with new values */
-        $request->merge(['price_final' => $price_final]);
         $request->merge(['URL' => $URL]);
+        $request->merge(['code' => $code]);
+
         // Check permission
         $this->authorize('edit', $data);
         
@@ -245,6 +255,7 @@ class ProductsController extends VoyagerBaseController
         }
         
         if (!$request->ajax()) {
+
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
             event(new BreadDataUpdated($dataType, $data));
@@ -289,6 +300,7 @@ class ProductsController extends VoyagerBaseController
             $dataType->addRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
+        
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'add');
 
@@ -327,6 +339,19 @@ class ProductsController extends VoyagerBaseController
             return response()->json(['errors' => $val->messages()]);
         }
 
+        /* Final price convertation */
+        if($request->currency_final) {
+            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
+
+            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
+            
+            $request->merge(['price_final' => $price_final]);
+        }
+       
+        /* URL Generating */
+        $URL = $request->root() . '/' . $slug . '/' . $request->slug; 
+        $request->merge(['URL' => $URL]);
+        
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 

@@ -69,6 +69,7 @@
                                     @foreach (app('voyager')->afterFormFields($dataTypeRows[12], $dataType, $dataTypeContent) as $after)
                                         {!! $after->handle($dataTypeRows[12], $dataType, $dataTypeContent) !!}
                                     @endforeach
+
                                 </div>
                             </div>
                             <div class="panel-footer">
@@ -89,6 +90,8 @@
                                                     $row->field == 'USD' || 
                                                     $row->field == 'EUR' || 
                                                     $row->field == 'UAH' || 
+                                                    $row->field == 'URL' ||
+                                                    $row->field == 'code' ||
                                                     $row->field == 'price_final' || 
                                                     $row->field == 'product_hasone_currency_relationship' ||
                                                     $row->field == 'profitability')
@@ -117,6 +120,7 @@
                                                 @endif
                                                 </tr>
                                             @endforeach
+                                            
                                         </tbody>
                                     </table>
                                 </div><!-- panel-body -->
@@ -139,7 +143,10 @@
                                                 $row->field == 'color' ||
                                                 $row->field == 'manufacturer' ||
                                                 $row->field == 'URL' ||
-                                                $row->field == 'publication')
+                                                $row->field == 'code' ||
+                                                $row->field == 'publication' ||
+                                                $row->field == 'product_belongsto_product_status_relationship' ||
+                                                $row->field == 'product_belongsto_product_label_relationship')
                                                     <?php continue; ?>
                                             @endif
                                             <!-- GET THE DISPLAY OPTIONS -->

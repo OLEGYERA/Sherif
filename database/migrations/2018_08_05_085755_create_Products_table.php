@@ -26,12 +26,15 @@ class CreateProductsTable extends Migration {
 			$table->string('color', 191)->nullable();
 			$table->string('manufacturer', 191)->nullable();
 			$table->timestamps();
-			$table->string('URL')->nullable();
+			$table->string('URL', 191)->nullable();
 			$table->text('description', 65535)->nullable();
 			$table->integer('publication')->nullable();
 			$table->text('characteristics', 65535)->nullable();
 			$table->integer('price_final')->nullable();
-			$table->string('currency_final')->nullable();
+			$table->string('currency_final', 191)->nullable();
+			$table->integer('status')->nullable();
+			$table->integer('label')->nullable();
+			$table->string('code')->nullable();
 		});
 	}
 
