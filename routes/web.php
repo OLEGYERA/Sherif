@@ -29,7 +29,11 @@ Route::group(['prefix' => 'admin'], function () {
     ////////////abanners
     Route::put('banner/{id}/save', [
         'uses' => 'Voyager\AdminBannerController@storeBanner',
-        'as'   => 'admin.banner'
+        'as'   => 'admin.banner.save'
+    ]);
+    Route::post('banner/save', [
+        'uses' => 'Voyager\AdminBannerController@storeBanner',
+        'as'   => 'admin.banner.store'
     ]);
 });
 

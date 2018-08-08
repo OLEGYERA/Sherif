@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 
 class GetFunction
 {
-    public static function create_image_url_cache($filepath, $w,$h) {
+    public static function create_image_url_cache($filepath, $w, $h) {
         //print_r($filepath);
         $old_image = $filepath;
         $filepath = get_file_path($filepath);
@@ -42,7 +42,7 @@ class GetFunction
                             $constraint->upsize();
                         }
                     )
-                    ->encode($extension, 75);
+                    ->encode($extension, 95);
                     //->save(platformSlashes(public_path($new_image)));
                 Storage::disk(config('voyager.storage.disk'))->put($new_image, (string)$image, 'public');
 

@@ -47,7 +47,7 @@ class IndexController extends Controller
     }
 
     public function getIndex(){
-        $banner = Banner::with(['bannerImages.bannerLinkPosition'])->find(1);
+        $banner = Banner::with(['bannerImages.bannerLinkPosition'])->first();
         return $this->viewMaker('index')->with([
             'banner' =>$banner
         ]);

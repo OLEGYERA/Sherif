@@ -1,5 +1,6 @@
 @section("main_banner")
     <div class="sherif_home_main-box_slider slider">
+    @if (isset($banner))
         @foreach($banner->bannerImages as $key => $bannerImage)
             @php
                 $bannerposition = \App\Models\BannerImages::i()->getBannerImageLink($bannerImage->id);
@@ -9,7 +10,9 @@
                 <div class="slide-content" style="background-image: url('{{Illuminate\Support\Facades\Storage::url(get_image_cache($bannerImage->image, $banner->width, $banner->height))}}')">
                     @if (($bannerImage->type == '1-1') && isset($bannerImage->bannerLinkPosition[0]))
                         <a href="{{$bannerImage->bannerLinkPosition[0]->link}}">
-                            <!--<img class="d-block w-100"  alt="First slide [800x400]" src="{{asset('/assets/img/slider/FirstSlide.png')}}" data-holder-rendered="true">-->
+                            <div class="col-sm-12" style="background-color: #0a2b1d; position: absolute; left: 0; height: 100%; opacity: 0.2;">
+                                <!--<img class="d-block w-100"  alt="First slide [800x400]" src="{{asset('/assets/img/slider/FirstSlide.png')}}" data-holder-rendered="true">-->
+                            </div>
                         </a>
                     @elseif (($bannerImage->type == '2-2') && (isset($bannerposition[7])) && (isset($bannerposition[8])))
                         <a href="{{$bannerposition[7]}}">
@@ -70,5 +73,13 @@
                 </div>
             </div>
         @endforeach
+    @else
+        <!--Slide start-->
+            <div class="slide item">
+                <div class="slide-content" style="background-image: url('{{asset('/assets/img/slider/FirstSlide.png')}}');">
+                </div>
+            </div>
+            <!--Slide end -->
+    @endif
     </div>
 @show

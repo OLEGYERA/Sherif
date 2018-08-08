@@ -42,7 +42,7 @@
                 <div class="panel panel-bordered">
                     <!-- form start -->
 
-                    <form action="{{route('admin.banner',$dataTypeContent->getKey())}}" method="post" enctype="multipart/form-data" id="form-banner" class="form-horizontal"
+                    <form action="@if(isset($dataTypeContent->id)){{ route('admin.banner.save',$dataTypeContent->getKey()) }}@else{{ route('admin.banner.store') }}@endif" method="post" enctype="multipart/form-data" id="form-banner" class="form-horizontal"
                           role="form"
                           class="form-edit-add">
                         <!-- PUT Method if we are editing -->
@@ -67,7 +67,7 @@
 
 
                             <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="id" id="id" value="{{$banner['id']}}">
+                            <input type="hidden" name="id" id="id" value="{{$banner['id'] or '' }}">
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label"
                                        for="input-name">{!! trans('admin.entry_name') !!}</label>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"
-                                       for="input-status">Статус</label>
+                                       for="input-status">{{ trans('admin.entry_status') }}</label>
                                 <div class="col-sm-10">
                                     <select name="status" id="input-status" class="form-control">
                                         <?php if ($banner['status']) { ?>
@@ -326,6 +326,7 @@
         var image_row = <?php echo $image_row; ?>;
 
         function addImage() {
+            console.log(image_row);
             html = '<tr id="image-row' + image_row + '">';
             html += '<td class="text-left">'  +
                 '   <input type="text" name="banner_image['+ image_row +'][banner_image_description]; ?>]" value="" placeholder="{{ trans('admin.entry_title') }}" class="form-control" />'+
@@ -345,7 +346,7 @@
 
             html +=  '    <td class="text-left">  '  +
                 '     <a href="" id="thumb-image' + image_row + '" data-toggle="image" class="img-thumbnail"><img src="/storage/placeholder.png" id="thumb' + image_row + '" alt="" title="" data-placeholder="{!! trans('admin.image_placeholder') !!}" /></a><input type="hidden" name="banner_image[' + image_row + '][image]" value="" id="input-image' + image_row + '" />  '  +
-                '    <input id="inputImg<?php echo $image_row; ?>" type="file" name="banner_image[<?php echo $image_row; ?>][image]"> ' +
+                '    <input id="inputImg' + image_row + '" type="file" name="banner_image[' + image_row + '][image]"> ' +
             '    <script>'  +
             '  $(document).ready(function() {' + '\n' +
             '    $("#inputImg' + image_row + '").fileinput({ ' + '\n' +

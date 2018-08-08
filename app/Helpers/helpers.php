@@ -1,6 +1,6 @@
 <?php
 use App\Library\GetFunction;
-
+use Illuminate\Support\Facades\Storage;
 /**
 * Get image url
 *
@@ -11,6 +11,13 @@ if (!function_exists('get_image_cache')) {
     function get_image_cache($img_path, $w, $h)
     {
         return GetFunction::create_image_url_cache($img_path, $w, $h);
+    }
+}
+if (!function_exists('get_url_image')) {
+    function get_url_image($img_path, $w, $h)
+    {
+
+        return Storage::url(GetFunction::create_image_url_cache($img_path, $w, $h));
     }
 }
 if (!function_exists('set_image_cache')) {
