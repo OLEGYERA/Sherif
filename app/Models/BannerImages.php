@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class BannerImages extends Model
 {
     protected $table = 'banner_image';
-    protected $primaryKey = 'd';
+    protected $primaryKey = 'id';
     protected $fillable = ['*'];
     public $timestamps = false;
     public static $_instance = null;
@@ -27,5 +28,17 @@ class BannerImages extends Model
     }
     public function bannerLinkPosition() {
         return $this->hasMany(BannerLinkPosition::class, 'banner_image_id', 'id');
+    }
+    public function getBannerImageLink($banner_image_id)
+    {
+        $query = DB::table('banner_link_position')
+            ->where('banner_image_id',$banner_image_id)
+            ->get()
+            ->toArray();
+        $result = array();
+        foreach ($query as $res) {
+            $result[$res->banner_position_id] = $res->link;
+        }
+        return $result;
     }
 }

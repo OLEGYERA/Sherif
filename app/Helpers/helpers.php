@@ -13,6 +13,19 @@ if (!function_exists('get_image_cache')) {
         return GetFunction::create_image_url_cache($img_path, $w, $h);
     }
 }
+if (!function_exists('set_image_cache')) {
+    function set_image_cache($img_path, $type)
+    {
+        return GetFunction::set_image_url_cache($img_path, $type);
+    }
+}
+
+if (!function_exists('get_file_path')) {
+    function get_file_path($img_path)
+    {
+        return GetFunction::get_file_path($img_path);
+    }
+}
 
 if (!function_exists('platformSlashes')) {
     function platformSlashes($path)

@@ -24,6 +24,13 @@ Route::get('/stock', 'IndexController@getStock')->name('stock');
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+
+
+    ////////////abanners
+    Route::put('banner/{id}/save', [
+        'uses' => 'Voyager\AdminBannerController@storeBanner',
+        'as'   => 'admin.banner'
+    ]);
 });
 
 Auth::routes();
@@ -31,3 +38,7 @@ Route::get('/account', 'Account\AccountController@index')->name('account');
 
 Route::post('/account/savepersonal','Account\AccountController@store')->name('saveUserPersonal');
 Route::post('/account/saveuserpassword','Account\AccountController@storePassword')->name('saveUserPassword');
+
+
+
+

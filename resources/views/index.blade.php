@@ -19,38 +19,8 @@
 @section("main_column")
     <div class="sherif_center_column">
         @include("layouts.chat")
-        <div class="sherif_home_main-box_slider slider">
-            <!--Slide start-->
-            <div class="slide item">
-                <div class="slide-content" style="background-image: url('{{asset('/assets/img/slider/FirstSlide.png')}}');">
-                </div>
-            </div>
-            <!--Slide end -->
-            <!--Slide start-->
-            <div class="slide item">
-                <div class="slide-content" style="background-image: url('{{asset('/assets/img/slider/FirstSlide.png')}}');">
-                </div>
-            </div>
-            <!--Slide end -->
-            <!--Slide start-->
-            <div class="slide item">
-                <div class="slide-content" style="background-image: url('{{asset('/assets/img/slider/FirstSlide.png')}}');">
-                </div>
-            </div>
-            <!--Slide end -->
-            <!--Slide start-->
-            <div class="slide item">
-                <div class="slide-content" style="background-image: url('{{asset('/assets/img/slider/FirstSlide.png')}}');">
-                </div>
-            </div>
-            <!--Slide end -->
-            <!--Slide start-->
-            <div class="slide item">
-                <div class="slide-content" style="background-image: url('{{asset('/assets/img/slider/FirstSlide.png')}}');">
-                </div>
-            </div>
-            <!--Slide end -->
-        </div>
+        @include("frontend.module.banner")
+
         <div class="sherif_home_main-box_brand">
             <!-- Box brand start -->
             <div class="sherif_home_main-box_brand-brands">

@@ -9,45 +9,42 @@
 
 namespace App\Library;
 
+use Intervention\Image\Constraint;
 use Intervention\Image\Facades\Image;
-
+use Illuminate\Support\Facades\Storage;
 
 class GetFunction
 {
     public static function create_image_url_cache($filepath, $w,$h) {
         //print_r($filepath);
-        $filepath = '/storage/' . $filepath;
-        if (!is_file(platformSlashes(public_path($filepath)))) {
-            dd(public_path($filepath));
+        $old_image = $filepath;
+        $filepath = get_file_path($filepath);
+        if (!is_file($filepath)) {
             return ('/storage/placeholder.png');
         }
 
         $extension = pathinfo($filepath, PATHINFO_EXTENSION);
 
-        $old_image = $filepath;
-        $new_image = DIRECTORY_SEPARATOR.'cache' . mb_substr(platformSlashes($filepath), 0, mb_strrpos(platformSlashes($filepath), '.')) . '-' . $w . 'x' . $h . '.' . $extension;
 
+        $new_image = 'cache' .'/' . mb_substr(($old_image), 0, mb_strrpos(($old_image), '.')) . '-' . $w . 'x' . $h . '.' . $extension;
 
-        if (!is_file(platformSlashes(public_path($new_image)))) {
-            $path = '';
+       // dd(get_file_path($new_image));
+        if (!is_file(get_file_path($new_image))) {
 
-            $directories = explode(DIRECTORY_SEPARATOR, dirname(str_replace('..'.DIRECTORY_SEPARATOR, '', $new_image)));
-
-            foreach ($directories as $directory) {
-                $path = $path . DIRECTORY_SEPARATOR . $directory;
-
-                if (!is_dir(public_path(DIRECTORY_SEPARATOR.$path))) {
-                    @mkdir(public_path(DIRECTORY_SEPARATOR.$path), 0777);
-
-                }
-            }
-            //dd($directories);
-            list($width_orig, $height_orig) = getimagesize(platformSlashes(public_path($old_image)));
-
+            list($width_orig, $height_orig) = getimagesize($filepath);
             if ($width_orig != $w || $height_orig != $h) {
-                Image::make(platformSlashes(public_path($old_image)))
-                    ->resize($h, $w)
-                    ->save(platformSlashes(public_path($new_image)));
+                $image = Image::make($filepath)
+                    ->resize(
+                        $w,
+                        $h,
+                        function (Constraint $constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        }
+                    )
+                    ->encode($extension, 75);
+                    //->save(platformSlashes(public_path($new_image)));
+                Storage::disk(config('voyager.storage.disk'))->put($new_image, (string)$image, 'public');
 
                 return $new_image;
             } else {
@@ -55,8 +52,26 @@ class GetFunction
                 return $new_image;
             }
         } else {
-            return $new_image;//('/uploads/placeholder.jpg');
+
+            return $new_image;
+        }
+    }
+    public static function set_image_url_cache($file, $type = '') {
+        //print_r($filepath);
+
+        if (is_file($file)) {
+            $image = Image::make($file->getRealPath())->stream();
+            Storage::disk(config('voyager.storage.disk'))->put($type .'/' .  $file->getClientOriginalName(), $image->getContents(), 'public');
+                //->save(platformSlashes(public_path($new_image)));
+            return ($type .'/' .  $file->getClientOriginalName());
+
+        } else {
+            return ('/storage/placeholder.png');
         }
     }
 
+    public static function get_file_path($file) {
+
+            return platformSlashes(Storage::disk(config('voyager.storage.disk'))->path($file));
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -46,7 +47,10 @@ class IndexController extends Controller
     }
 
     public function getIndex(){
-        return $this->viewMaker('index');
+        $banner = Banner::with(['bannerImages.bannerLinkPosition'])->find(1);
+        return $this->viewMaker('index')->with([
+            'banner' =>$banner
+        ]);
     }
 
     public function getContacts(){
