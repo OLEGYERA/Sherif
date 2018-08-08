@@ -70,7 +70,7 @@ class DataTypesTableSeeder extends Seeder
         $dataType = $this->dataType('slug', 'categories');
         if (!$dataType->exists) {
             $dataType->fill([
-                'name'                  => 'Categories',
+                'name'                  => 'categories',
                 'display_name_singular' => __('Category'),
                 'display_name_plural'   => __('Categories'),
                 'icon'                  => 'voyager-categories',
@@ -131,7 +131,7 @@ class DataTypesTableSeeder extends Seeder
                 'display_name_plural'   => __('Subcategories'),
                 'icon'                  => 'voyager-categories',
                 'model_name'            => 'App\\Subcategory',
-                'controller'            => '',
+                'controller'            => '\\App\\Http\\Controllers\\Voyager\\SubcategoriesController',
                 'generate_permissions'  => 1,
                 'description'           => '',
             ])->save();

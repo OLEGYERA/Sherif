@@ -35,7 +35,7 @@ class PermissionsTableSeeder extends Seeder
 
         Permission::generateFor('Products');
 
-        Permission::generateFor('Categories');
+        Permission::generateFor('categories');
 
         Permission::generateFor('Currencies');
 

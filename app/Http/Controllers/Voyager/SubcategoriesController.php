@@ -2,24 +2,19 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use App\Currency;//for convertion
-use App\Product;//for convertion
-
-use App\Category;
-use App\Subcategory;
-
 use Illuminate\Http\Request;
-use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
+use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
-use TCG\Voyager\Database\Schema\SchemaManager;
+use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
-class ProductsController extends VoyagerBaseController
+class SubcategoriesController extends VoyagerBaseController
 {
+
     //***************************************
     //               ____
     //              |  _ \
@@ -31,6 +26,7 @@ class ProductsController extends VoyagerBaseController
     //      Browse our Data Type (B)READ
     //
     //****************************************
+
     public function index(Request $request)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
@@ -125,7 +121,6 @@ class ProductsController extends VoyagerBaseController
 
     public function show(Request $request, $id)
     {
-        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -157,17 +152,7 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.read";
         }
 
-        /* Currency displaying */
-        if($dataTypeContent->currency_final) {
-            $currency = Currency::where('id', '=', $dataTypeContent->currency_final)->first(); //retrieve currency object
-            $currency_name = $currency->name;
-        } else {
-            $currency_name = '';
-        }
-       
-
-        
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     //***************************************
@@ -185,7 +170,7 @@ class ProductsController extends VoyagerBaseController
     public function edit(Request $request, $id)
     {
         $slug = $this->getSlug($request);
-        
+
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         $relationships = $this->getRelationships($dataType);
@@ -199,13 +184,12 @@ class ProductsController extends VoyagerBaseController
             $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
-        $categories = Category::get();
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'edit');
 
         // Check permission
         $this->authorize('edit', $dataTypeContent);
-        
+
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
@@ -215,7 +199,7 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
@@ -230,34 +214,17 @@ class ProductsController extends VoyagerBaseController
 
         $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
 
-        /* Final price convertation */
-        if($request->currency_final) {
-            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
-
-            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-            
-            $request->merge(['price_final' => $price_final]);
-        }
-        
-        //$subcategory = Subcategory::where('id', '=', $request->product_belongstomany_subcategory_relationship[0])->first();
-        //$category = Category::where('id', '=', $subcategory->category)->first();
-        /* URL Generating */
-        //$URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug; 
-        /* Merging request with new values */
-        //$request->merge(['URL' => $URL]);
-        
         // Check permission
         $this->authorize('edit', $data);
-        
+
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id);
-        
+
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
-        
-        if (!$request->ajax()) {
 
+        if (!$request->ajax()) {
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
             event(new BreadDataUpdated($dataType, $data));
@@ -302,7 +269,6 @@ class ProductsController extends VoyagerBaseController
             $dataType->addRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
-        $categories = Category::get();
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'add');
 
@@ -315,7 +281,7 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     /**
@@ -341,22 +307,6 @@ class ProductsController extends VoyagerBaseController
             return response()->json(['errors' => $val->messages()]);
         }
 
-        /* Final price convertation */
-        if($request->currency_final) {
-            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
-
-            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-            
-            $request->merge(['price_final' => $price_final]);
-        }
-       
-        $subcategory = Subcategory::where('id', '=', $request->product_belongstomany_subcategory_relationship[0])->first();
-        $category = Category::where('id', '=', $subcategory->category)->first();
-
-        /* URL Generating */
-        $URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug; 
-        $request->merge(['URL' => $URL]);
-        
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 

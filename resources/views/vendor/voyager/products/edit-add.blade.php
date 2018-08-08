@@ -139,7 +139,7 @@
                                                 $row->field == 'name' || 
                                                 $row->field == 'slug' || 
                                                 $row->field == 'vendor_code' || 
-                                                $row->field == 'product_belongsto_category_relationship' || 
+                                                $row->field == 'product_belongstomany_subcategory_relationship' || 
                                                 $row->field == 'color' ||
                                                 $row->field == 'manufacturer' ||
                                                 $row->field == 'URL' ||

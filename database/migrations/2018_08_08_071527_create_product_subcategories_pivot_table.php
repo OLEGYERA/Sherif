@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateSubcategoriesTable extends Migration {
+class CreateProductSubcategoriesPivotTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,10 +12,11 @@ class CreateSubcategoriesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('Subcategories', function(Blueprint $table)
+		Schema::create('product_subcategories_pivot', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('name')->nullable();
+			$table->integer('product_id')->nullable();
+			$table->integer('subcategory_id')->nullable();
 			$table->timestamps();
 		});
 	}
@@ -28,7 +29,7 @@ class CreateSubcategoriesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('Subcategories');
+		Schema::drop('product_subcategories_pivot');
 	}
 
 }

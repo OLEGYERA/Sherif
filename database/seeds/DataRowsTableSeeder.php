@@ -569,21 +569,6 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 13,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'product_belongsto_category_relationship');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type'         => 'relationship',
-                'display_name' => __('Category'),
-                'required'     => 0,
-                'browse'       => 1,
-                'read'         => 1,
-                'edit'         => 1,
-                'add'          => 1,
-                'delete'       => 1,
-                'details'      => '{"model":"App\\\Category","table":"Categories","type":"belongsTo","column":"category","key":"id","label":"name","pivot_table":"Categories","pivot":"0","taggable":"0"}',
-                'order'        => 14,
-            ])->save();
-        }
         $dataRow = $this->dataRow($productsDataType, 'URL');
         if (!$dataRow->exists) {
             $dataRow->fill([
@@ -689,18 +674,18 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 19,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'product_belongsto_category_relationship');
+        $dataRow = $this->dataRow($productsDataType, 'product_belongstomany_subcategory_relationship');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'relationship',
-                'display_name' => __('Category'),
+                'display_name' => __('Подкатегория'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 1,
-                'details'      => '{"model":"App\\\Category","table":"Categories","type":"belongsTo","column":"category","key":"id","label":"name","pivot_table":"Categories","pivot":"0","taggable":"0"}',
+                'details'      => '{"model":"App\\\Subcategory","table":"Subcategories","type":"belongsToMany","column":"category","key":"id","label":"name","pivot_table":"product_subcategories_pivot","pivot":"1","taggable":"on"}',
                 'order'        => 14,
             ])->save();
         }
@@ -1102,7 +1087,7 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 0,
                 'delete'       => 1,
                 'details'      => '',
-                'order'        => 3,
+                'order'        => 4,
             ])->save();
         }
         $dataRow = $this->dataRow($productSubcategoriesDataType, 'updated_at');
@@ -1117,7 +1102,52 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 0,
                 'delete'       => 0,
                 'details'      => '',
-                'order'        => 4,
+                'order'        => 5,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productSubcategoriesDataType, 'subcategory_belongsto_category_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('categories'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '{"model":"App\\\Category","table":"categories","type":"belongsTo","column":"category","key":"id","label":"name","pivot_table":"Currencies","pivot":"0","taggable":"0"}',
+                'order'        => 7,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productSubcategoriesDataType, 'category');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Category'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 6,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productSubcategoriesDataType, 'slug');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Slug'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '{"slugify":{"origin":"name","forceUpdate":true}}',
+                'order'        => 3,
             ])->save();
         }
 
