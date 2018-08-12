@@ -14,12 +14,13 @@ class CreateBannerLinkPositionTable extends Migration {
 	{
 		Schema::create('banner_link_position', function(Blueprint $table)
 		{
-			$table->integer('banner_image_id');
+            $table->increments('id');
+		    $table->integer('banner_image_id');
 			$table->integer('banner_id');
 			$table->integer('banner_position_id');
 			$table->string('link')->nullable();
 			$table->string('position', 6)->nullable();
-			$table->primary(['banner_position_id','banner_image_id','banner_id']);
+			//$table->primary(['banner_position_id','banner_image_id','banner_id']);
 		});
 	}
 
