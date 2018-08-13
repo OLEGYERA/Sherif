@@ -89,7 +89,7 @@ class DataTypesTableSeeder extends Seeder
                 'display_name_plural'   => __('Currencies'),
                 'icon'                  => 'voyager-dollar',
                 'model_name'            => 'App\\Currency',
-                'controller'            => '',
+                'controller'            => '\\App\Http\\Controllers\\Voyager\\CurrenciesController',
                 'generate_permissions'  => 1,
                 'description'           => '',
             ])->save();

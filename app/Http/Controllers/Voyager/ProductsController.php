@@ -48,7 +48,7 @@ class ProductsController extends VoyagerBaseController
         $searchable = $dataType->server_side ? array_keys(SchemaManager::describeTable(app($dataType->model_name)->getTable())->toArray()) : '';
         $orderBy = $request->get('order_by');
         $sortOrder = $request->get('sort_order', null);
-
+        
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $relationships = $this->getRelationships($dataType);
