@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Voyager;
 
 use App\Currency;//for convertion
+use App\Models\Attribute;
 use App\Product;//for convertion
 
 use App\Category;
@@ -164,7 +165,8 @@ class ProductsController extends VoyagerBaseController
         } else {
             $currency_name = '';
         }
-       
+        $attributes =  Attribute::all();
+        //$product_attributes = A
 
         
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name);
@@ -238,7 +240,25 @@ class ProductsController extends VoyagerBaseController
             
             $request->merge(['price_final' => $price_final]);
         }
-        
+
+
+        /// addimage
+        if ($request->addimage) {
+            $strimage = array();
+            foreach ($request->addimage as $image){
+                if (is_array($image) && isset($image['image'])) {
+                    if (!is_file($image['image'])) {
+                        $strimage[] .= $image['image'];
+                    }
+                }
+            }
+            $data->addimage = json_encode($strimage);
+        }
+        if (!$request->product_belongstomany_attribute_relationship) {
+            $request->product_belongstomany_attribute_relationship = [];
+        }
+
+       // dd($dataType->editRows);
         //$subcategory = Subcategory::where('id', '=', $request->product_belongstomany_subcategory_relationship[0])->first();
         //$category = Category::where('id', '=', $subcategory->category)->first();
         /* URL Generating */
@@ -248,14 +268,13 @@ class ProductsController extends VoyagerBaseController
         
         // Check permission
         $this->authorize('edit', $data);
-        
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id);
-        
+
+        //$date = $request->all();
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
-        
         if (!$request->ajax()) {
 
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
@@ -356,7 +375,7 @@ class ProductsController extends VoyagerBaseController
         /* URL Generating */
         $URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug; 
         $request->merge(['URL' => $URL]);
-        
+
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 

@@ -30,6 +30,7 @@
                         <!-- CSRF TOKEN -->
                         {{ csrf_field() }}
 
+
                         <div class="panel-body">
 
                             @if (count($errors) > 0)
@@ -47,7 +48,6 @@
                                 $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
                             @endphp
 
-                            
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#tab1">Описание</a></li>
                     <li><a data-toggle="tab" href="#tab2">Информация о товаре</a></li>
@@ -56,18 +56,17 @@
                     <li><a data-toggle="tab" href="#tab5">Сопутствующий</a></li>
                     <li><a data-toggle="tab" href="#tab6">Похожие товары</a></li>
                 </ul>
-
                 <div class="tab-content">
                     <div id="tab1" class="tab-pane fade in active">
                         <div class="panel panel-bordered col-lg-12">
                             <div class="panel-body">
-                                <div class="form-group @if($dataTypeRows[12]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
-                                    {{ $dataTypeRows[12]->slugify }}
-                                    <label for="name">{{ $dataTypeRows[12]->display_name }}</label>
-                                        {!! app('voyager')->formField($dataTypeRows[12], $dataType, $dataTypeContent) !!}
+                                <div class="form-group @if($dataTypeRows[13]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                    {{ $dataTypeRows[13]->slugify }}
+                                    <label for="name">{{ $dataTypeRows[13]->display_name }}</label>
+                                        {!! app('voyager')->formField($dataTypeRows[13], $dataType, $dataTypeContent) !!}
 
-                                    @foreach (app('voyager')->afterFormFields($dataTypeRows[12], $dataType, $dataTypeContent) as $after)
-                                        {!! $after->handle($dataTypeRows[12], $dataType, $dataTypeContent) !!}
+                                    @foreach (app('voyager')->afterFormFields($dataTypeRows[13], $dataType, $dataTypeContent) as $after)
+                                        {!! $after->handle($dataTypeRows[13], $dataType, $dataTypeContent) !!}
                                     @endforeach
 
                                 </div>
@@ -84,6 +83,7 @@
                                     <table class="table table-hover">
                                         <tbody>
                                             @foreach($dataTypeRows as $row)
+
                                                 <tr>
                                                 @if($row->field == 'description' || 
                                                     $row->field == 'characteristics' || 
@@ -94,7 +94,10 @@
                                                     $row->field == 'code' ||
                                                     $row->field == 'price_final' || 
                                                     $row->field == 'product_hasone_currency_relationship' ||
-                                                    $row->field == 'profitability')
+                                                    $row->field == 'profitability' ||
+                                                    $row->field == 'mainimage' ||
+                                                    $row->field == 'addimage' ||
+                                                    $row->field == 'product_belongstomany_attribute_relationship')
                                                         <?php continue; ?>
                                                 @endif
                                                 <!-- GET THE DISPLAY OPTIONS -->
@@ -134,20 +137,23 @@
                                 <div class="panel-body">
                                     <tr>
                                         @foreach($dataTypeRows as $row)
-                                            @if($row->field == 'description' || 
-                                                $row->field == 'characteristics' || 
-                                                $row->field == 'name' || 
-                                                $row->field == 'slug' || 
-                                                $row->field == 'vendor_code' || 
-                                                $row->field == 'product_belongstomany_subcategory_relationship' || 
+                                            @if($row->field == 'description' ||
+                                                $row->field == 'characteristics' ||
+                                                $row->field == 'name' ||
+                                                $row->field == 'slug' ||
+                                                $row->field == 'vendor_code' ||
+                                                $row->field == 'product_belongstomany_subcategory_relationship' ||
                                                 $row->field == 'color' ||
                                                 $row->field == 'manufacturer' ||
                                                 $row->field == 'URL' ||
                                                 $row->field == 'code' ||
                                                 $row->field == 'publication' ||
+                                                $row->field == 'addimage' ||
+                                                $row->field == 'mainimage' ||
                                                 $row->field == 'product_belongsto_product_status_relationship' ||
-                                                $row->field == 'product_belongsto_product_label_relationship')
-                                                    <?php continue; ?>
+                                                $row->field == 'product_belongsto_product_label_relationship' ||
+                                                $row->field == 'product_belongstomany_attribute_relationship')
+                                                <?php continue; ?>
                                             @endif
                                             <!-- GET THE DISPLAY OPTIONS -->
                                             @php
@@ -176,19 +182,362 @@
                             </div>
                         </div>
                     </div>
-                    <div id="tab3" class="tab-pane fade"></div>
+                    <div id="tab3" class="tab-pane fade">
+                        <!-- ### IMAGE ### -->
+                        <div class="panel panel-bordered panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="icon wb-image"></i> {{ __('voyager::post.image') }}</h3>
+                                <div class="panel-actions">
+                                    <a class="panel-action voyager-angle-down" data-toggle="panel-collapse" aria-hidden="true"></a>
+                                </div>
+                            </div>
+                                @php
+                                    $imagesjson = json_decode($dataTypeContent->addimage);
+                                    $images = array();
+                                    if(isset($imagesjson)) {
+                                        foreach ($imagesjson as $key => $image) {
+                                            $images[] = [
+                                                'image' => $image,
+                                                'order' => $key,
+                                            ];
+                                        }
+                                    }
+                                @endphp
+                                <table id="image" class="table table-striped table-bordered table-hover panel-body">
+                                    <thead>
+                                    <tr>
+                                        <td class="text-left">Главное зображение</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="file-preview-thumbnails" data-field-name="addimage" style="float:left;padding-right:15px;">
+                                                    @if(isset($dataTypeContent->mainimage))
+                                                        <img src="@if( !filter_var($dataTypeContent->mainimage, FILTER_VALIDATE_URL)){{ Voyager::image( $dataTypeContent->mainimage ) }}@else '/storage/placeholder.png' @endif"
+                                                             style="max-width:200px; height:auto; clear:both; display:block; padding:2px; border:1px solid #ddd; margin-bottom:10px;">
+                                                    @else
+                                                        <img src="/storage/placeholder.png" style="max-width:200px; height:auto; clear:both; display:block; padding:2px; border:1px solid #ddd; margin-bottom:10px;">
+                                                    @endif
+                                                </div>
+
+                                                <input id="mainimage" type="file" name="mainimage" accept="image/*">
+                                                <script>
+                                                    $(document).ready(function() {
+                                                        $("#mainimage").fileinput({
+                                                            showUpload: false,
+                                                            maxFileCount: 1,
+                                                            showRemove: false,
+                                                            previewFileType: 'image',
+                                                            initialPreviewCount: 1,
+                                                            autoReplace: true,
+                                                            browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+                                                            removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+                                                            allowedFileTypes: ['image'],
+                                                            previewTemplates: {
+                                                                image: '<div class="img_settings_container" id="{previewId}" data-fileindex="{fileindex}">\n' +
+                                                                '   <img src="{data}" style="max-width: 20%;" class="" title="{caption}" alt="{caption}">\n' +
+                                                                '</div>\n',
+                                                                generic: '<div class="img_settings_container" id="{previewId}" data-fileindex="{fileindex}">\n' +
+                                                                '   {content}\n' +
+                                                                '</div>\n'
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                                <table id="images" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <td class="text-left">Изображение</td>
+                                        <td class="text-right">Сортировка</td>
+                                        <td></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $image_row = 0; ?>
+                                    <?php foreach ($images as $image) { ?>
+                                    <tr id="image-row<?php echo $image_row; ?>">
+                                        <td class="text-left">
+                                            <div class="img_settings_container" data-field-name="addimage" style="float:left;padding-right:15px;">
+                                                <img src="{{ Voyager::image( $image['image'] ) }}" data-image="{{ $image['image'] }}" data-id="{{ $dataTypeContent->id }}" style="max-width:200px; height:auto; clear:both; display:block; padding:2px; border:1px solid #ddd; margin-bottom:5px;">
+                                            </div>
+                                            <input id="inputImg<?php echo $image_row; ?>" type="file" name="addimage[<?php echo $image_row; ?>]">
+                                            <script>
+                                                $(document).ready(function() {
+                                                    $("#inputImg<?php echo $image_row; ?>").fileinput({
+                                                        showUpload: false,
+                                                        maxFileCount: 1,
+                                                        showRemove: false,
+                                                        previewFileType: 'image',
+                                                        initialPreviewCount: 1,
+                                                        autoReplace: true,
+                                                        allowedFileTypes: ['image'],
+                                                        previewTemplates: {
+                                                            image: '<div class="img_settings_container" id="{previewId}" data-fileindex="{fileindex}">\n' +
+                                                            '   <img src="{data}" style="max-width: 20%;" class="" title="{caption}" alt="{caption}">\n' +
+                                                            '</div>\n',
+                                                            generic: '<div class="img_settings_container" id="{previewId}" data-fileindex="{fileindex}">\n' +
+                                                            '   {content}\n' +
+                                                            '</div>\n'
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+
+                                            <input type="hidden" name="addimage[<?php echo $image_row; ?>][image]" value="<?php echo $image['image']; ?>" id="input-image<?php echo $image_row; ?>" />
+                                        </td>
+                                         <td class="text-right" style="width: 10%;"><input type="text"
+                                                                                          name="addimage[<?php echo $image_row; ?>][order]"
+                                                                                          value="{{$image['order'] }}"
+                                                                                          placeholder="сортировка"
+                                                                                          class="form-control"/></td>
+                                        <td class="text-left">
+                                            <button type="button"
+                                                    onclick="$('#image-row<?php echo $image_row; ?>, .tooltip').remove();"
+                                                    data-toggle="tooltip" title="{{ trans('admin.button_remove')}}"
+                                                    class="btn btn-danger"><i class="voyager-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <?php $image_row++; ?>
+                                    <?php } ?>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td class="text-left">
+                                            <button type="button" onclick="addImage();" data-toggle="tooltip"
+                                                    title="Добавить" class="btn btn-primary"><i class="voyager-plus"></i></button>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            <script type="text/javascript">
+                               // $(document).ready(function () {
+                                    var image_row = <?php echo $image_row; ?>;
+
+                                    function addImage() {
+                                        console.log(image_row);
+                                        html = '<tr id="image-row' + image_row + '">';
+                                        html +=  '    <td class="text-left">  '  +
+                                            '     <div class="img_settings_container" data-field-name="addimage" style="float:left;padding-right:15px;">  '  +
+                                            '      <img src="/storage/placeholder.png" data-id="" style="max-width:200px; height:auto; clear:both; display:block; padding:2px; border:1px solid #ddd; margin-bottom:5px;"> ' +
+                                            '    </div>' +
+                                            '    <input id="inputImg' +image_row +'" type="file" name="addimage[' +image_row +']"> ' +
+                                            '    <script>'  +
+                                            '  $(document).ready(function() {' + '\n' +
+                                            '    $("#inputImg' + image_row + '").fileinput({ ' + '\n' +
+                                            '            showUpload: false, '  + '\n' +
+                                            '            maxFileCount: 1, '  + '\n' +
+                                            '            showRemove: false, '  + '\n' +
+                                            '            previewFileType: "image", '  + '\n' +
+                                            '            initialPreviewCount: 1, '  + '\n' +
+                                            '            autoReplace: true, '  + '\n' +
+                                            '            allowedFileTypes: ["image"], '  + '\n' +
+                                            '            previewTemplates: { '  + '\n' +
+                                            '                image: \'<div class="" id="{previewId}" data-fileindex="{fileindex}"><img src="{data}" style="max-width: 100%;" class="" title="{caption}" alt="{caption}"></div>\',' +
+                                            '               generic: \'<div class="" id="{previewId}" data-fileindex="{fileindex}">{content}</div>\'' +
+                                            '            } '  + '\n' +
+                                            '        }); '  + '\n' +
+                                            '   }); '  + '\n' +
+                                            '    <\/script> '  +
+                                            '  </td>  ' ;
+                                        html += '  <td class="text-right"><input type="text" name="addimage[' + image_row + '][order]" value="0" placeholder="Сортировка" class="form-control" /></td>';
+                                        html += '  <td class="text-left"><button type="button" onclick="$(\'#image-row' + image_row  + '\').remove();" data-toggle="tooltip" title="Удалить" class="btn btn-danger"><i class="voyager-trash"></i></button></td>';
+
+
+                                        //  '       <input type="hidden" name="banner_image[' + image_row + '][image]" value="" id="input-image' + image_row + '" />' ;
+                                        html += '</tr>';
+
+                                        $('#images tbody').append(html);
+                                        image_row++;
+                                    }
+                               // });
+                            </script>
+
+                            <div class="panel-footer">
+                                <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                            </div>
+                        </div>
+                    </div>
                     <div id="tab4" class="tab-pane fade">
                         <div class="panel panel-bordered col-lg-12">
                             <div class="panel-body">
-                                <div class="form-group @if($dataTypeRows[14]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
-                                    {{ $dataTypeRows[14]->slugify }}
-                                    <label for="name">{{ $dataTypeRows[14]->display_name }}</label>
-                                        {!! app('voyager')->formField($dataTypeRows[14], $dataType, $dataTypeContent) !!}
+                                <div class="form-group @if($dataTypeRows[15]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                    {{ $dataTypeRows[15]->slugify }}
+                                    <label for="name">{{ $dataTypeRows[15]->display_name }}</label>
+                                        {!! app('voyager')->formField($dataTypeRows[15], $dataType, $dataTypeContent) !!}
 
-                                    @foreach (app('voyager')->afterFormFields($dataTypeRows[14], $dataType, $dataTypeContent) as $after)
-                                        {!! $after->handle($dataTypeRows[14], $dataType, $dataTypeContent) !!}
+                                    @foreach (app('voyager')->afterFormFields($dataTypeRows[15], $dataType, $dataTypeContent) as $after)
+                                        {!! $after->handle($dataTypeRows[15], $dataType, $dataTypeContent) !!}
                                     @endforeach
                                 </div>
+                            </div>
+                            <div class="panel-body panel-bordered col-lg-12">
+
+                                @if (isset($dataTypeRows[25])) {{-- product_belongstomany_attribute_relationship --}}
+                                @php
+
+                                    $row = $dataTypeRows[25];
+                                    $options = json_decode($row->details);
+                                    $display_options = isset($options->display) ? $options->display : NULL;
+                                    $selected_values = isset($dataTypeContent) ? $dataTypeContent->belongsToMany($options->model, $options->pivot_table)->pluck($options->table.'.'.$options->key)->all() : array();
+                                    $relationshipOptions = app($options->model)->all();
+                                    $relationshipField = $row->field;
+                                    $relationshipData = (isset($data)) ? $data : $dataTypeContent;
+	            	                $selected_values = isset($relationshipData) ? $relationshipData->belongsToMany($options->model, $options->pivot_table)->withPivot('value')->get() : array();
+                                   // dd($dataTypeContent->belongsToMany($options->model, $options->pivot_table)->get());
+                                @endphp
+
+                                <div id="table" class="table-editable">
+                                    <span class="table-add glyphicon glyphicon-plus"></span>
+                                    <table class="table">
+                                        <tr>
+                                            <th>Имя Атрибута</th>
+                                            <th>Значение</th>
+                                            <th></th>
+                                        </tr>
+                                        @php $r = 0; @endphp
+
+                                        @foreach($selected_values as $k => $key)
+                                            <tr>
+                                                <td contenteditable="true">
+                                                    @if(isset($options->model) && isset($options->type))
+                                                        @if(class_exists($options->model))
+
+                                                            <select class="form-control select2 select-{{$r}}" name="{{ $relationshipField }}[{{$k}}][attribute_id]">
+
+                                                                @if($row->required === 0)
+                                                                    <option value="">{{__('voyager::generic.none')}}</option>
+                                                                @endif
+
+                                                                @foreach($relationshipOptions as $relationshipOption)
+
+                                                                    <option value="{{ $relationshipOption->{$options->key} }}" @if($relationshipOption->{$options->key} === $key->{$options->key}){{ 'selected="selected"' }}@endif>{{ $relationshipOption->{$options->label} }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @endif
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <input  class="form-control" name="{{ $relationshipField }}[{{$k}}][value]" value="{{ $key->pivot->value }}">
+                                                </td>
+                                                <td>
+                                                    <span class="table-remove glyphicon glyphicon-remove"></span>
+                                                </td>
+                                            </tr>
+                                            @php $r++; @endphp
+                                        @endforeach
+                                        <!-- This is our clonable table line -->
+                                        <tr class="hide">
+                                            <td contenteditable="true">
+                                                @if(isset($options->model) && isset($options->type))
+                                                    @if(class_exists($options->model))
+                                                        <select class="form-control hiddenatr select_new_row">
+                                                            @if($row->required === 0)
+                                                                <option value="">{{__('voyager::generic.none')}}</option>
+                                                            @endif
+
+                                                            @foreach($relationshipOptions as $relationshipOption)
+                                                                <option value="{{ $relationshipOption->{$options->key} }}">{{ $relationshipOption->{$options->label} }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <input class="form-control select_new_attr_val_row">
+                                            </td>
+                                            <td>
+                                                <span class="table-remove glyphicon glyphicon-remove"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <script type="text/javascript">
+                                    var $TABLE = $('#table');
+                                    var $BTN = $('#export-btn');
+                                    var $EXPORT = $('#export');
+                                    var $row = {{ $r }} ;
+                                    var $fieldname = '{{ $relationshipField }}';
+                                   // $('select.hiddenatr').select2({
+                                    //    width: "100%"
+                                   // });
+                                    $(document).ready(function() {
+
+                                        //function to initialize select2
+                                        function initializeSelect2(selectElementObj) {
+                                            selectElementObj.select2({
+                                                width: "100%"
+                                            });
+                                        }
+
+                                        $('.table-add').click(function () {
+                                            var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line').addClass('addtr'+$row);
+                                            $clone.find('select.select_new_row').attr("name",$fieldname+'['+$row+']'+'[attribute_id]');
+                                            $clone.find('.select_new_attr_val_row').attr("name",$fieldname+'['+$row+']'+'[value]');
+                                            $TABLE.find('table').append($clone);
+                                            $('tr.addtr'+$row+' select.select_new_row').select2({
+                                                width: "100%"
+                                            });
+                                            $row++;
+                                        });
+
+                                        $('.table-remove').click(function () {
+                                            $(this).parents('tr').detach();
+                                        });
+
+                                        $('.table-up').click(function () {
+                                            var $row = $(this).parents('tr');
+                                            if ($row.index() === 1) return; // Don't go above the header
+                                            $row.prev().before($row.get(0));
+                                        });
+
+                                        $('.table-down').click(function () {
+                                            var $row = $(this).parents('tr');
+                                            $row.next().after($row.get(0));
+                                        });
+                                    });
+
+
+                                    // A few jQuery helpers for exporting only
+                                    jQuery.fn.pop = [].pop;
+                                    jQuery.fn.shift = [].shift;
+
+                                    $BTN.click(function () {
+                                        var $rows = $TABLE.find('tr:not(:hidden)');
+                                        var headers = [];
+                                        var data = [];
+
+                                        // Get the headers (add special header logic here)
+                                        $($rows.shift()).find('th:not(:empty)').each(function () {
+                                            headers.push($(this).text().toLowerCase());
+                                        });
+
+                                        // Turn all existing rows into a loopable array
+                                        $rows.each(function () {
+                                            var $td = $(this).find('td');
+                                            var h = {};
+
+                                            // Use the headers from earlier to name our hash keys
+                                            headers.forEach(function (header, i) {
+                                                h[header] = $td.eq(i).text();
+                                            });
+
+                                            data.push(h);
+                                        });
+
+
+                                        /////////////////////////add image /////
+
+                                    });
+                                </script>
+                                @endif
                             </div>
                             <div class="panel-footer">
                                 <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
@@ -244,8 +593,8 @@
 
 @section('javascript')
     <script>
-        var params = {}
-        var $image
+        var params = {};
+        var $image;
 
         $('document').ready(function () {
             $('.toggleswitch').bootstrapToggle();

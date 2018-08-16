@@ -57,11 +57,10 @@ class GetFunction
         }
     }
     public static function set_image_url_cache($file, $type = '') {
-        //print_r($filepath);
-
         if (is_file($file)) {
-            $image = Image::make($file->getRealPath())->stream();
-            Storage::disk(config('voyager.storage.disk'))->put($type .'/' .  $file->getClientOriginalName(), $image->getContents(), 'public');
+            $file->move(storage_path() . '/app/public'.'/'.$type,$file->getClientOriginalName());
+            //$image = Image::make($file->getRealPath())->stream();
+            //Storage::disk(config('voyager.storage.disk'))->put($type .'/' .  $file->getClientOriginalName(), $file, 'public');
                 //->save(platformSlashes(public_path($new_image)));
             return ($type .'/' .  $file->getClientOriginalName());
 
