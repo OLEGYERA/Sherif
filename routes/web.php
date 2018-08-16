@@ -26,6 +26,9 @@ Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 
 
+    // Update currency rate
+    Route::get('/currency_update', 'Voyager\CurrenciesController@currencyUpdate');
+
     ////////////abanners
     Route::put('banner/{id}/save', [
         'uses' => 'Voyager\AdminBannerController@storeBanner',
@@ -35,6 +38,8 @@ Route::group(['prefix' => 'admin'], function () {
         'uses' => 'Voyager\AdminBannerController@storeBanner',
         'as'   => 'admin.banner.store'
     ]);
+
+   
 });
 
 Auth::routes();
