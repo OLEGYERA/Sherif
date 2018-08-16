@@ -35,6 +35,11 @@ class CreateProductsTable extends Migration {
 			$table->integer('status')->nullable();
 			$table->integer('label')->nullable();
 			$table->string('code')->nullable();
+            $table->string('mainimage', 191)->nullable();
+            $table->string('addimage', 1024)->nullable();
+            $table->string('concomitant', 1024)->nullable();
+            $table->string('similar', 1024)->nullable();
+
 		});
 	}
 
