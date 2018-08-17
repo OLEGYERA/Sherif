@@ -367,7 +367,7 @@
                     </div>
                     <div id="tab4" class="tab-pane fade">
                         <div class="panel panel-bordered col-lg-12">
-                            <div class="panel-body">
+                            <!--<div class="panel-body">
                                 <div class="form-group @if($dataTypeRows[15]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
                                     {{ $dataTypeRows[15]->slugify }}
                                     <label for="name">{{ $dataTypeRows[15]->display_name }}</label>
@@ -377,7 +377,7 @@
                                         {!! $after->handle($dataTypeRows[15], $dataType, $dataTypeContent) !!}
                                     @endforeach
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="panel-body panel-bordered col-lg-12">
 
                                 @if (isset($dataTypeRows[25])) {{-- product_belongstomany_attribute_relationship --}}
@@ -386,16 +386,16 @@
                                     $row = $dataTypeRows[25];
                                     $options = json_decode($row->details);
                                     $display_options = isset($options->display) ? $options->display : NULL;
-                                    $selected_values = isset($dataTypeContent) ? $dataTypeContent->belongsToMany($options->model, $options->pivot_table)->pluck($options->table.'.'.$options->key)->all() : array();
+                                    //$selected_values = isset($dataTypeContent) ? $dataTypeContent->belongsToMany($options->model, $options->pivot_table)->pluck($options->table.'.'.$options->key)->all() : array();
                                     $relationshipOptions = app($options->model)->all();
                                     $relationshipField = $row->field;
                                     $relationshipData = (isset($data)) ? $data : $dataTypeContent;
 	            	                $selected_values = isset($relationshipData) ? $relationshipData->belongsToMany($options->model, $options->pivot_table)->withPivot('value')->get() : array();
-                                   // dd($dataTypeContent->belongsToMany($options->model, $options->pivot_table)->get());
+                                    //dd($relationshipData);
                                 @endphp
 
-                                <div id="table" class="table-editable">
-                                    <span class="table-add glyphicon glyphicon-plus"></span>
+                                <div id="table-attr" class="table-editable">
+                                    <span class="table-add-attr glyphicon glyphicon-plus"></span>
                                     <table class="table">
                                         <tr>
                                             <th>Имя Атрибута</th>
@@ -409,12 +409,7 @@
                                                 <td contenteditable="true">
                                                     @if(isset($options->model) && isset($options->type))
                                                         @if(class_exists($options->model))
-
-                                                            <select class="form-control select2 select-{{$r}}" name="{{ $relationshipField }}[{{$k}}][attribute_id]">
-
-                                                                @if($row->required === 0)
-                                                                    <option value="">{{__('voyager::generic.none')}}</option>
-                                                                @endif
+                                                           <select class="form-control select2 select-{{$r}}" name="{{ $relationshipField }}[{{$k }}][attribute_id]">
 
                                                                 @foreach($relationshipOptions as $relationshipOption)
 
@@ -438,10 +433,7 @@
                                             <td contenteditable="true">
                                                 @if(isset($options->model) && isset($options->type))
                                                     @if(class_exists($options->model))
-                                                        <select class="form-control hiddenatr select_new_row">
-                                                            @if($row->required === 0)
-                                                                <option value="">{{__('voyager::generic.none')}}</option>
-                                                            @endif
+                                                        <select class="form-control hiddenatr select_new_row_attr">
 
                                                             @foreach($relationshipOptions as $relationshipOption)
                                                                 <option value="{{ $relationshipOption->{$options->key} }}">{{ $relationshipOption->{$options->label} }}</option>
@@ -460,11 +452,11 @@
                                     </table>
                                 </div>
                                 <script type="text/javascript">
-                                    var $TABLE = $('#table');
+                                    var $TABLEATTR = $('#table-attr');
                                     var $BTN = $('#export-btn');
                                     var $EXPORT = $('#export');
-                                    var $row = {{ $r }} ;
-                                    var $fieldname = '{{ $relationshipField }}';
+                                    var $rowattr = {{ $r }} ;
+                                    var $fieldnameattr = 'product_belongstomany_attribute_relationship';//'{{ $relationshipField }}';
                                    // $('select.hiddenatr').select2({
                                     //    width: "100%"
                                    // });
@@ -477,15 +469,15 @@
                                             });
                                         }
 
-                                        $('.table-add').click(function () {
-                                            var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line').addClass('addtr'+$row);
-                                            $clone.find('select.select_new_row').attr("name",$fieldname+'['+$row+']'+'[attribute_id]');
-                                            $clone.find('.select_new_attr_val_row').attr("name",$fieldname+'['+$row+']'+'[value]');
-                                            $TABLE.find('table').append($clone);
-                                            $('tr.addtr'+$row+' select.select_new_row').select2({
+                                        $('.table-add-attr').click(function () {
+                                            var $clone = $TABLEATTR.find('tr.hide').clone(true).removeClass('hide table-line').addClass('addtr'+$rowattr);
+                                            $clone.find('select.select_new_row_attr').attr("name",$fieldnameattr+'['+$rowattr+']'+'[attribute_id]');
+                                            $clone.find('.select_new_attr_val_row').attr("name",$fieldnameattr+'['+$rowattr+']'+'[value]');
+                                            $TABLEATTR.find('table').append($clone);
+                                            $('tr.addtr'+$rowattr+' select.select_new_row_attr').select2({
                                                 width: "100%"
                                             });
-                                            $row++;
+                                            $rowattr++;
                                         });
 
                                         $('.table-remove').click(function () {
@@ -544,8 +536,235 @@
                             </div>
                         </div>
                     </div>
-                    <div id="tab5" class="tab-pane fade"></div>
-                    <div id="tab6" class="tab-pane fade"></div>
+                    <div id="tab5" class="tab-pane fade">
+                        <div class="panel-body panel-bordered col-lg-12">
+
+                            @if (isset($dataTypeRows[26])) {{-- concomitant --}}
+                            @php
+
+                                $row = $dataTypeRows[26];
+
+                                $options = json_decode($row->details);
+                                $display_options = isset($options->display) ? $options->display : NULL;
+
+                                $selected_values = isset($dataTypeContent) ? stripslashes($dataTypeContent->{$row->field}) : null;
+                                $selected_values = (json_decode($selected_values));
+                                if(!$selected_values) {
+                                    $selected_values = array();
+                                }
+
+                                $relationshipOptions = app('App\Product')->all();
+                                $relationshipData = (isset($data)) ? $data : $dataTypeContent;
+                                //$selected_values = isset($relationshipData) ? $relationshipData->belongsToMany($options->model, $options->pivot_table)->withPivot('value')->get() : array();
+                               // dd($dataTypeContent->belongsToMany($options->model, $options->pivot_table)->get());
+                            @endphp
+
+                            <div id="tableconcomitant" class="table-editable">
+                                <span class="table-add-concomitant glyphicon glyphicon-plus"></span>
+                                <table class="table">
+                                    <tr>
+                                        <th>Товар</th>
+                                        <th></th>
+                                    </tr>
+                                    @php $c = 0; @endphp
+                                    @if (isset($selected_values))
+                                        @foreach($selected_values as $k => $key)
+                                            <tr>
+                                                <td contenteditable="true">
+                                                    @if(class_exists('App\Product'))
+
+                                                        <select class="form-control select2 selectconcomitant-{{$r}}" name="{{ $row->field }}[{{$k}}]">
+
+                                                            @foreach($relationshipOptions as $relationshipOption)
+                                                                <option value="{{ $relationshipOption->id }}" @if($relationshipOption->id == $key){{ 'selected="selected"' }}@endif>{{ $relationshipOption->name }}</option>
+                                                            @endforeach
+
+                                                        </select>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="table-remove glyphicon glyphicon-remove"></span>
+                                                </td>
+                                            </tr>
+                                        @php $c++; @endphp
+                                        @endforeach
+                                    @endif
+                                <!-- This is our clonable table line -->
+                                    <tr class="hide">
+                                        <td contenteditable="true">
+                                            @if(class_exists('App\Product'))
+                                                <select class="form-control hiddenatr select_new_row_concomitant">
+                                                    @foreach($relationshipOptions as $relationshipOption)
+                                                        <option value="{{ $relationshipOption->id }}">{{ $relationshipOption->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span class="table-remove glyphicon glyphicon-remove"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <script type="text/javascript">
+                                var $TABLECON = $('#tableconcomitant');
+                                var $rowcon = {{ $c }} ;
+                                var $fieldnamecon = 'concomitant'//'{{ $row->field }}';
+                                // $('select.hiddenatr').select2({
+                                //    width: "100%"
+                                // });
+                                $(document).ready(function() {
+
+
+                                    $('.table-add-concomitant').click(function () {
+                                        var $clone = $TABLECON.find('tr.hide').clone(true).removeClass('hide table-line').addClass('addconcom'+$rowcon);
+                                        console.log($clone);
+                                        $clone.find('select.select_new_row_concomitant').attr("name",$fieldnamecon+'['+$rowcon+']');
+                                        $TABLECON.find('table').append($clone);
+                                        $('tr.addconcom'+$rowcon+' select.select_new_row_concomitant').select2({
+                                            width: "100%"
+                                        });
+                                        $rowcon++;
+                                    });
+
+                                    $('.table-remove').click(function () {
+                                        $(this).parents('tr').detach();
+                                    });
+
+                                    $('.table-up').click(function () {
+                                        var $row = $(this).parents('tr');
+                                        if ($row.index() === 1) return; // Don't go above the header
+                                        $row.prev().before($row.get(0));
+                                    });
+
+                                    $('.table-down').click(function () {
+                                        var $row = $(this).parents('tr');
+                                        $row.next().after($row.get(0));
+                                    });
+                                });
+
+                            </script>
+                            @endif
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                        </div>
+
+                    </div>
+                    <div id="tab6" class="tab-pane fade">
+                        <div class="panel-body panel-bordered col-lg-12">
+
+                            @if (isset($dataTypeRows[27])) {{-- similar --}}
+                            @php
+
+                                $row = $dataTypeRows[27];
+
+                                $options = json_decode($row->details);
+                                $display_options = isset($options->display) ? $options->display : NULL;
+
+                                $selected_values = isset($dataTypeContent) ? stripslashes($dataTypeContent->{$row->field}) : null;
+                                $selected_values = (json_decode($selected_values));
+                                if(!$selected_values) {
+                                    $selected_values = array();
+                                }
+
+                                //$relationshipOptions = app('App\Product')->all();
+                                $relationshipData = (isset($data)) ? $data : $dataTypeContent;
+                                //$selected_values = isset($relationshipData) ? $relationshipData->belongsToMany($options->model, $options->pivot_table)->withPivot('value')->get() : array();
+                               // dd($dataTypeContent->belongsToMany($options->model, $options->pivot_table)->get());
+                            @endphp
+
+                            <div id="tablesimilar" class="table-editable">
+                                <span class="table-add-similar glyphicon glyphicon-plus"></span>
+                                <table class="table">
+                                    <tr>
+                                        <th>Товар</th>
+                                        <th></th>
+                                    </tr>
+                                    @php $s = 0; @endphp
+                                    @if (isset($selected_values))
+                                        @foreach($selected_values as $k => $key)
+                                            <tr>
+                                                <td contenteditable="true">
+                                                    @if(class_exists('App\Product'))
+
+                                                        <select class="form-control select2 selectsimilar-{{$r}}" name="{{ $row->field }}[{{$k}}]">
+
+                                                            @foreach($relationshipOptions as $relationshipOption)
+                                                                <option value="{{ $relationshipOption->id }}" @if($relationshipOption->id == $key){{ 'selected="selected"' }}@endif>{{ $relationshipOption->name }}</option>
+                                                            @endforeach
+
+                                                        </select>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="table-remove glyphicon glyphicon-remove"></span>
+                                                </td>
+                                            </tr>
+                                        @php $s++; @endphp
+                                    @endforeach
+                                @endif
+                                <!-- This is our clonable table line -->
+                                    <tr class="hide">
+                                        <td contenteditable="true">
+                                            @if(class_exists('App\Product'))
+                                                <select class="form-control hiddenatr select_new_row_similar">
+                                                    @foreach($relationshipOptions as $relationshipOption)
+                                                        <option value="{{ $relationshipOption->id }}">{{ $relationshipOption->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span class="table-remove glyphicon glyphicon-remove"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <script type="text/javascript">
+                                var $TABLESIM = $('#tablesimilar');
+                                var $rowsim = {{ $c }} ;
+                                var $fieldnamesim = 'similar'//'{{ $row->field }}';
+                                // $('select.hiddenatr').select2({
+                                //    width: "100%"
+                                // });
+                                $(document).ready(function() {
+
+
+                                    $('.table-add-similar').click(function () {
+                                        var $clone = $TABLESIM.find('tr.hide').clone(true).removeClass('hide table-line').addClass('addsim'+$rowsim);
+                                        //console.log($clone);
+                                        $clone.find('select.select_new_row_similar').attr("name",$fieldnamesim+'['+$rowsim+']');
+                                        $TABLESIM.find('table').append($clone);
+                                        $('tr.addsim'+$rowsim+' select.select_new_row_similar').select2({
+                                            width: "100%"
+                                        });
+                                        $rowsim++;
+                                    });
+
+                                    $('.table-remove').click(function () {
+                                        $(this).parents('tr').detach();
+                                    });
+
+                                    $('.table-up').click(function () {
+                                        var $row = $(this).parents('tr');
+                                        if ($row.index() === 1) return; // Don't go above the header
+                                        $row.prev().before($row.get(0));
+                                    });
+
+                                    $('.table-down').click(function () {
+                                        var $row = $(this).parents('tr');
+                                        $row.next().after($row.get(0));
+                                    });
+                                });
+
+                            </script>
+                            @endif
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                        </div>
+                    </div>
                 </div>
 
 

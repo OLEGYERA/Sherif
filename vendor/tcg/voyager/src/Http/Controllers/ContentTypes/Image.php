@@ -16,8 +16,8 @@ class Image extends BaseType
             $uri = '';
             $uri = str_replace('/admin/','',$this->request->getRequestUri());
             $file = $this->request->file($this->row->field);
-            //$path = $uri.DIRECTORY_SEPARATOR.date('FY').DIRECTORY_SEPARATOR;
-            $path = $this->slug.DIRECTORY_SEPARATOR.date('FY').DIRECTORY_SEPARATOR;
+            $path = $uri.DIRECTORY_SEPARATOR.date('FY').DIRECTORY_SEPARATOR;
+            //$path = $this->slug.DIRECTORY_SEPARATOR.date('FY').DIRECTORY_SEPARATOR;
 
             $filename = $this->generateFileName($file, $path);
 
