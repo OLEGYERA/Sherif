@@ -1,5 +1,7 @@
 <?php
 
+
+
 namespace App\Http\Controllers\Voyager;
 
 use App\Currency;//for convertion
@@ -7,6 +9,10 @@ use App\Product;//for convertion
 
 use App\Category;
 use App\Subcategory;
+
+use App\ProductWholesale;
+
+use Illuminate\Support\Collection;
 
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -165,9 +171,10 @@ class ProductsController extends VoyagerBaseController
             $currency_name = '';
         }
        
-
+        /* WHolesale price displaying */
+        $wholesale = Product::find($id)->wholesale;
         
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale);
     }
 
     //***************************************
@@ -215,7 +222,10 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories);
+        /* WHolesale price displaying */
+        $wholesale = Product::find($id)->wholesale;
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale);
     }
 
     // POST BR(E)AD
@@ -239,13 +249,32 @@ class ProductsController extends VoyagerBaseController
             $request->merge(['price_final' => $price_final]);
         }
         
-        //$subcategory = Subcategory::where('id', '=', $request->product_belongstomany_subcategory_relationship[0])->first();
-        //$category = Category::where('id', '=', $subcategory->category)->first();
-        /* URL Generating */
-        //$URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug; 
-        /* Merging request with new values */
-        //$request->merge(['URL' => $URL]);
-        
+        //Inserting wholesale options of the product
+        if($slug == 'products') {
+            if(!$request->ajax()) {
+                
+                ProductWholesale::where('product_id', '=', $id)->delete();
+                
+                $i = 0;
+            
+                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
+
+                    $product_wholesale = new ProductWholesale;
+
+                    $product_wholesale->product_id = $data->id;
+                    $product_wholesale->quantity = $request->quantity[$i];
+                    $product_wholesale->unit = $request->unit[$i];;
+                    $product_wholesale->discount = $request->sale[$i];
+
+                    $product_wholesale->price = $price_final * (100 - $product_wholesale->discount) / 100;
+
+                    $product_wholesale->save();
+                    
+                    $i++;
+                }
+            }
+        }
+
         // Check permission
         $this->authorize('edit', $data);
         
@@ -349,7 +378,7 @@ class ProductsController extends VoyagerBaseController
             
             $request->merge(['price_final' => $price_final]);
         }
-       
+        
         $subcategory = Subcategory::where('id', '=', $request->product_belongstomany_subcategory_relationship[0])->first();
         $category = Category::where('id', '=', $subcategory->category)->first();
 
@@ -359,6 +388,27 @@ class ProductsController extends VoyagerBaseController
         
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
+
+            //Inserting wholesale options of the product
+            if($slug == 'products') {
+                $i = 0;
+            
+                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
+
+                    $product_wholesale = new ProductWholesale;
+
+                    $product_wholesale->product_id = $data->id;
+                    $product_wholesale->quantity = $request->quantity[$i];
+                    $product_wholesale->unit = $request->unit[$i];;
+                    $product_wholesale->discount = $request->sale[$i];
+
+                    $product_wholesale->price = $price_final * (100 - $product_wholesale->discount) / 100;
+
+                    $product_wholesale->save();
+                    
+                    $i++;
+                }
+            }
 
             event(new BreadDataAdded($dataType, $data));
 

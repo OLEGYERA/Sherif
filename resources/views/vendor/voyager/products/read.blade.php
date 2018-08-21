@@ -66,8 +66,15 @@
                     </div>
                     <div id="tab2" class="tab-pane fade">
                     <div class="col-lg-6">
-                        <div class="panel panel-bordered col-lg-12" style="padding-bottom:5px;">
-                            <table class="table table-hover">
+                        <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h4>Основная информация</h4>
+                                        </td>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <tr>
                                         <td><b>{{$dataType->readRows[0]->display_name}}</b></td>
@@ -168,8 +175,15 @@
                         </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="panel panel-bordered col-lg-12" style="padding-bottom:5px;">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
                             <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h4>Цена</h4>
+                                        </td>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <tr>
                                         <td><b>{{$dataType->readRows[5]->display_name}}</b></td>
@@ -184,22 +198,66 @@
                                         <td>{{$dataTypeContent->UAH}}</td>
                                     </tr>
                                     <tr>
+                                        <td><b>Учтена валюта</b></td>
+                                        <td>{{$currency_name}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h4>Розничная цена</h4>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
                                         <td><b>Наценка (%)</b></td>
                                         <td>{{$dataTypeContent->profitability}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>Учтена валюта</b></td>
-                                        <td>{{$currency_name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>Итоговая цена в UAH</b></td>
+                                        <td><b>Розничная цена в UAH</b></td>
                                         <td>{{$dataTypeContent->price_final}}</td>
                                     </tr>
                                 </tbody>
                             </table>
                             </div>
                         </div>
-                    </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="3">
+                                            <h4>Оптовая цена</h4>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($wholesales as $key=>$wholesale)
+                                    <tr>
+                                        <td><b>{{++$key}}. Скидка (%)</b></td>
+                                        <td colspan="2">{{$wholesale->discount}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Количество от</b></td>
+                                        <td>{{$wholesale->quantity}}</td>
+                                        <td>{{$wholesale->unit}}</td>
+                                    </tr>
+                                    <tr style>
+                                        <td><b>Оптовая цена в UAH</b></td>
+                                        <td colspan="2">{{$wholesale->price}}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
                     <div id="tab3" class="tab-pane fade">
                         
                     </div>

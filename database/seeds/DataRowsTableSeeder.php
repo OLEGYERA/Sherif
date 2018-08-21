@@ -498,7 +498,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => __('Profitability'),
+                'display_name' => __('Рентабельность'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -513,7 +513,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'color',
-                'display_name' => __('Color'),
+                'display_name' => __('Цвет'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -528,7 +528,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => __('Manufacturer'),
+                'display_name' => __('Производитель'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -603,7 +603,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'checkbox',
-                'display_name' => __('Publication'),
+                'display_name' => __('Публикация'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -663,7 +663,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => __('Currency Final'),
+                'display_name' => __('Учётная валюта'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -693,7 +693,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => __('Category'),
+                'display_name' => __('Категория'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -708,7 +708,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'relationship',
-                'display_name' => __('Status'),
+                'display_name' => __('Статус'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -723,7 +723,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'relationship',
-                'display_name' => __('Label'),
+                'display_name' => __('Метка'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -738,7 +738,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => __('Label'),
+                'display_name' => __('Метка'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -762,6 +762,36 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 1,
                 'details'      => '',
                 'order'        => 22,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'trade_sale');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('Скидка (%)'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 23,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'trade_price');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('Оптовая цена'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 24,
             ])->save();
         }
 

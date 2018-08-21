@@ -79,8 +79,9 @@
                     </div>
                     <div id="tab2" class="tab-pane fade">
                         <div class="col-lg-6">
-                            <div class="panel panel-bordered col-lg-12">
+                            <div class="panel panel-default">
                                 <div class="panel-body">
+                                    <h4>Основная информация</h4>
                                     <table class="table table-hover">
                                         <tbody>
                                             @foreach($dataTypeRows as $row)
@@ -94,7 +95,9 @@
                                                     $row->field == 'code' ||
                                                     $row->field == 'price_final' || 
                                                     $row->field == 'product_hasone_currency_relationship' ||
-                                                    $row->field == 'profitability')
+                                                    $row->field == 'profitability'||
+                                                    $row->field == 'trade_sale' ||
+                                                    $row->field == 'trade_price')
                                                         <?php continue; ?>
                                                 @endif
                                                 <!-- GET THE DISPLAY OPTIONS -->
@@ -130,25 +133,57 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="panel panel-bordered col-lg-12">
+                            <div class="panel panel-default">
                                 <div class="panel-body">
-                                    <tr>
+                                <h4>Цена</h4>
+                                    <table class="table table-hover">
+                                        <tbody>
                                         @foreach($dataTypeRows as $row)
-                                            @if($row->field == 'description' || 
-                                                $row->field == 'characteristics' || 
-                                                $row->field == 'name' || 
-                                                $row->field == 'slug' || 
-                                                $row->field == 'vendor_code' || 
-                                                $row->field == 'product_belongstomany_subcategory_relationship' || 
-                                                $row->field == 'color' ||
-                                                $row->field == 'manufacturer' ||
-                                                $row->field == 'URL' ||
-                                                $row->field == 'code' ||
-                                                $row->field == 'publication' ||
-                                                $row->field == 'product_belongsto_product_status_relationship' ||
-                                                $row->field == 'product_belongsto_product_label_relationship')
-                                                    <?php continue; ?>
+                                            <tr>
+                                            @if($row->field == 'EUR' || 
+                                                $row->field == 'USD' || 
+                                                $row->field == 'UAH' || 
+                                                $row->field == 'product_hasone_currency_relationship')
+                                                <!-- GET THE DISPLAY OPTIONS -->
+                                                @php
+                                                    $options = json_decode($row->details);
+                                                    $display_options = isset($options->display) ? $options->display : NULL;
+                                                @endphp
+
+                                                @if ($options && isset($options->formfields_custom))
+                                                    @include('voyager::formfields.custom.' . $options->formfields_custom)
+                                                @else
+                                                    {{ $row->slugify }}
+                                                            <td><label for="name">{{ $row->display_name }}</label></td>
+                                                        @include('voyager::multilingual.input-hidden-bread-edit-add')
+                                                        @if($row->type == 'relationship')
+                                                            <td>@include('voyager::formfields.relationship')</td>
+                                                        @else
+                                                            <td>{!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}</td>
+                                                        @endif
+                                                        @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
+                                                            <td>{!! $after->handle($row, $dataType, $dataTypeContent) !!}</td>
+                                                        @endforeach
+                                                @endif
                                             @endif
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h4>Розничная цена</h4>
+                                <table class="table table-hover">
+                                    <tbody>
+                                    @foreach($dataTypeRows as $row)
+                                        <tr>
+                                        @if($row->field == 'profitability' ||
+                                            $row->field == 'price_final')
                                             <!-- GET THE DISPLAY OPTIONS -->
                                             @php
                                                 $options = json_decode($row->details);
@@ -158,23 +193,56 @@
                                             @if ($options && isset($options->formfields_custom))
                                                 @include('voyager::formfields.custom.' . $options->formfields_custom)
                                             @else
-                                                 {{ $row->slugify }}
-                                                        <td><label for="name">{{ $row->display_name }}</label></td>
+                                                {{ $row->slugify }}
+                                                        <td><label for="name">{{ $row->display_name }}</label> </td>
                                                     @include('voyager::multilingual.input-hidden-bread-edit-add')
                                                     @if($row->type == 'relationship')
-                                                        <td>@include('voyager::formfields.relationship')</td>
+                                                    <td>@include('voyager::formfields.relationship') </td>
                                                     @else
-                                                        <td>{!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}</td>
+                                                    <td>{!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!} </td>
                                                     @endif
                                                     @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
-                                                        <td>{!! $after->handle($row, $dataType, $dataTypeContent) !!}</td>
+                                                    <td>{!! $after->handle($row, $dataType, $dataTypeContent) !!} </td>
                                                     @endforeach
                                             @endif
-                                        @endforeach
-                                    </tr>
-                                </div>
+                                        @endif
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-body dynamic">
+                                <table class="table table-default" id="dynamic_table">
+                                        
+                                        <tr>
+                                            <td colspan="3"><h4>Оптовая цена</h4></td>
+                                            <td><button type="button" id="add" class="btn btn-success">Добавить</button></td>
+                                        </tr>
+                                        @if(isset($wholesales))
+                                            @foreach($wholesales as $wholesale)
+                                                <table class="table table-hover">
+                                                    <tr>
+                                                        <td>Скидка %</td>
+                                                        <td colspan="2"><input type="text" name="sale[]" id="sale" class="form-control" value="{{$wholesale->discount}}" required></td>
+                                                        <td><button type="button" id="remove" class="btn btn-danger">Удалить</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Количество от</td>
+                                                        <td><input type="text" name="quantity[]" id="quantity" class="form-control" value="{{$wholesale->quantity}}" required></td>
+                                                        <td><input type="text" name="unit[]" id="unit" class="form-control" value="{{$wholesale->unit}}" required></td>
+                                                        <td>(единицы)</td>
+                                                    </tr>
+                                                </table>
+                                            @endforeach 
+                                        @endif                                       
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                     <div id="tab3" class="tab-pane fade"></div>
                     <div id="tab4" class="tab-pane fade">
@@ -198,11 +266,7 @@
                     <div id="tab5" class="tab-pane fade"></div>
                     <div id="tab6" class="tab-pane fade"></div>
                 </div>
-
-
-                       
                     </form>
-
                     <iframe id="form_target" name="form_target" style="display:none"></iframe>
                     <form id="my_form" action="{{ route('voyager.upload') }}" target="form_target" method="post"
                             enctype="multipart/form-data" style="width:0;height:0;overflow:hidden">
@@ -234,16 +298,35 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
                     <button type="button" class="btn btn-danger" id="confirm_delete">{{ __('voyager::generic.delete_confirm') }}
-                    </button>
+                </button>
                 </div>
             </div>
         </div>
     </div>
     <!-- End Delete File Modal -->
+
 @stop
 
 @section('javascript')
     <script>
+        //add trade options
+        var additional_field = '<table class="table table-hover"><tr><td>Скидка %</td><td colspan="2"><input type="text" name="sale[]" id="sale" class="form-control" required></td><td><button type="button" id="remove" class="btn btn-danger">Удалить</button></td></tr><tr><td>Количество от</td><td><input type="text" name="quantity[]" id="quantity" class="form-control" required></td><td><input type="text" name="unit[]" id="unit" class="form-control" required></td><td>(единицы)</td></tr></table>';
+        
+        $(document).ready(function () {
+            $('#add').click(function(e) {
+                $('.panel-body.dynamic').append(additional_field);
+            });
+        });
+
+        $(document).ready(function () {
+            $('.panel-body.dynamic').on('click', '#remove', function(e) {
+                $(this).parents().eq(3).remove();
+
+            });
+        });
+        
+
+
         var params = {}
         var $image
 
@@ -301,5 +384,22 @@
             });
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+
+
+/*
+        $(document).ready(function() {
+            var i = 1;
+            $('#add').click(function () {
+                i++;
+                $('#dynamic_field').append('<tr id="row'+i+'"><td>Скидка %</td><td colspan="2"><input type="text" name="sale[]" id="sale"  class="form-control name_list"></td><td><button name="remove" id="'+i+'" class="btn btn-danger btn_remove">Удалить</button></td></tr><tr><td>Количество от</td><td><input type="text" name="quantity[]" id="quantity"  class="form-control name_list"></td><td><input type="text" name="unit[]" id="unit"  class="form-control name_list"></td><td>(единицы)</td></tr>');
+            });
+            
+        });
+        
+        $(document).on('click', '.btn_remove', function() {
+                var button_id = $(this).attr("id");
+                $("#row"+button_id+"").remove();
+            });*/
     </script>
 @stop
