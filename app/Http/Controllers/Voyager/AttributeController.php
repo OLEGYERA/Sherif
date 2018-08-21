@@ -2,21 +2,170 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use App\Models\Banner;
-use App\Models\BannerImages;
-use App\Models\BannerLinkPosition;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use TCG\Voyager\Http\Controllers\VoyagerBaseController;
-use TCG\Voyager\Facades\Voyager;
+use Illuminate\Support\Facades\DB;
+use TCG\Voyager\Database\Schema\SchemaManager;
+use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
+use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
+use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
-
-class AdminBannerController extends VoyagerBaseController
+class AttributeController extends VoyagerBaseController
 {
+    //***************************************
+    //               ____
+    //              |  _ \
+    //              | |_) |
+    //              |  _ <
+    //              | |_) |
+    //              |____/
     //
+    //      Browse our Data Type (B)READ
+    //
+    //****************************************
+
+    public function index(Request $request)
+    {
+        // GET THE SLUG, ex. 'posts', 'pages', etc.
+        $slug = $this->getSlug($request);
+
+        // GET THE DataType based on the slug
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        // Check permission
+        $this->authorize('browse', app($dataType->model_name));
+
+        $getter = $dataType->server_side ? 'paginate' : 'get';
+
+        $search = (object) ['value' => $request->get('s'), 'key' => $request->get('key'), 'filter' => $request->get('filter')];
+        $searchable = $dataType->server_side ? array_keys(SchemaManager::describeTable(app($dataType->model_name)->getTable())->toArray()) : '';
+        $orderBy = $request->get('order_by');
+        $sortOrder = $request->get('sort_order', null);
+
+        // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
+        if (strlen($dataType->model_name) != 0) {
+            $relationships = $this->getRelationships($dataType);
+
+            $model = app($dataType->model_name);
+            $query = $model::select('*')->with($relationships);
+
+            // If a column has a relationship associated with it, we do not want to show that field
+            $this->removeRelationshipField($dataType, 'browse');
+
+            if ($search->value && $search->key && $search->filter) {
+                $search_filter = ($search->filter == 'equals') ? '=' : 'LIKE';
+                $search_value = ($search->filter == 'equals') ? $search->value : '%'.$search->value.'%';
+                $query->where($search->key, $search_filter, $search_value);
+            }
+
+            if ($orderBy && in_array($orderBy, $dataType->fields())) {
+                $querySortOrder = (!empty($sortOrder)) ? $sortOrder : 'DESC';
+                $dataTypeContent = call_user_func([
+                    $query->orderBy($orderBy, $querySortOrder),
+                    $getter,
+                ]);
+            } elseif ($model->timestamps) {
+                $dataTypeContent = call_user_func([$query->latest($model::CREATED_AT), $getter]);
+            } else {
+                $dataTypeContent = call_user_func([$query->orderBy($model->getKeyName(), 'DESC'), $getter]);
+            }
+
+            // Replace relationships' keys for labels and create READ links if a slug is provided.
+            $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType);
+        } else {
+            // If Model doesn't exist, get data from table name
+            $dataTypeContent = call_user_func([DB::table($dataType->name), $getter]);
+            $model = false;
+        }
+
+        // Check if BREAD is Translatable
+        if (($isModelTranslatable = is_bread_translatable($model))) {
+            $dataTypeContent->load('translations');
+        }
+
+        // Check if server side pagination is enabled
+        $isServerSide = isset($dataType->server_side) && $dataType->server_side;
+
+        $view = 'voyager::bread.browse';
+
+        if (view()->exists("voyager::$slug.browse")) {
+            $view = "voyager::$slug.browse";
+        }
+
+        return Voyager::view($view, compact(
+            'dataType',
+            'dataTypeContent',
+            'isModelTranslatable',
+            'search',
+            'orderBy',
+            'sortOrder',
+            'searchable',
+            'isServerSide'
+        ));
+    }
+
+    //***************************************
+    //                _____
+    //               |  __ \
+    //               | |__) |
+    //               |  _  /
+    //               | | \ \
+    //               |_|  \_\
+    //
+    //  Read an item of our Data Type B(R)EAD
+    //
+    //****************************************
+
+    public function show(Request $request, $id)
+    {
+        $slug = $this->getSlug($request);
+
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        $relationships = $this->getRelationships($dataType);
+        if (strlen($dataType->model_name) != 0) {
+            $model = app($dataType->model_name);
+            $dataTypeContent = call_user_func([$model->with($relationships), 'findOrFail'], $id);
+        } else {
+            // If Model doest exist, get data from table name
+            $dataTypeContent = DB::table($dataType->name)->where('id', $id)->first();
+        }
+
+        // Replace relationships' keys for labels and create READ links if a slug is provided.
+        $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType, true);
+
+        // If a column has a relationship associated with it, we do not want to show that field
+        $this->removeRelationshipField($dataType, 'read');
+
+        // Check permission
+        $this->authorize('read', $dataTypeContent);
+
+        // Check if BREAD is Translatable
+        $isModelTranslatable = is_bread_translatable($dataTypeContent);
+
+        $view = 'voyager::bread.read';
+
+        if (view()->exists("voyager::$slug.read")) {
+            $view = "voyager::$slug.read";
+        }
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+    }
+
+    //***************************************
+    //                ______
+    //               |  ____|
+    //               | |__
+    //               |  __|
+    //               | |____
+    //               |______|
+    //
+    //  Edit an item of our Data Type BR(E)AD
+    //
+    //****************************************
+
     public function edit(Request $request, $id)
     {
         $slug = $this->getSlug($request);
@@ -42,164 +191,52 @@ class AdminBannerController extends VoyagerBaseController
 
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
-        $get_banner = Banner::i()->getBanner($id);
-        //print('<pre>'); print_r($get_category); exit;
-        if (count($get_banner) > 0) {
-            $banner = array();//
-             /*   'status' => 1,
-                'heigth' => 640,
-                'width' => 480,
-            );*/
-            $banner = $get_banner[0];
-
-            $banner_images = array();
-            $bannerimages = array();
-
-            $banner_positions = array(
-                0 => 'pos1-1',
-                1 => 'pos1-6',
-                2 => 'pos2-6',
-                3 => 'pos3-6',
-                4 => 'pos4-6',
-                5 => 'pos5-6',
-                6 => 'pos6-6',
-                7 => 'pos1-2',
-                8 => 'pos2-2'
-            );
-
-            $banner_types = array(
-                1 => '1-1',
-                2 => '2-2',
-                3 => '6-6',
-            );
-            $banner_images = Banner::i()->getBannerImages($id);
-
-            foreach ($banner_images as $banner_image) {
-                if (is_file(get_file_path($banner_image['image']))) {
-                    $image = $banner_image['image'];
-                    $thumb = $banner_image['image'];
-                } else {
-                    $image = '';
-                    $thumb = '';
-                }
-
-                $bannerimages[] = array(
-                    'banner_image_description' => $banner_image['banner_image_description'],
-                    'banner_link_position' => $banner_image['banner_link_position'],
-                    'link' => $banner_image['link'],
-                    'type' => $banner_image['type'],
-                    'image' => $image,
-                    'thumb' => Storage::url(get_image_cache($thumb, 100, 100)),
-                    'sort_order' => $banner_image['order']
-                );
-
-            }
-            $banner['banner_images'] = $bannerimages;
-            $banner['banner_position'] = $banner_positions;
-            $banner['banner_types'] = $banner_types;
-
-        }
 
         $view = 'voyager::bread.edit-add';
-        //dd($banner);
+
         if (view()->exists("voyager::$slug.edit-add")) {
             $view = "voyager::$slug.edit-add";
         }
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable','banner'));
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
-    public function storeBanner(Request $request)
+    // POST BR(E)AD
+    public function update(Request $request, $id)
     {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
+        // Compatibility with Model binding.
+        $id = $id instanceof Model ? $id->{$id->getKeyName()} : $id;
+
+        $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
+
         // Check permission
-        $this->authorize('add', app($dataType->model_name));
+        $this->authorize('edit', $data);
 
+        // Validate fields with ajax
+        $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id);
 
-        $data = $request->all();
+        if ($val->fails()) {
+            return response()->json(['errors' => $val->messages()]);
+        }
 
-        $rules['name'] = 'required';
-        $validator = Validator::make($data, $rules);
+        if (!$request->ajax()) {
+            $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors($validator);
-        } else {
-            $banner = Banner::firstOrNew(['banner.id' => $data['id']]);
-            if (empty($banner)) {
-                redirect()->back()->withInput();
-            }
-            //dd($data);
-            $banner->status = isset($data['status']) ? (int)$data['status'] : 0;
-            $banner->name = isset($data['name']) ? $data['name'] : '';
-            $banner->height = isset($data['height']) ? $data['height'] : 640;
-            $banner->width = isset($data['width']) ? $data['width'] : 480;
-            //$banner->type = isset($data['type']) ? $data['type'] : '';
+            event(new BreadDataUpdated($dataType, $data));
 
-            if ($banner->save()) {
-
-                $banner_id = $banner->id;
-
-                //////////banner images
-
-                BannerImages::where('banner_id', $banner_id)->delete();
-                BannerLinkPosition::where('banner_id', $banner_id)->delete();
-                if (isset($data['banner_image']) && (count($data['banner_image']) > 0) && ($data['banner_image'] != '')) {
-                    $banrimg = array();
-
-                    foreach ($data['banner_image'] as $key => $result) {
-
-                        $img = '';
-                        if (isset($result['image']) && is_file($result['image'])) {
-                            $filename = $result['image']->getClientOriginalName();
-                            $file = $result['image'];
-                            $img = set_image_cache($file, 'banner/'.$banner_id);
-                        } else {
-                            $img = $result['image'];
-                        }
-                        $banrimg = array(
-                            'banner_id' => $banner_id,
-                            'description' => $result['banner_image_description'],
-                            'image'       => $img,
-                            'type'       => $result['type'],
-                            'order' => $result['sort_order']
-                        );
-
-                        $banner_image_id = BannerImages::insertGetId($banrimg);
-
-
-                        if (isset($result['banner_link_position']) && (count($result['banner_link_position']) > 0) && ($result['banner_link_position'] != '')) {
-                            $banner_image_description_data = array();
-                            foreach ($result['banner_link_position'] as $id => $banner_link){
-                                if ($result['banner_link_position'][$id]['link'] != '') {
-                                    $banner_image_description_data = array(
-                                        'banner_id' => $banner_id,
-                                        'banner_image_id' => $banner_image_id,
-                                        'banner_position_id' => $id,
-                                        'link' => $banner_link['link']
-                                    );
-                                    BannerLinkPosition::insert($banner_image_description_data);
-                                }
-                            }
-                        }
-
-                    }
-
-                }
-
-            }
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
                 ->with([
-                    'message'    => __('voyager::generic.successfully_added_new')." {$dataType->display_name_singular}",
+                    'message'    => __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
                     'alert-type' => 'success',
                 ]);
         }
-
     }
+
     //***************************************
     //
     //                   /\
@@ -236,53 +273,6 @@ class AdminBannerController extends VoyagerBaseController
 
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
-        $newbanner = new Banner;
-       // dd($dataType);
-        $banner = array(
-            'name' => '',
-            'height' => '',
-            'width' => '',
-            'order' => 0,
-            'status' => 1
-
-        );
-
-
-        $bannerimages = array();
-
-        $banner_positions = array(
-            0 => 'pos1-1',
-            1 => 'pos1-6',
-            2 => 'pos2-6',
-            3 => 'pos3-6',
-            4 => 'pos4-6',
-            5 => 'pos5-6',
-            6 => 'pos6-6',
-            7 => 'pos1-2',
-            8 => 'pos2-2'
-        );
-
-        $banner_types = array(
-            1 => '1-1',
-            2 => '2-2',
-            3 => '6-6',
-        );
-
-        $bannerimages = array();//
-      /*      'banner_image_description' => '',
-            'banner_link_position' => '',
-            'link' => '',
-            'type' => '',
-            'image' => '',
-            'thumb' => '/storage/placegolder.png',
-            'sort_order' => 0
-        );*/
-
-
-        $banner['banner_images'] = $bannerimages;
-        $banner['banner_position'] = $banner_positions;
-        $banner['banner_types'] = $banner_types;
-
 
         $view = 'voyager::bread.edit-add';
 
@@ -290,7 +280,48 @@ class AdminBannerController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'banner'));
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+    }
+
+    /**
+     * POST BRE(A)D - Store data.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $slug = $this->getSlug($request);
+
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        // Check permission
+        $this->authorize('add', app($dataType->model_name));
+
+        // Validate fields with ajax
+        $val = $this->validateBread($request->all(), $dataType->addRows);
+
+        if ($val->fails()) {
+            return response()->json(['errors' => $val->messages()]);
+        }
+
+        if (!$request->has('_validate')) {
+            $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
+
+            event(new BreadDataAdded($dataType, $data));
+
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'data' => $data]);
+            }
+
+            return redirect()
+                ->route("voyager.{$dataType->slug}.index")
+                ->with([
+                    'message'    => __('voyager::generic.successfully_added_new')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+        }
     }
 
     //***************************************
@@ -326,9 +357,6 @@ class AdminBannerController extends VoyagerBaseController
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
             $this->cleanup($dataType, $data);
-
-            BannerImages::where('banner_id',$id)->delete();
-            BannerLinkPosition::where('banner_id',$id)->delete();
         }
 
         $displayName = count($ids) > 1 ? $dataType->display_name_plural : $dataType->display_name_singular;
