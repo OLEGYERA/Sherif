@@ -811,6 +811,71 @@ class DataRowsTableSeeder extends Seeder
                 'order' => 24,
             ])->save();
         }
+
+        $dataRow = $this->dataRow($productsDataType, 'concomitant');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Сопутствующий'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App/Product"}',
+                'order' => 30,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($productsDataType, 'similar');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Похожий'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App/Product"}',
+                'order' => 31,
+            ])->save();
+        }
+
+
+        $dataRow = $this->dataRow($productsDataType, 'product_hasone_subcategory_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Главная категория'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\\Subcategory","table":"Subcategories","type":"belongsTo","column":"maincategory","key":"id","label":"name","pivot_table":"Currencies","pivot":"0","taggable":"0"}',
+                'order' => 33,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($productsDataType, 'maincategory');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Maincategory'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 32,
+            ])->save();
+        }
         /* Categories */
         $dataRow = $this->dataRow($categoriesDataType, 'id');
         if (!$dataRow->exists) {
