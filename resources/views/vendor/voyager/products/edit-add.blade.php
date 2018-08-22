@@ -46,6 +46,7 @@
                             <!-- Adding / Editing -->
                             @php
                                 $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
+                            //dd($dataTypeRows);
                             @endphp
 
                 <ul class="nav nav-tabs">
@@ -221,7 +222,7 @@
                                                     @endif
                                                 </div>
 
-                                                <input id="mainimage" type="file" name="mainimage" accept="image/*">
+                                                <input class="btn-image" id="mainimage" type="file" name="mainimage" accept="image/*">
                                                 <script>
                                                     $(document).ready(function() {
                                                         $("#mainimage").fileinput({
@@ -380,10 +381,10 @@
                             </div>-->
                             <div class="panel-body panel-bordered col-lg-12">
 
-                                @if (isset($dataTypeRows[25])) {{-- product_belongstomany_attribute_relationship --}}
+                                @if (isset($dataTypeRows[24])) {{-- product_belongstomany_attribute_relationship --}}
                                 @php
 
-                                    $row = $dataTypeRows[25];
+                                    $row = $dataTypeRows[24];
                                     $options = json_decode($row->details);
                                     $display_options = isset($options->display) ? $options->display : NULL;
                                     //$selected_values = isset($dataTypeContent) ? $dataTypeContent->belongsToMany($options->model, $options->pivot_table)->pluck($options->table.'.'.$options->key)->all() : array();
