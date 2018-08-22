@@ -96,8 +96,8 @@
                                                     $row->field == 'price_final' || 
                                                     $row->field == 'product_hasone_currency_relationship' ||
                                                     $row->field == 'profitability'||
-                                                    $row->field == 'trade_sale' ||
-                                                    $row->field == 'trade_price')
+                                                    $row->field == 'sale_discount' ||
+                                                    $row->field == 'sale_price' )
                                                         <?php continue; ?>
                                                 @endif
                                                 <!-- GET THE DISPLAY OPTIONS -->
@@ -183,7 +183,9 @@
                                     @foreach($dataTypeRows as $row)
                                         <tr>
                                         @if($row->field == 'profitability' ||
-                                            $row->field == 'price_final')
+                                            $row->field == 'price_final' ||
+                                            $row->field == 'sale_discount' ||
+                                            $row->field == 'sale_price' )
                                             <!-- GET THE DISPLAY OPTIONS -->
                                             @php
                                                 $options = json_decode($row->details);

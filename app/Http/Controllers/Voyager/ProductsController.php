@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace App\Http\Controllers\Voyager;
 
 use App\Currency;//for convertion
@@ -11,6 +9,8 @@ use App\Category;
 use App\Subcategory;
 
 use App\ProductWholesale;
+
+use App\ProductSubcategoriesPivot;
 
 use Illuminate\Support\Collection;
 
@@ -266,12 +266,22 @@ class ProductsController extends VoyagerBaseController
                     $product_wholesale->unit = $request->unit[$i];;
                     $product_wholesale->discount = $request->sale[$i];
 
-                    $product_wholesale->price = $price_final * (100 - $product_wholesale->discount) / 100;
+                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
+                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
 
                     $product_wholesale->save();
                     
                     $i++;
                 }
+            }
+        }
+
+        /*sale price */
+        if($slug == 'products') {
+            if(isset($request->sale_discount)) {
+                $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
+                $sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
+                $request->merge(['sale_price' => $sale_price]);
             }
         }
 
@@ -286,6 +296,30 @@ class ProductsController extends VoyagerBaseController
         }
         
         if (!$request->ajax()) {
+
+            //Inserting wholesale options of the product
+            if($slug == 'products') {
+                ProductWholesale::where('product_id', '=', $id)->delete();
+                
+                $i = 0;
+            
+                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
+
+                    $product_wholesale = new ProductWholesale;
+
+                    $product_wholesale->product_id = $data->id;
+                    $product_wholesale->quantity = $request->quantity[$i];
+                    $product_wholesale->unit = $request->unit[$i];;
+                    $product_wholesale->discount = $request->sale[$i];
+
+                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
+                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
+
+                    $product_wholesale->save();
+                    
+                    $i++;
+                }
+            }
 
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
@@ -386,7 +420,17 @@ class ProductsController extends VoyagerBaseController
         $URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug; 
         $request->merge(['URL' => $URL]);
         
+        if($slug == 'products') {
+            if(isset($request->sale_discount)) {
+                $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
+                $sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
+                $request->merge(['sale_price' => $sale_price]);
+            }
+        }
+        
         if (!$request->has('_validate')) {
+            
+
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
             //Inserting wholesale options of the product
@@ -402,7 +446,8 @@ class ProductsController extends VoyagerBaseController
                     $product_wholesale->unit = $request->unit[$i];;
                     $product_wholesale->discount = $request->sale[$i];
 
-                    $product_wholesale->price = $price_final * (100 - $product_wholesale->discount) / 100;
+                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
+                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
 
                     $product_wholesale->save();
                     
@@ -455,13 +500,21 @@ class ProductsController extends VoyagerBaseController
             // Single item delete, get ID from URL
             $ids[] = $id;
         }
+
+        
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
             $this->cleanup($dataType, $data);
+
+            //delete relations with subcategories
+            $deletedRows = DB::table('product_subcategories_pivot')->where('product_id', '=', $id)->delete();
+
+            //delete relations with wholesaleprices
+            $deletedRows = DB::table('product_wholesales')->where('product_id', '=', $id)->delete();
         }
 
         $displayName = count($ids) > 1 ? $dataType->display_name_plural : $dataType->display_name_singular;
-
+        
         $res = $data->destroy($ids);
         $data = $res
             ? [

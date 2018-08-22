@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Voyager;
 
 use App\Currency;
 use App\Product;
+use App\ProductWholesale;
 
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
@@ -35,9 +36,16 @@ class CurrenciesController extends VoyagerBaseController
         foreach($products as $product) {
             $currency = Currency::where('id', '=', $product->currency_final)->first(); //retrieve currency object
             
+            /*product price*/
             $price_final = ($product[$currency->name]) * ($product->profitability / 100) * $currency->rate;
-            
             Product::where('id', '=', $product->id)->update(['price_final' => $price_final]);
+
+            /*product wholesale price*/
+            $wholesale_products = Product::find($product->id)->wholesale;
+            foreach($wholesale_products as $wholesale_product) {
+                $product_wholesale_price = $price_final * (100 - $wholesale_product->discount) / 100;
+                ProductWholesale::where('id', '=', $wholesale_product->id)->update(['price' => round($product_wholesale_price, 2, PHP_ROUND_HALF_UP)]);
+            }
         }
 
         return redirect()->route("voyager.currencies.index");

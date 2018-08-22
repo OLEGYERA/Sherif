@@ -201,6 +201,7 @@
                                         <td><b>Учтена валюта</b></td>
                                         <td>{{$currency_name}}</td>
                                     </tr>
+                                    
                                 </tbody>
                             </table>
                             </div>
@@ -223,6 +224,14 @@
                                     <tr>
                                         <td><b>Розничная цена в UAH</b></td>
                                         <td>{{$dataTypeContent->price_final}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Скидка (%)</b></td>
+                                        <td>{{$dataTypeContent->sale_discount}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Стоимость со скидкой</b></td>
+                                        <td>{{$dataTypeContent->sale_price}}</td>
                                     </tr>
                                 </tbody>
                             </table>

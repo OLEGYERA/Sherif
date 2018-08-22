@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Voyager;
 
 use App\Product;
+use App\Subcategory;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +15,8 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
-class SubcategoriesController extends VoyagerBaseController
+class CategoriesController extends VoyagerBaseController
 {
-
     //***************************************
     //               ____
     //              |  _ \
@@ -225,16 +225,21 @@ class SubcategoriesController extends VoyagerBaseController
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
+        
+        /* adding discount to all subcategories and their products */
+        $subcategories = Subcategory::where('category', '=', $id)->get();
+        foreach($subcategories as $subcategory) {
+            $subcategory->sale_discount = $request->sale_discount;
+            $subcategory->save();
+            $products_ids = DB::table('product_subcategories_pivot')->where('subcategory_id', '=', $subcategory->id)->get();
 
-        /* adding discount to all products in subcategory */
-        $products_ids = DB::table('product_subcategories_pivot')->where('subcategory_id', '=', $id)->get();
-        foreach($products_ids as $product_id) {
-            $product = Product::find($product_id->product_id);
-            $product->sale_discount = $request->sale_discount;
-            $product->sale_price = $product->price_final * (100 - $request->sale_discount) / 100;
-            $product->save();
+            foreach($products_ids as $product_id) {
+                $product = Product::find($product_id->product_id);
+                $product->sale_discount = $request->sale_discount;
+                $product->sale_price = $product->price_final * (100 - $request->sale_discount) / 100;
+                $product->save();
+            }
         }
-
 
         if (!$request->ajax()) {
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
@@ -318,7 +323,7 @@ class SubcategoriesController extends VoyagerBaseController
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
-        
+
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
@@ -388,6 +393,8 @@ class SubcategoriesController extends VoyagerBaseController
         if ($res) {
             event(new BreadDataDeleted($dataType, $data));
         }
+
+        
 
         return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
     }

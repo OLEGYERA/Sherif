@@ -764,7 +764,7 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 22,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'trade_sale');
+        $dataRow = $this->dataRow($productsDataType, 'sale_discount');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
@@ -779,11 +779,11 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 23,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'trade_price');
+        $dataRow = $this->dataRow($productsDataType, 'sale_price');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => __('Оптовая цена'),
+                'display_name' => __('Стоимость со скидкой'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -869,6 +869,21 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 0,
                 'details'      => '',
                 'order'        => 5,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($categoriesDataType, 'sale_discount');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('Скидка (%)'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 0,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 6,
             ])->save();
         }
         
@@ -1178,6 +1193,21 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 1,
                 'details'      => '{"slugify":{"origin":"name","forceUpdate":true}}',
                 'order'        => 3,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productSubcategoriesDataType, 'sale_discount');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('Скидка (%)'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 0,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 7,
             ])->save();
         }
 
