@@ -77,39 +77,53 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[0]->display_name}}</b></td>
+                                        <td><b>ID</b></td>
                                         <td>{{$dataTypeContent->id}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[1]->display_name}}</b></td>
+                                        <td><b>Название</b></td>
                                         <td>{{$dataTypeContent->name}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[2]->display_name}}</b></td>
+                                        <td><b>Slug</b></td>
                                         <td>{{$dataTypeContent->slug}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[12]->display_name}}</b></td>
+                                        <td><b>URL</b></td>
                                         <td>{{$dataTypeContent->URL}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[3]->display_name}}</b></td>
+                                        <td><b>Артикул</b></td>
                                         <td>{{$dataTypeContent->vendor_code}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[23]->display_name}}</b></td>
+                                        <td><b>Код Товара</b></td>
                                         <td>{{$dataTypeContent->code}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[11]->display_name}}</b></td>
+                                        <td><b>{{$dataType->readRows[12]->display_name}}</b></td>
                                         <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[11]->details);
+                                        @php $rowDetails = json_decode($dataType->readRows[12]->details);
                                             if($rowDetails === null){
                                                     $rowDetails=new stdClass();
                                                     $rowDetails->options=new stdClass();
                                             }
                                         @endphp
-                                        @if($dataType->readRows[11]->type == 'relationship')
+                                        @if($dataType->readRows[12]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
+                                        @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Главная подкатегория</b></td>
+                                        <td>
+                                        @php $rowDetails = json_decode($dataType->readRows[29]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[29]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>
@@ -201,6 +215,7 @@
                                         <td><b>Учтена валюта</b></td>
                                         <td>{{$currency_name}}</td>
                                     </tr>
+                                    
                                 </tbody>
                             </table>
                             </div>
@@ -223,6 +238,14 @@
                                     <tr>
                                         <td><b>Розничная цена в UAH</b></td>
                                         <td>{{$dataTypeContent->price_final}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Скидка (%)</b></td>
+                                        <td>{{$dataTypeContent->sale_discount}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Стоимость со скидкой</b></td>
+                                        <td>{{$dataTypeContent->sale_price}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -258,6 +281,7 @@
                             </table>
                             </div>
                         </div>
+                    </div>
                     <div id="tab3" class="tab-pane fade">
                         
                     </div>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\Product;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use TCG\Voyager\Database\Schema\SchemaManager;
@@ -224,6 +226,16 @@ class SubcategoriesController extends VoyagerBaseController
             return response()->json(['errors' => $val->messages()]);
         }
 
+        /* adding discount to all products in subcategory */
+        $products_ids = DB::table('product_subcategories_pivot')->where('subcategory_id', '=', $id)->get();
+        foreach($products_ids as $product_id) {
+            $product = Product::find($product_id->product_id);
+            $product->sale_discount = $request->sale_discount;
+            $product->sale_price = $product->price_final * (100 - $request->sale_discount) / 100;
+            $product->save();
+        }
+
+
         if (!$request->ajax()) {
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
@@ -306,7 +318,7 @@ class SubcategoriesController extends VoyagerBaseController
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
-
+        
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 

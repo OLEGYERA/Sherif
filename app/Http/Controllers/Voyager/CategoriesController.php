@@ -2,30 +2,20 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use App\Currency;//for convertion
-use App\Models\Attribute;
-use App\Product;//for convertion
-
-use App\Category;
+use App\Product;
 use App\Subcategory;
 
-use App\ProductWholesale;
-
-use App\ProductSubcategoriesPivot;
-
-use Illuminate\Support\Collection;
-
 use Illuminate\Http\Request;
-use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
+use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
-use TCG\Voyager\Database\Schema\SchemaManager;
+use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
-class ProductsController extends VoyagerBaseController
+class CategoriesController extends VoyagerBaseController
 {
     //***************************************
     //               ____
@@ -38,6 +28,7 @@ class ProductsController extends VoyagerBaseController
     //      Browse our Data Type (B)READ
     //
     //****************************************
+
     public function index(Request $request)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
@@ -55,7 +46,7 @@ class ProductsController extends VoyagerBaseController
         $searchable = $dataType->server_side ? array_keys(SchemaManager::describeTable(app($dataType->model_name)->getTable())->toArray()) : '';
         $orderBy = $request->get('order_by');
         $sortOrder = $request->get('sort_order', null);
-        
+
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $relationships = $this->getRelationships($dataType);
@@ -132,7 +123,6 @@ class ProductsController extends VoyagerBaseController
 
     public function show(Request $request, $id)
     {
-        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -164,23 +154,7 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.read";
         }
 
-        /* Currency displaying */
-        if($dataTypeContent->currency_final) {
-            $currency = Currency::where('id', '=', $dataTypeContent->currency_final)->first(); //retrieve currency object
-            $currency_name = $currency->name;
-        } else {
-            $currency_name = '';
-        }
-       
-        /* WHolesale price displaying */
-        $wholesale = Product::find($id)->wholesale;
-
-
-        $attributes =  Attribute::all();
-        //$product_attributes = A
-
-        
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     //***************************************
@@ -198,7 +172,7 @@ class ProductsController extends VoyagerBaseController
     public function edit(Request $request, $id)
     {
         $slug = $this->getSlug($request);
-        
+
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         $relationships = $this->getRelationships($dataType);
@@ -212,13 +186,12 @@ class ProductsController extends VoyagerBaseController
             $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
-        $categories = Category::get();
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'edit');
 
         // Check permission
         $this->authorize('edit', $dataTypeContent);
-        
+
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
@@ -228,10 +201,7 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        /* WHolesale price displaying */
-        $wholesale = Product::find($id)->wholesale;
-
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
@@ -246,122 +216,32 @@ class ProductsController extends VoyagerBaseController
 
         $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
 
-        /* Final price convertation */
-        if($request->currency_final) {
-            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
-
-            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-            
-            $request->merge(['price_final' => $price_final]);
-        }
-        
-        //Inserting wholesale options of the product
-        if($slug == 'products') {
-            if(!$request->ajax()) {
-                
-                ProductWholesale::where('product_id', '=', $id)->delete();
-                
-                $i = 0;
-            
-                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
-
-                    $product_wholesale = new ProductWholesale;
-
-                    $product_wholesale->product_id = $data->id;
-                    $product_wholesale->quantity = $request->quantity[$i];
-                    $product_wholesale->unit = $request->unit[$i];;
-                    $product_wholesale->discount = $request->sale[$i];
-
-                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
-                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
-
-                    $product_wholesale->save();
-                    
-                    $i++;
-                }
-            }
-        }
-
-        /*sale price */
-        if($slug == 'products') {
-            if(isset($request->sale_discount)) {
-                $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
-                $sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
-                $request->merge(['sale_price' => $sale_price]);
-            }
-        }
-
-
-
-        /// addimage
-        if ($request->addimage) {
-            $strimage = array();
-            foreach ($request->addimage as $image){
-                if (is_array($image) && isset($image['image'])) {
-                    if (!is_file($image['image'])) {
-                        $strimage[] .= $image['image'];
-                    }
-                }
-            }
-            $data->addimage = json_encode($strimage);
-        }
-        if (!$request->product_belongstomany_attribute_relationship) {
-            $request->merge(['product_belongstomany_attribute_relationship' => []]);
-        } else {
-            $attr = [];
-            foreach ($request->product_belongstomany_attribute_relationship as $attribute) {
-                $attr[$attribute['attribute_id']] = array(
-                    'value' => $attribute['value']
-                );
-            }
-            $request->merge(['product_belongstomany_attribute_relationship' => $attr]);
-        }
-        if($request->concomitant) {
-            $request->merge(['concomitant' =>addslashes(json_encode($request->concomitant))]);
-        } else {
-            $request->merge(['concomitant' =>'']);;
-        }
-        if($request->similar) {
-            $request->merge(['similar' =>addslashes(json_encode($request->similar))]);
-        } else {
-            $request->merge(['similar' =>'']);;
-        }
-        
         // Check permission
         $this->authorize('edit', $data);
+
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id);
 
-        //$date = $request->all();
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
-        if (!$request->ajax()) {
+        
+        /* adding discount to all subcategories and their products */
+        $subcategories = Subcategory::where('category', '=', $id)->get();
+        foreach($subcategories as $subcategory) {
+            $subcategory->sale_discount = $request->sale_discount;
+            $subcategory->save();
+            $products_ids = DB::table('product_subcategories_pivot')->where('subcategory_id', '=', $subcategory->id)->get();
 
-            //Inserting wholesale options of the product
-            if($slug == 'products') {
-                ProductWholesale::where('product_id', '=', $id)->delete();
-                
-                $i = 0;
-            
-                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
-
-                    $product_wholesale = new ProductWholesale;
-
-                    $product_wholesale->product_id = $data->id;
-                    $product_wholesale->quantity = $request->quantity[$i];
-                    $product_wholesale->unit = $request->unit[$i];;
-                    $product_wholesale->discount = $request->sale[$i];
-
-                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
-                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
-
-                    $product_wholesale->save();
-                    
-                    $i++;
-                }
+            foreach($products_ids as $product_id) {
+                $product = Product::find($product_id->product_id);
+                $product->sale_discount = $request->sale_discount;
+                $product->sale_price = $product->price_final * (100 - $request->sale_discount) / 100;
+                $product->save();
             }
+        }
 
+        if (!$request->ajax()) {
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
             event(new BreadDataUpdated($dataType, $data));
@@ -406,7 +286,6 @@ class ProductsController extends VoyagerBaseController
             $dataType->addRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
-        $categories = Category::get();
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'add');
 
@@ -419,7 +298,7 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     /**
@@ -445,56 +324,8 @@ class ProductsController extends VoyagerBaseController
             return response()->json(['errors' => $val->messages()]);
         }
 
-        /* Final price convertation */
-        if($request->currency_final) {
-            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
-
-            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-            
-            $request->merge(['price_final' => $price_final]);
-        }
-        
-        $subcategory = Subcategory::where('id', '=', $request->product_belongstomany_subcategory_relationship[0])->first();
-        $category = Category::where('id', '=', $subcategory->category)->first();
-
-        /* URL Generating */
-        $URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug; 
-        $request->merge(['URL' => $URL]);
-        
-        if($slug == 'products') {
-            if(isset($request->sale_discount)) {
-                $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
-                $sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
-                $request->merge(['sale_price' => $sale_price]);
-            }
-        }
-        
         if (!$request->has('_validate')) {
-            
-
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
-
-            //Inserting wholesale options of the product
-            if($slug == 'products') {
-                $i = 0;
-            
-                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
-
-                    $product_wholesale = new ProductWholesale;
-
-                    $product_wholesale->product_id = $data->id;
-                    $product_wholesale->quantity = $request->quantity[$i];
-                    $product_wholesale->unit = $request->unit[$i];;
-                    $product_wholesale->discount = $request->sale[$i];
-
-                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
-                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
-
-                    $product_wholesale->save();
-                    
-                    $i++;
-                }
-            }
 
             event(new BreadDataAdded($dataType, $data));
 
@@ -541,21 +372,13 @@ class ProductsController extends VoyagerBaseController
             // Single item delete, get ID from URL
             $ids[] = $id;
         }
-
-        
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
             $this->cleanup($dataType, $data);
-
-            //delete relations with subcategories
-            $deletedRows = DB::table('product_subcategories_pivot')->where('product_id', '=', $id)->delete();
-
-            //delete relations with wholesaleprices
-            $deletedRows = DB::table('product_wholesales')->where('product_id', '=', $id)->delete();
         }
 
         $displayName = count($ids) > 1 ? $dataType->display_name_plural : $dataType->display_name_singular;
-        
+
         $res = $data->destroy($ids);
         $data = $res
             ? [
@@ -570,6 +393,8 @@ class ProductsController extends VoyagerBaseController
         if ($res) {
             event(new BreadDataDeleted($dataType, $data));
         }
+
+        
 
         return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
     }

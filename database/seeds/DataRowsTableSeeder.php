@@ -766,7 +766,7 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 22,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'trade_sale');
+        $dataRow = $this->dataRow($productsDataType, 'sale_discount');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
@@ -778,14 +778,14 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 1,
                 'details'      => '',
-                'order'        => 23,
+                'order'        => 34,
             ])->save();
         }
-        $dataRow = $this->dataRow($productsDataType, 'trade_price');
+        $dataRow = $this->dataRow($productsDataType, 'sale_price');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => __('Оптовая цена'),
+                'display_name' => __('Стоимость со скидкой'),
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,
@@ -793,10 +793,9 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 1,
                 'details'      => '',
-                'order'        => 24,
-            ])->save();
+                'order'        => 35,
+                ])->save();
         }
-
         $dataRow = $this->dataRow($productsDataType, 'mainimage');
         if (!$dataRow->exists) {
             $dataRow->fill([
@@ -840,6 +839,71 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 1,
                 'details' => NULL,
                 'order' => 24,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($productsDataType, 'concomitant');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Сопутствующий'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App/Product"}',
+                'order' => 30,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($productsDataType, 'similar');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Похожий'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App/Product"}',
+                'order' => 31,
+            ])->save();
+        }
+
+
+        $dataRow = $this->dataRow($productsDataType, 'product_hasone_subcategory_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Главная категория'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\\Subcategory","table":"Subcategories","type":"belongsTo","column":"maincategory","key":"id","label":"name","pivot_table":"Currencies","pivot":"0","taggable":"0"}',
+                'order' => 33,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($productsDataType, 'maincategory');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Maincategory'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 32,
             ])->save();
         }
         /* Categories */
@@ -916,6 +980,21 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 0,
                 'details'      => '',
                 'order'        => 5,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($categoriesDataType, 'sale_discount');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('Скидка (%)'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 0,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 6,
             ])->save();
         }
         
@@ -1226,6 +1305,21 @@ class DataRowsTableSeeder extends Seeder
                 'details'      => '{"slugify":{"origin":"name","forceUpdate":true}}',
                 'order'        => 3,
             ])->save();
+        }
+        $dataRow = $this->dataRow($productSubcategoriesDataType, 'sale_discount');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('Скидка (%)'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 0,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 7,
+                ])->save();
         }
         $dataRow = $this->dataRow($attributeDataType, 'id');
         if (!$dataRow->exists) {

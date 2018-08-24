@@ -46,6 +46,7 @@
                             <!-- Adding / Editing -->
                             @php
                                 $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
+                            //dd($dataTypeRows);
                             @endphp
 
                 <ul class="nav nav-tabs">
@@ -60,13 +61,13 @@
                     <div id="tab1" class="tab-pane fade in active">
                         <div class="panel panel-bordered col-lg-12">
                             <div class="panel-body">
-                                <div class="form-group @if($dataTypeRows[13]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
-                                    {{ $dataTypeRows[13]->slugify }}
-                                    <label for="name">{{ $dataTypeRows[13]->display_name }}</label>
-                                        {!! app('voyager')->formField($dataTypeRows[13], $dataType, $dataTypeContent) !!}
+                                <div class="form-group @if($dataTypeRows[12]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                    {{ $dataTypeRows[12]->slugify }}
+                                    <label for="name">Описание</label>
+                                        {!! app('voyager')->formField($dataTypeRows[12], $dataType, $dataTypeContent) !!}
 
-                                    @foreach (app('voyager')->afterFormFields($dataTypeRows[13], $dataType, $dataTypeContent) as $after)
-                                        {!! $after->handle($dataTypeRows[13], $dataType, $dataTypeContent) !!}
+                                    @foreach (app('voyager')->afterFormFields($dataTypeRows[12], $dataType, $dataTypeContent) as $after)
+                                        {!! $after->handle($dataTypeRows[12], $dataType, $dataTypeContent) !!}
                                     @endforeach
 
                                 </div>
@@ -95,12 +96,16 @@
                                                     $row->field == 'code' ||
                                                     $row->field == 'price_final' || 
                                                     $row->field == 'product_hasone_currency_relationship' ||
+                                                    $row->field == 'profitability'||
+                                                    $row->field == 'sale_discount' ||
+                                                    $row->field == 'sale_price' ||
                                                     $row->field == 'profitability' ||
                                                     $row->field == 'mainimage' ||
                                                     $row->field == 'addimage' ||
-                                                    $row->field == 'product_belongstomany_attribute_relationship'
-                                                    $row->field == 'trade_sale' ||
-                                                    $row->field == 'trade_price')
+                                                    $row->field == 'similar' ||
+                                                    $row->field == 'concomitant' ||
+                                                    $row->field == 'addimage' ||
+                                                    $row->field == 'product_belongstomany_attribute_relationship')
                                                         <?php continue; ?>
                                                 @endif
                                                 <!-- GET THE DISPLAY OPTIONS -->
@@ -186,7 +191,9 @@
                                     @foreach($dataTypeRows as $row)
                                         <tr>
                                         @if($row->field == 'profitability' ||
-                                            $row->field == 'price_final')
+                                            $row->field == 'price_final' ||
+                                            $row->field == 'sale_discount' ||
+                                            $row->field == 'sale_price' )
                                             <!-- GET THE DISPLAY OPTIONS -->
                                             @php
                                                 $options = json_decode($row->details);
@@ -246,6 +253,7 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                     <div id="tab3" class="tab-pane fade">
                         <!-- ### IMAGE ### -->
                         <div class="panel panel-bordered panel-primary">
@@ -285,7 +293,7 @@
                                                     @endif
                                                 </div>
 
-                                                <input id="mainimage" type="file" name="mainimage" accept="image/*">
+                                                <input class="btn-image" id="mainimage" type="file" name="mainimage" accept="image/*">
                                                 <script>
                                                     $(document).ready(function() {
                                                         $("#mainimage").fileinput({
@@ -444,10 +452,10 @@
                             </div>-->
                             <div class="panel-body panel-bordered col-lg-12">
 
-                                @if (isset($dataTypeRows[25])) {{-- product_belongstomany_attribute_relationship --}}
+                                @if (isset($dataTypeRows[24])) {{-- product_belongstomany_attribute_relationship --}}
                                 @php
 
-                                    $row = $dataTypeRows[25];
+                                    $row = $dataTypeRows[24];
                                     $options = json_decode($row->details);
                                     $display_options = isset($options->display) ? $options->display : NULL;
                                     //$selected_values = isset($dataTypeContent) ? $dataTypeContent->belongsToMany($options->model, $options->pivot_table)->pluck($options->table.'.'.$options->key)->all() : array();

@@ -75,7 +75,7 @@ class DataTypesTableSeeder extends Seeder
                 'display_name_plural'   => __('Categories'),
                 'icon'                  => 'voyager-categories',
                 'model_name'            => 'App\\Category',
-                'controller'            => '',
+                'controller'            => '\\App\\Http\\Controllers\\Voyager\\CategoriesController',
                 'generate_permissions'  => 1,
                 'description'           => '',
             ])->save();

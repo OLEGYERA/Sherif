@@ -34,11 +34,14 @@ class CreateProductsTable extends Migration {
 			$table->string('currency_final', 191)->nullable();
 			$table->integer('status')->nullable();
 			$table->integer('label')->nullable();
-			$table->string('code')->nullable();
+			$table->string('code', 191)->nullable();
+			$table->integer('sale_discount')->nullable();
+			$table->float('sale_price', 10, 0)->nullable();
             $table->string('mainimage', 191)->nullable();
             $table->string('addimage', 1024)->nullable();
             $table->string('concomitant', 1024)->nullable();
-            $table->string('similar', 1024)->nullable();
+			$table->string('similar', 1024)->nullable();
+			$table->string('maincategory', 255)->nullable();
 
 		});
 	}
