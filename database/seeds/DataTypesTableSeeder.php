@@ -136,6 +136,34 @@ class DataTypesTableSeeder extends Seeder
                 'description'           => '',
             ])->save();
         }
+
+        $dataType = $this->dataType('slug', 'banner');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'Banner',
+                'display_name_singular' => __('Banner'),
+                'display_name_plural'   => __('Banners'),
+                'icon'                  => 'voyager-categories',
+                'model_name'            => 'App\\Models\\Banner',
+                'controller'            => '\\App\\Http\\Controllers\\Voyager\\AdminBannerController',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+
+        $dataType = $this->dataType('slug', 'attribute');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'Attribute',
+                'display_name_singular' => __('Attribute'),
+                'display_name_plural'   => __('Attributes'),
+                'icon'                  => 'voyager-categories',
+                'model_name'            => 'App\\Models\\Attribute',
+                'controller'            => '\\App\\Http\\Controllers\\Voyager\\AttributeController',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
     }
 
     /**

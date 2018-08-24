@@ -155,7 +155,7 @@
                         <span class="toggle-label">управление</span>
                         <div class="footer-service-info">
                             <span><i class="fas fa-eye footer-service-icon"></i>20000/20 посетителей всего/сегодня</span>
-                            <span><i class="fas fa-globe footer-service-icon"></i>ваш IP:8.8.8.8</span>
+                            <span><i class="fas fa-globe footer-service-icon"></i>ваш IP:{{\Illuminate\Support\Facades\Request::ip()}}</span>
                             <span><i class="fas fa-calendar-alt footer-service-icon"></i>01.01.2018 - проиндексировано google</span>
                             <span><i class="far fa-user footer-service-icon"></i>панель администратора</span>
                         </div>

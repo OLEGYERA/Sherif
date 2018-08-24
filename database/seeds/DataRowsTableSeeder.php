@@ -20,6 +20,7 @@ class DataRowsTableSeeder extends Seeder
         $productStatusesDataType = DataType::where('slug', 'product-statuses')->firstOrFail();
         $productLabelsDataType = DataType::where('slug', 'product-labels')->firstOrFail();
         $productSubcategoriesDataType = DataType::where('slug', 'subcategories')->firstOrFail();
+        $attributeDataType = DataType::where('slug','attribute')->firstOrFail();
 
         $dataRow = $this->dataRow($userDataType, 'id');
         if (!$dataRow->exists) {
@@ -389,6 +390,7 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 1,
             ])->save();
         }
+
         $dataRow = $this->dataRow($productsDataType, 'name');
         if (!$dataRow->exists) {
             $dataRow->fill([
@@ -401,7 +403,7 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 0,
                 'details'      => '',
-                'order'        => 2,
+                'order'        => 3,
             ])->save();
         }
         $dataRow = $this->dataRow($productsDataType, 'slug');
@@ -776,7 +778,7 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 1,
                 'details'      => '',
-                'order'        => 23,
+                'order'        => 34,
             ])->save();
         }
         $dataRow = $this->dataRow($productsDataType, 'sale_price');
@@ -791,10 +793,119 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 1,
                 'details'      => '',
-                'order'        => 24,
+                'order'        => 35,
+                ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'mainimage');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'image',
+                'display_name' => __('voyager::seeders.data_rows.mainimage'),
+                'required' => 0,
+                'browse' => 1,
+                'read' => 0,
+                'edit' => 0,
+                'add' => 0,
+                'delete' => 0,
+                'details' => '{"resize":{"width":"1000","height":"null"},"quality":"75%","upsize":true,"thumbnails":[{"name":"medium","scale":"50%"},{"name":"small","scale":"25%"},{"name":"cropped","crop":{"width":"300","height":"250"}}]}',
+                'order' => 2,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'product_belongstomany_attribute_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Атрибуты'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\\Models\\\\Attribute","table":"attribute","type":"belongsToMany","column":"id","key":"id","label":"name","pivot_table":"product_attributes_pivot","pivot":"1","taggable":"0"}',
+                'order' => 28,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'addimage');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'multiple_images',
+                'display_name' => __('Изображения'),
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 24,
             ])->save();
         }
 
+        $dataRow = $this->dataRow($productsDataType, 'concomitant');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Сопутствующий'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App/Product"}',
+                'order' => 30,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($productsDataType, 'similar');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Похожий'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App/Product"}',
+                'order' => 31,
+            ])->save();
+        }
+
+
+        $dataRow = $this->dataRow($productsDataType, 'product_hasone_subcategory_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Главная категория'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\\Subcategory","table":"Subcategories","type":"belongsTo","column":"maincategory","key":"id","label":"name","pivot_table":"Currencies","pivot":"0","taggable":"0"}',
+                'order' => 33,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($productsDataType, 'maincategory');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Maincategory'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 32,
+            ])->save();
+        }
         /* Categories */
         $dataRow = $this->dataRow($categoriesDataType, 'id');
         if (!$dataRow->exists) {
@@ -1208,9 +1319,84 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 1,
                 'details'      => '',
                 'order'        => 7,
+                ])->save();
+        }
+        $dataRow = $this->dataRow($attributeDataType, 'id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('id'),
+                'required' => 1,
+                'browse' => 0,
+                'read' => 0,
+                'edit' => 0,
+                'add' => 0,
+                'delete' => 0,
+                'details' => NULL,
+                'order' => 1,
             ])->save();
         }
 
+        $dataRow = $this->dataRow($attributeDataType, 'name');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Имя'),
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 2,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($attributeDataType, 'value');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Значение'),
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 3,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($attributeDataType, 'created_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('Created At'),
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 0,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 4,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($attributeDataType, 'updated_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('Updated at'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 0,
+                'edit' => 0,
+                'add' => 0,
+                'delete' => 0,
+                'details' => NULL,
+                'order' => 5,
+            ])->save();
+        }
     }
 
     /**

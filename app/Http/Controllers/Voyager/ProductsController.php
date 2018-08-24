@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Voyager;
 
 use App\Currency;//for convertion
+use App\Models\Attribute;
 use App\Product;//for convertion
 
 use App\Category;
@@ -173,7 +174,11 @@ class ProductsController extends VoyagerBaseController
        
         /* WHolesale price displaying */
         $wholesale = Product::find($id)->wholesale;
-        
+
+
+        $attributes =  Attribute::all();
+        //$product_attributes = A
+
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale);
     }
 
@@ -285,16 +290,51 @@ class ProductsController extends VoyagerBaseController
             }
         }
 
+
+
+        /// addimage
+        if ($request->addimage) {
+            $strimage = array();
+            foreach ($request->addimage as $image){
+                if (is_array($image) && isset($image['image'])) {
+                    if (!is_file($image['image'])) {
+                        $strimage[] .= $image['image'];
+                    }
+                }
+            }
+            $data->addimage = json_encode($strimage);
+        }
+        if (!$request->product_belongstomany_attribute_relationship) {
+            $request->merge(['product_belongstomany_attribute_relationship' => []]);
+        } else {
+            $attr = [];
+            foreach ($request->product_belongstomany_attribute_relationship as $attribute) {
+                $attr[$attribute['attribute_id']] = array(
+                    'value' => $attribute['value']
+                );
+            }
+            $request->merge(['product_belongstomany_attribute_relationship' => $attr]);
+        }
+        if($request->concomitant) {
+            $request->merge(['concomitant' =>addslashes(json_encode($request->concomitant))]);
+        } else {
+            $request->merge(['concomitant' =>'']);;
+        }
+        if($request->similar) {
+            $request->merge(['similar' =>addslashes(json_encode($request->similar))]);
+        } else {
+            $request->merge(['similar' =>'']);;
+        }
+        
         // Check permission
         $this->authorize('edit', $data);
-        
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id);
-        
+
+        //$date = $request->all();
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
-        
         if (!$request->ajax()) {
 
             //Inserting wholesale options of the product
