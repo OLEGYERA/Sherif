@@ -8,13 +8,11 @@ use App\Product;//for convertion
 
 use App\Category;
 use App\Subcategory;
+use App\ProductSubcategoriesPivot;
 
 use App\ProductWholesale;
 
-use App\ProductSubcategoriesPivot;
-
 use Illuminate\Support\Collection;
-
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -179,8 +177,11 @@ class ProductsController extends VoyagerBaseController
         $attributes =  Attribute::all();
         //$product_attributes = A
 
-        
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale);
+        /*All editing info*/
+        $edit_info = DB::table('product_edit_info')->where('product_id', $id)->first();
+
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale)->with('edit_info', $edit_info);
     }
 
     //***************************************
@@ -280,6 +281,34 @@ class ProductsController extends VoyagerBaseController
                     $i++;
                 }
             }
+
+             /* Publication history */
+            if(Product::find($id)->publication == '1') {
+                $last_value = 'on';
+            } else {
+                $last_value = null;
+            }
+
+            $user_name = \Auth::user()->name;
+
+            if($request->publication != $last_value) {
+                if($request->publication == 'on') {
+                    DB::table('product_edit_info')->where('product_id', $id)
+                    ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Опубликовано']);
+                } else {
+                    DB::table('product_edit_info')->where('product_id', $id)
+                    ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Снято с публикации']);
+                }  
+            } 
+
+            /* Editing history */
+            DB::table('product_edit_info')->where('product_id', $id)->update(['editing_updated_at' => date("Y-m-d H:i:s"), 'editing_user' => $user_name]);
+                
+            /* Description editor */
+            $last_description = Product::find($id)->description;
+            if($request->description != $last_description) {
+                DB::table('product_edit_info')->where('product_id', $id)->update(['description_updated_at' => date("Y-m-d H:i:s"), 'description_user' => $user_name]);
+            }
         }
 
         /*sale price */
@@ -326,7 +355,7 @@ class ProductsController extends VoyagerBaseController
         } else {
             $request->merge(['similar' =>'']);;
         }
-        
+
         // Check permission
         $this->authorize('edit', $data);
         // Validate fields with ajax
@@ -493,6 +522,28 @@ class ProductsController extends VoyagerBaseController
                     $product_wholesale->save();
                     
                     $i++;
+                }
+
+                //creating row record in product_edit_info
+                DB::table('product_edit_info')->insert(['product_id' => $data->id]);
+
+                /* Publication history */
+                $user_name = \Auth::user()->name;
+
+                if($request->publication == 'on') {
+                    DB::table('product_edit_info')->where('product_id', $data->id)
+                    ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Опубликовано']);
+                } else {
+                    DB::table('product_edit_info')->where('product_id', $data->id)
+                    ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Снято с публикации']);
+                }  
+
+                /* Editing history */
+                DB::table('product_edit_info')->where('product_id', $data->id)->update(['editing_updated_at' => date("Y-m-d H:i:s"), 'editing_user' => $user_name]);
+                    
+                /* Description editor */
+                if(isset($request->description)) {
+                    DB::table('product_edit_info')->where('product_id', $data->id)->update(['description_updated_at' => date("Y-m-d H:i:s"), 'description_user' => $user_name]);
                 }
             }
 

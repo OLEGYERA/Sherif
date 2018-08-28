@@ -37,6 +37,7 @@
                     <li><a data-toggle="tab" href="#tab4">Характеристики</a></li>
                     <li><a data-toggle="tab" href="#tab5">Сопутствующий</a></li>
                     <li><a data-toggle="tab" href="#tab6">Похожие товары</a></li>
+                    <li><a data-toggle="tab" href="#tab7">История изменений</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -76,10 +77,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><b>ID</b></td>
-                                        <td>{{$dataTypeContent->id}}</td>
-                                    </tr>
                                     <tr>
                                         <td><b>ID</b></td>
                                         <td>{{$dataTypeContent->id}}</td>
@@ -321,9 +318,80 @@
                         <h3>Tab 6</h3>
                         <p>Здесь будут похожие товары.</p>
                     </div>
+                    <div id="tab7" class="tab-pane fade">
+                    <div class="col-lg-6">
+                        <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="3">
+                                            <h4>История публикаций</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><b>Дата</b></th>
+                                        <th><b>Пользователь</b></th>
+                                        <th><b>Примечание</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$edit_info->publication_updated_at}}</td>
+                                        <td>{{$edit_info->publication_user}}</td>
+                                        <td>{{$edit_info->publication_action}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h4>История правок</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><b>Дата</b></th>
+                                        <th><b>Пользователь</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$edit_info->editing_updated_at}}</td>
+                                        <td>{{$edit_info->editing_user}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h4>История описания</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><b>Дата</b></th>
+                                        <th><b>Пользователь</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$edit_info->description_updated_at}}</td>
+                                        <td>{{$edit_info->description_user}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-               
             </div>
         </div>
     </div>
