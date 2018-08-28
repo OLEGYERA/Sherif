@@ -61,13 +61,13 @@
                     <div id="tab1" class="tab-pane fade in active">
                         <div class="panel panel-bordered col-lg-12">
                             <div class="panel-body">
-                                <div class="form-group @if($dataTypeRows[12]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
-                                    {{ $dataTypeRows[12]->slugify }}
+                                <div class="form-group @if($dataTypeRows[13]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                    {{ $dataTypeRows[13]->slugify }}
                                     <label for="name">Описание</label>
-                                        {!! app('voyager')->formField($dataTypeRows[12], $dataType, $dataTypeContent) !!}
+                                        {!! app('voyager')->formField($dataTypeRows[13], $dataType, $dataTypeContent) !!}
 
-                                    @foreach (app('voyager')->afterFormFields($dataTypeRows[12], $dataType, $dataTypeContent) as $after)
-                                        {!! $after->handle($dataTypeRows[12], $dataType, $dataTypeContent) !!}
+                                    @foreach (app('voyager')->afterFormFields($dataTypeRows[13], $dataType, $dataTypeContent) as $after)
+                                        {!! $after->handle($dataTypeRows[13], $dataType, $dataTypeContent) !!}
                                     @endforeach
 
                                 </div>
@@ -113,7 +113,9 @@
                                                     $options = json_decode($row->details);
                                                     $display_options = isset($options->display) ? $options->display : NULL;
                                                 @endphp
-
+                                                @if ($options && isset($options->legend) && isset($options->legend->text))
+                                                    <legend class="text-{{$options->legend->align or 'center'}}" style="background-color: {{$options->legend->bgcolor or '#f0f0f0'}};padding: 5px;">{{$options->legend->text}}</legend>
+                                                @endif
                                                 @if ($options && isset($options->formfields_custom))
                                                     @include('voyager::formfields.custom.' . $options->formfields_custom)
                                                 @else
@@ -157,7 +159,9 @@
                                                     $options = json_decode($row->details);
                                                     $display_options = isset($options->display) ? $options->display : NULL;
                                                 @endphp
-
+                                                @if ($options && isset($options->legend) && isset($options->legend->text))
+                                                    <legend class="text-{{$options->legend->align or 'center'}}" style="background-color: {{$options->legend->bgcolor or '#f0f0f0'}};padding: 5px;">{{$options->legend->text}}</legend>
+                                                @endif
                                                 @if ($options && isset($options->formfields_custom))
                                                     @include('voyager::formfields.custom.' . $options->formfields_custom)
                                                 @else
@@ -199,7 +203,9 @@
                                                 $options = json_decode($row->details);
                                                 $display_options = isset($options->display) ? $options->display : NULL;
                                             @endphp
-
+                                            @if ($options && isset($options->legend) && isset($options->legend->text))
+                                                <legend class="text-{{$options->legend->align or 'center'}}" style="background-color: {{$options->legend->bgcolor or '#f0f0f0'}};padding: 5px;">{{$options->legend->text}}</legend>
+                                            @endif
                                             @if ($options && isset($options->formfields_custom))
                                                 @include('voyager::formfields.custom.' . $options->formfields_custom)
                                             @else
@@ -207,12 +213,12 @@
                                                         <td><label for="name">{{ $row->display_name }}</label> </td>
                                                     @include('voyager::multilingual.input-hidden-bread-edit-add')
                                                     @if($row->type == 'relationship')
-                                                    <td>@include('voyager::formfields.relationship') </td>
+                                                        <td>@include('voyager::formfields.relationship') </td>
                                                     @else
-                                                    <td>{!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!} </td>
+                                                        <td>{!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!} </td>
                                                     @endif
                                                     @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
-                                                    <td>{!! $after->handle($row, $dataType, $dataTypeContent) !!} </td>
+                                                        <td>{!! $after->handle($row, $dataType, $dataTypeContent) !!} </td>
                                                     @endforeach
                                             @endif
                                         @endif
@@ -452,10 +458,10 @@
                             </div>-->
                             <div class="panel-body panel-bordered col-lg-12">
 
-                                @if (isset($dataTypeRows[24])) {{-- product_belongstomany_attribute_relationship --}}
+                                @if (isset($dataTypeRows[25])) {{-- product_belongstomany_attribute_relationship --}}
                                 @php
 
-                                    $row = $dataTypeRows[24];
+                                    $row = $dataTypeRows[25];
                                     $options = json_decode($row->details);
                                     $display_options = isset($options->display) ? $options->display : NULL;
                                     //$selected_values = isset($dataTypeContent) ? $dataTypeContent->belongsToMany($options->model, $options->pivot_table)->pluck($options->table.'.'.$options->key)->all() : array();

@@ -81,6 +81,10 @@
                                         <td>{{$dataTypeContent->id}}</td>
                                     </tr>
                                     <tr>
+                                        <td><b>ID</b></td>
+                                        <td>{{$dataTypeContent->id}}</td>
+                                    </tr>
+                                    <tr>
                                         <td><b>Название</b></td>
                                         <td>{{$dataTypeContent->name}}</td>
                                     </tr>
@@ -101,15 +105,15 @@
                                         <td>{{$dataTypeContent->code}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[12]->display_name}}</b></td>
+                                        <td><b>{{$dataType->readRows[13]->display_name}}</b></td>
                                         <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[12]->details);
+                                        @php $rowDetails = json_decode($dataType->readRows[13]->details);
                                             if($rowDetails === null){
                                                     $rowDetails=new stdClass();
                                                     $rowDetails->options=new stdClass();
                                             }
                                         @endphp
-                                        @if($dataType->readRows[12]->type == 'relationship')
+                                        @if($dataType->readRows[13]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>
@@ -117,69 +121,69 @@
                                     <tr>
                                         <td><b>Главная подкатегория</b></td>
                                         <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[29]->details);
+                                        @php $rowDetails = json_decode($dataType->readRows[30]->details);
                                             if($rowDetails === null){
                                                     $rowDetails=new stdClass();
                                                     $rowDetails->options=new stdClass();
                                             }
                                         @endphp
-                                        @if($dataType->readRows[29]->type == 'relationship')
+                                        @if($dataType->readRows[30]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
-                                        @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>{{$dataType->readRows[9]->display_name}}</b></td>
-                                        <td>
-                                        @if($dataType->readRows[9]->type == 'color')
-                                            <span class="badge badge-lg" style="background-color: {{ $dataTypeContent->{$dataType->readRows[9]->field} }}">{{ $dataTypeContent->{$dataType->readRows[9]->field} }}</span>
                                         @endif
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><b>{{$dataType->readRows[10]->display_name}}</b></td>
+                                        <td>
+                                        @if($dataType->readRows[10]->type == 'color')
+                                            <span class="badge badge-lg" style="background-color: {{ $dataTypeContent->{$dataType->readRows[10]->field} }}">{{ $dataTypeContent->{$dataType->readRows[10]->field} }}</span>
+                                        @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{{$dataType->readRows[11]->display_name}}</b></td>
                                         <td>{{$dataTypeContent->manufacturer}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[14]->display_name}}</b></td>
+                                        <td><b>{{$dataType->readRows[15]->display_name}}</b></td>
                                         <td>
-                                            @if($dataType->readRows[14]->type == 'checkbox')
-                                                @if(json_decode($dataType->readRows[14]->details) && property_exists(json_decode($dataType->readRows[14]->details), 'on') && property_exists(json_decode($dataType->readRows[14]->details), 'off'))
-                                                    @if($dataTypeContent->{$dataType->readRows[14]->field})
-                                                    <span class="label label-info">{{ json_decode($dataType->readRows[14]->details)->on }}</span>
+                                            @if($dataType->readRows[15]->type == 'checkbox')
+                                                @if(json_decode($dataType->readRows[15]->details) && property_exists(json_decode($dataType->readRows[15]->details), 'on') && property_exists(json_decode($dataType->readRows[15]->details), 'off'))
+                                                    @if($dataTypeContent->{$dataType->readRows[15]->field})
+                                                    <span class="label label-info">{{ json_decode($dataType->readRows[15]->details)->on }}</span>
                                                     @else
-                                                    <span class="label label-primary">{{json_decode($dataType->readRows[14]->details)->off }}</span>
+                                                    <span class="label label-primary">{{json_decode($dataType->readRows[15]->details)->off }}</span>
                                                     @endif
                                                 @else
-                                                {{ $dataTypeContent->{$dataType->readRows[14]->field} }}
+                                                {{ $dataTypeContent->{$dataType->readRows[15]->field} }}
                                                 @endif
                                             @endif
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[20]->display_name}}</b></td>
+                                        <td><b>{{$dataType->readRows[21]->display_name}}</b></td>
                                         <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[20]->details);
+                                        @php $rowDetails = json_decode($dataType->readRows[21]->details);
                                             if($rowDetails === null){
                                                     $rowDetails=new stdClass();
                                                     $rowDetails->options=new stdClass();
                                             }
                                         @endphp
-                                        @if($dataType->readRows[20]->type == 'relationship')
+                                        @if($dataType->readRows[21]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[22]->display_name}}</b></td>
+                                        <td><b>{{$dataType->readRows[23]->display_name}}</b></td>
                                         <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[22]->details);
+                                        @php $rowDetails = json_decode($dataType->readRows[23]->details);
                                             if($rowDetails === null){
                                                     $rowDetails=new stdClass();
                                                     $rowDetails->options=new stdClass();
                                             }
                                         @endphp
-                                        @if($dataType->readRows[22]->type == 'relationship')
+                                        @if($dataType->readRows[23]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>
@@ -200,15 +204,15 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[5]->display_name}}</b></td>
+                                        <td><b>{{$dataType->readRows[6]->display_name}}</b></td>
                                         <td>{{$dataTypeContent->EUR}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[6]->display_name}}</b></td>
+                                        <td><b>{{$dataType->readRows[7]->display_name}}</b></td>
                                         <td>{{$dataTypeContent->USD}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[7]->display_name}}</b></td>
+                                        <td><b>{{$dataType->readRows[8]->display_name}}</b></td>
                                         <td>{{$dataTypeContent->UAH}}</td>
                                     </tr>
                                     <tr>
