@@ -8,13 +8,11 @@ use App\Product;//for convertion
 
 use App\Category;
 use App\Subcategory;
+use App\ProductSubcategoriesPivot;
 
 use App\ProductWholesale;
 
-use App\ProductSubcategoriesPivot;
-
 use Illuminate\Support\Collection;
-
 use Illuminate\Http\Request;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
@@ -55,7 +53,7 @@ class ProductsController extends VoyagerBaseController
         $searchable = $dataType->server_side ? array_keys(SchemaManager::describeTable(app($dataType->model_name)->getTable())->toArray()) : '';
         $orderBy = $request->get('order_by');
         $sortOrder = $request->get('sort_order', null);
-        
+
         // Next Get or Paginate the actual content from the MODEL that corresponds to the slug DataType
         if (strlen($dataType->model_name) != 0) {
             $relationships = $this->getRelationships($dataType);
@@ -132,7 +130,7 @@ class ProductsController extends VoyagerBaseController
 
     public function show(Request $request, $id)
     {
-        
+
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -171,7 +169,7 @@ class ProductsController extends VoyagerBaseController
         } else {
             $currency_name = '';
         }
-       
+
         /* WHolesale price displaying */
         $wholesale = Product::find($id)->wholesale;
 
@@ -179,8 +177,11 @@ class ProductsController extends VoyagerBaseController
         $attributes =  Attribute::all();
         //$product_attributes = A
 
-        
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale);
+        /*All editing info*/
+        $edit_info = DB::table('product_edit_info')->where('product_id', $id)->first();
+
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale)->with('edit_info', $edit_info);
     }
 
     //***************************************
@@ -198,7 +199,7 @@ class ProductsController extends VoyagerBaseController
     public function edit(Request $request, $id)
     {
         $slug = $this->getSlug($request);
-        
+
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         $relationships = $this->getRelationships($dataType);
@@ -218,7 +219,7 @@ class ProductsController extends VoyagerBaseController
 
         // Check permission
         $this->authorize('edit', $dataTypeContent);
-        
+
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
 
@@ -251,18 +252,18 @@ class ProductsController extends VoyagerBaseController
             $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
 
             $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-            
+
             $request->merge(['price_final' => $price_final]);
         }
-        
+
         //Inserting wholesale options of the product
         if($slug == 'products') {
             if(!$request->ajax()) {
-                
+
                 ProductWholesale::where('product_id', '=', $id)->delete();
-                
+
                 $i = 0;
-            
+
                 while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
 
                     $product_wholesale = new ProductWholesale;
@@ -276,9 +277,37 @@ class ProductsController extends VoyagerBaseController
                     $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
 
                     $product_wholesale->save();
-                    
+
                     $i++;
                 }
+            }
+
+            /* Publication history */
+            if(Product::find($id)->publication == '1') {
+                $last_value = 'on';
+            } else {
+                $last_value = null;
+            }
+
+            $user_name = \Auth::user()->name;
+
+            if($request->publication != $last_value) {
+                if($request->publication == 'on') {
+                    DB::table('product_edit_info')->where('product_id', $id)
+                        ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Опубликовано']);
+                } else {
+                    DB::table('product_edit_info')->where('product_id', $id)
+                        ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Снято с публикации']);
+                }
+            }
+
+            /* Editing history */
+            DB::table('product_edit_info')->where('product_id', $id)->update(['editing_updated_at' => date("Y-m-d H:i:s"), 'editing_user' => $user_name]);
+
+            /* Description editor */
+            $last_description = Product::find($id)->description;
+            if($request->description != $last_description) {
+                DB::table('product_edit_info')->where('product_id', $id)->update(['description_updated_at' => date("Y-m-d H:i:s"), 'description_user' => $user_name]);
             }
         }
 
@@ -326,7 +355,7 @@ class ProductsController extends VoyagerBaseController
         } else {
             $request->merge(['similar' =>'']);;
         }
-        
+
         // Check permission
         $this->authorize('edit', $data);
         // Validate fields with ajax
@@ -341,9 +370,9 @@ class ProductsController extends VoyagerBaseController
             //Inserting wholesale options of the product
             if($slug == 'products') {
                 ProductWholesale::where('product_id', '=', $id)->delete();
-                
+
                 $i = 0;
-            
+
                 while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
 
                     $product_wholesale = new ProductWholesale;
@@ -357,7 +386,7 @@ class ProductsController extends VoyagerBaseController
                     $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
 
                     $product_wholesale->save();
-                    
+
                     $i++;
                 }
             }
@@ -398,8 +427,8 @@ class ProductsController extends VoyagerBaseController
         $this->authorize('add', app($dataType->model_name));
 
         $dataTypeContent = (strlen($dataType->model_name) != 0)
-                            ? new $dataType->model_name()
-                            : false;
+            ? new $dataType->model_name()
+            : false;
 
         foreach ($dataType->addRows as $key => $row) {
             $details = json_decode($row->details);
@@ -450,17 +479,17 @@ class ProductsController extends VoyagerBaseController
             $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
 
             $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-            
+
             $request->merge(['price_final' => $price_final]);
         }
-        
+
         $subcategory = Subcategory::where('id', '=', $request->product_belongstomany_subcategory_relationship[0])->first();
         $category = Category::where('id', '=', $subcategory->category)->first();
 
         /* URL Generating */
-        $URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug; 
+        $URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug;
         $request->merge(['URL' => $URL]);
-        
+
         if($slug == 'products') {
             if(isset($request->sale_discount)) {
                 $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
@@ -468,16 +497,16 @@ class ProductsController extends VoyagerBaseController
                 $request->merge(['sale_price' => $sale_price]);
             }
         }
-        
+
         if (!$request->has('_validate')) {
-            
+
 
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
             //Inserting wholesale options of the product
             if($slug == 'products') {
                 $i = 0;
-            
+
                 while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
 
                     $product_wholesale = new ProductWholesale;
@@ -491,8 +520,30 @@ class ProductsController extends VoyagerBaseController
                     $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
 
                     $product_wholesale->save();
-                    
+
                     $i++;
+                }
+
+                //creating row record in product_edit_info
+                DB::table('product_edit_info')->insert(['product_id' => $data->id]);
+
+                /* Publication history */
+                $user_name = \Auth::user()->name;
+
+                if($request->publication == 'on') {
+                    DB::table('product_edit_info')->where('product_id', $data->id)
+                        ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Опубликовано']);
+                } else {
+                    DB::table('product_edit_info')->where('product_id', $data->id)
+                        ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Снято с публикации']);
+                }
+
+                /* Editing history */
+                DB::table('product_edit_info')->where('product_id', $data->id)->update(['editing_updated_at' => date("Y-m-d H:i:s"), 'editing_user' => $user_name]);
+
+                /* Description editor */
+                if(isset($request->description)) {
+                    DB::table('product_edit_info')->where('product_id', $data->id)->update(['description_updated_at' => date("Y-m-d H:i:s"), 'description_user' => $user_name]);
                 }
             }
 
@@ -505,9 +556,9 @@ class ProductsController extends VoyagerBaseController
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
                 ->with([
-                        'message'    => __('voyager::generic.successfully_added_new')." {$dataType->display_name_singular}",
-                        'alert-type' => 'success',
-                    ]);
+                    'message'    => __('voyager::generic.successfully_added_new')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
         }
     }
 
@@ -542,7 +593,7 @@ class ProductsController extends VoyagerBaseController
             $ids[] = $id;
         }
 
-        
+
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
             $this->cleanup($dataType, $data);
@@ -555,7 +606,7 @@ class ProductsController extends VoyagerBaseController
         }
 
         $displayName = count($ids) > 1 ? $dataType->display_name_plural : $dataType->display_name_singular;
-        
+
         $res = $data->destroy($ids);
         $data = $res
             ? [
@@ -654,11 +705,11 @@ class ProductsController extends VoyagerBaseController
 
         if (!isset($dataType->order_column) || !isset($dataType->order_display_column)) {
             return redirect()
-            ->route("voyager.{$dataType->slug}.index")
-            ->with([
-                'message'    => __('voyager::bread.ordering_not_set'),
-                'alert-type' => 'error',
-            ]);
+                ->route("voyager.{$dataType->slug}.index")
+                ->with([
+                    'message'    => __('voyager::bread.ordering_not_set'),
+                    'alert-type' => 'error',
+                ]);
         }
 
         $model = app($dataType->model_name);
