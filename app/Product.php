@@ -12,4 +12,9 @@ class Product extends Model
     {
         return $this->hasMany('App\ProductWholesale');
     }
+
+    public function edit_info()
+    {
+        return $this->hasOne('App\ProductEditInfo');
+    }
 }
