@@ -390,6 +390,37 @@
                             </table>
                             </div>
                         </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="3">
+                                            <h4>История статуса</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><b>Пользователь</b></th>
+                                        <th><b>Установлен статус</b></th>
+                                        <th><b>Дата</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$edit_info->status_user}}</td>
+                                        <td>{{$edit_info->status}}</td>
+                                        <td>{{$edit_info->status_updated_at}}</td>
+                                    </tr>
+                                    @if(isset($edit_info->status_to_change))
+                                        <tr>
+                                            <td colspan='2'> Статус будет изменен на "В Наличии"</td>
+                                            <td>{{$edit_info->status_to_change}}</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

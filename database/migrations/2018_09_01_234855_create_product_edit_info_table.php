@@ -18,11 +18,15 @@ class CreateProductEditInfoTable extends Migration {
 			$table->integer('product_id')->nullable();
 			$table->string('publication_user')->nullable();
 			$table->dateTime('publication_updated_at')->nullable();
-			$table->string('publication_action')->nullable();
 			$table->string('editing_user')->nullable();
 			$table->dateTime('editing_updated_at')->nullable();
+			$table->string('publication_action')->nullable();
 			$table->string('description_user')->nullable();
 			$table->dateTime('description_updated_at')->nullable();
+			$table->string('status')->nullable();
+			$table->dateTime('status_updated_at')->nullable();
+			$table->string('status_user')->nullable();
+			$table->dateTime('status_to_change')->nullable();
 		});
 	}
 

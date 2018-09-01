@@ -309,6 +309,14 @@ class ProductsController extends VoyagerBaseController
             if($request->description != $last_description) {
                 DB::table('product_edit_info')->where('product_id', $id)->update(['description_updated_at' => date("Y-m-d H:i:s"), 'description_user' => $user_name]);
             }
+
+            /* Status date and info */
+            DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_updated_at' => date("Y-m-d H:i:s"), 'status_user' => $user_name, 'status' => DB::table('product_statuses')->where('id', $request->status)->first()->name]);
+            if($request->status == '3') {
+                DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_to_change' => date("Y-m-d H:i:s", strtotime("+10 day", strtotime("now")))]);
+            } else {
+                DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_to_change' => null]);
+            }
         }
 
         /*sale price */
@@ -509,7 +517,7 @@ class ProductsController extends VoyagerBaseController
                     'alert-type' => 'error',
                 ]); 
         }
-
+        
         if (!$request->has('_validate')) {
 
 
@@ -557,6 +565,15 @@ class ProductsController extends VoyagerBaseController
                 if(isset($request->description)) {
                     DB::table('product_edit_info')->where('product_id', $data->id)->update(['description_updated_at' => date("Y-m-d H:i:s"), 'description_user' => $user_name]);
                 }
+
+                /* Status date and info */
+                DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_updated_at' => date("Y-m-d H:i:s"), 'status_user' => $user_name, 'status' => DB::table('product_statuses')->where('id', $request->status)->first()->name]);
+                if($request->status == '3') {
+                    DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_to_change' => date("Y-m-d H:i:s", strtotime("+10 day", strtotime("now")))]);
+                } else {
+                    DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_to_change' => null]);
+                }
+                
             }
 
             event(new BreadDataAdded($dataType, $data));
