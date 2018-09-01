@@ -497,6 +497,18 @@ class ProductsController extends VoyagerBaseController
                 $request->merge(['sale_price' => $sale_price]);
             }
         }
+        
+        //checking if product with same vendor code and manufacturer exists
+        $products = Product::where('vendor_code', $request->vendor_code)->where('manufacturer', $request->manufacturer)->first();
+        if(isset($products)) {
+            return redirect()
+                ->route("voyager.{$dataType->slug}.create")
+                ->withInput()
+                ->with([
+                    'message'    => __('Товар с такими артикулом и производителем уже существуют'),
+                    'alert-type' => 'error',
+                ]); 
+        }
 
         if (!$request->has('_validate')) {
 

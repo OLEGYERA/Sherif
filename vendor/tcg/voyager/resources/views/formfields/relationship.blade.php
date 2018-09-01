@@ -146,12 +146,13 @@
 			@else
 				<select
 					class="form-control @if(isset($options->taggable) && $options->taggable == 'on') select2-taggable @else select2 @endif" 
-					name="{{ $relationshipField }}[]" multiple
+					name="{{ $relationshipField }}[]" multiple required
 					@if(isset($options->taggable) && $options->taggable == 'on')
 						data-route="{{ route('voyager.'.str_slug($options->table).'.store') }}"
 						data-label="{{$options->label}}"
 						data-error-message="{{__('voyager::bread.error_tagging')}}"
 					@endif
+					
 				>
 					
 			            @php 
@@ -190,5 +191,5 @@
 		cannot make relationship because {{ $options->model }} does not exist.
 
 	@endif
-
+	
 @endif

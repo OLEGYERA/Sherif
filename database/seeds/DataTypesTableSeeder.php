@@ -56,7 +56,7 @@ class DataTypesTableSeeder extends Seeder
         $dataType = $this->dataType('slug', 'products');
         if (!$dataType->exists) {
             $dataType->fill([
-                'name'                  => 'Products',
+                'name'                  => 'products',
                 'display_name_singular' => __('Product'),
                 'display_name_plural'   => __('Products'),
                 'icon'                  => 'voyager-bag',
@@ -84,7 +84,7 @@ class DataTypesTableSeeder extends Seeder
         $dataType = $this->dataType('slug', 'currencies');
         if (!$dataType->exists) {
             $dataType->fill([
-                'name'                  => 'Currencies',
+                'name'                  => 'currencies',
                 'display_name_singular' => __('Currency'),
                 'display_name_plural'   => __('Currencies'),
                 'icon'                  => 'voyager-dollar',
@@ -126,7 +126,7 @@ class DataTypesTableSeeder extends Seeder
         $dataType = $this->dataType('slug', 'subcategories');
         if (!$dataType->exists) {
             $dataType->fill([
-                'name'                  => 'Subcategories',
+                'name'                  => 'subcategories',
                 'display_name_singular' => __('Subcategory'),
                 'display_name_plural'   => __('Subcategories'),
                 'icon'                  => 'voyager-categories',
@@ -140,7 +140,7 @@ class DataTypesTableSeeder extends Seeder
         $dataType = $this->dataType('slug', 'banner');
         if (!$dataType->exists) {
             $dataType->fill([
-                'name'                  => 'Banner',
+                'name'                  => 'banner',
                 'display_name_singular' => __('Banner'),
                 'display_name_plural'   => __('Banners'),
                 'icon'                  => 'voyager-categories',
@@ -154,7 +154,7 @@ class DataTypesTableSeeder extends Seeder
         $dataType = $this->dataType('slug', 'attribute');
         if (!$dataType->exists) {
             $dataType->fill([
-                'name'                  => 'Attribute',
+                'name'                  => 'attribute',
                 'display_name_singular' => __('Attribute'),
                 'display_name_plural'   => __('Attributes'),
                 'icon'                  => 'voyager-categories',

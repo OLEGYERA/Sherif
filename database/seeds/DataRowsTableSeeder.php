@@ -657,7 +657,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 1,
-                'details'      => '{"model":"App\\\Currency","table":"Currencies","type":"belongsTo","column":"currency_final","key":"id","label":"name","pivot_table":"Categories","pivot":"0","taggable":"0"}',
+                'details'      => '{"model":"App\\\Currency","table":"currencies","type":"belongsTo","column":"currency_final","key":"id","label":"name","pivot_table":"Categories","pivot":"0","taggable":"0"}',
                 'order'        => 19,
             ])->save();
         }
@@ -687,7 +687,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 1,
-                'details'      => '{"model":"App\\\Subcategory","table":"Subcategories","type":"belongsToMany","column":"category","key":"id","label":"name","pivot_table":"product_subcategories_pivot","pivot":"1","taggable":"on"}',
+                'details'      => '{"model":"App\\\Subcategory","table":"subcategories","type":"belongsToMany","column":"category","key":"id","label":"name","pivot_table":"product_subcategories_pivot","pivot":"1","taggable":"on"}',
                 'order'        => 14,
             ])->save();
         }
@@ -886,7 +886,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{"model":"App\\\\Subcategory","table":"Subcategories","type":"belongsTo","column":"maincategory","key":"id","label":"name","pivot_table":"Currencies","pivot":"0","taggable":"0"}',
+                'details' => '{"model":"App\\\\Subcategory","table":"subcategories","type":"belongsTo","column":"maincategory","key":"id","label":"name","pivot_table":"Currencies","pivot":"0","taggable":"0"}',
                 'order' => 33,
             ])->save();
         }
