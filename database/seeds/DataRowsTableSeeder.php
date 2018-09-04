@@ -21,6 +21,7 @@ class DataRowsTableSeeder extends Seeder
         $productLabelsDataType = DataType::where('slug', 'product-labels')->firstOrFail();
         $productSubcategoriesDataType = DataType::where('slug', 'subcategories')->firstOrFail();
         $attributeDataType = DataType::where('slug','attribute')->firstOrFail();
+        $colorDataType = DataType::where('slug','colors')->firstOrFail();
 
         $dataRow = $this->dataRow($userDataType, 'id');
         if (!$dataRow->exists) {
@@ -873,8 +874,6 @@ class DataRowsTableSeeder extends Seeder
                 'order' => 31,
             ])->save();
         }
-
-
         $dataRow = $this->dataRow($productsDataType, 'product_hasone_subcategory_relationship');
         if (!$dataRow->exists) {
             $dataRow->fill([
@@ -890,7 +889,6 @@ class DataRowsTableSeeder extends Seeder
                 'order' => 33,
             ])->save();
         }
-
         $dataRow = $this->dataRow($productsDataType, 'maincategory');
         if (!$dataRow->exists) {
             $dataRow->fill([
@@ -906,6 +904,22 @@ class DataRowsTableSeeder extends Seeder
                 'order' => 32,
             ])->save();
         }
+        $dataRow = $this->dataRow($productsDataType, 'product_belongsto_color_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Цвет'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => {"model":"App\\\Color","table":"colors","type":"belongsTo","column":"color","key":"id","label":"name","pivot_table":"attribute","pivot":"0","taggable":"0"},
+                'order' => 36,
+            ])->save();
+        }
+
         /* Categories */
         $dataRow = $this->dataRow($categoriesDataType, 'id');
         if (!$dataRow->exists) {
@@ -1395,6 +1409,84 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 0,
                 'details' => NULL,
                 'order' => 5,
+            ])->save();
+        }
+
+        $colorDataType = $this->dataRow($attributeDataType, 'updated_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('Updated at'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 0,
+                'edit' => 0,
+                'add' => 0,
+                'delete' => 0,
+                'details' => NULL,
+                'order' => 5,
+            ])->save();
+        }
+        
+        /* Colors */
+        $dataRow = $this->dataRow($colorDataType, 'id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('ID'),
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 1,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($colorDataType, 'name');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Name'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 2,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($colorDataType, 'created_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('voyager::seeders.data_rows.created_at'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 0,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 3,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($colorDataType, 'updated_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('voyager::seeders.data_rows.updated_at'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 0,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 4,
             ])->save();
         }
     }

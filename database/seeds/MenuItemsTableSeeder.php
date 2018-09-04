@@ -43,7 +43,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-images',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 8,
+                'order'      => 6,
             ])->save();
         }
 
@@ -90,7 +90,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-tools',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 9,
+                'order'      => 7,
             ])->save();
         }
 
@@ -170,13 +170,13 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-settings',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 10,
+                'order'      => 8,
             ])->save();
         }
 
         $menuItem = MenuItem::firstOrNew([
             'menu_id' => $menu->id,
-            'title'   => __('Products'),
+            'title'   => __('Товары'),
             'url'     => 'admin/products',
             'route'   => 'voyager.products.index',
         ]);
@@ -185,14 +185,14 @@ class MenuItemsTableSeeder extends Seeder
                 'target'     => '_self',
                 'icon_class' => 'voyager-bag',
                 'color'      => null,
-                'parent_id'  => null,
-                'order'      => 6,
+                'parent_id'  => 15,
+                'order'      => 3,
             ])->save();
         }
 
         $menuItem = MenuItem::firstOrNew([
             'menu_id' => $menu->id,
-            'title'   => __('Categories'),
+            'title'   => __('Категории'),
             'url'     => 'admin/categories',
             'route'   => 'voyager.categories.index',
         ]);
@@ -201,14 +201,14 @@ class MenuItemsTableSeeder extends Seeder
                 'target'     => '_self',
                 'icon_class' => 'voyager-categories',
                 'color'      => null,
-                'parent_id'  => null,
-                'order'      => 4,
+                'parent_id'  => 15,
+                'order'      => 1,
             ])->save();
         }
 
         $menuItem = MenuItem::firstOrNew([
             'menu_id' => $menu->id,
-            'title'   => __('Currencies'),
+            'title'   => __('Курс валют'),
             'url'     => 'admin/currencies',
             'route'   => 'voyager.currencies.index',
         ]);
@@ -218,13 +218,13 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-dollar',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 7,
+                'order'      => 5,
             ])->save();
         }
 
         $menuItem = MenuItem::firstOrNew([
             'menu_id' => $menu->id,
-            'title'   => __('Subcategories'),
+            'title'   => __('Подкатегории'),
             'url'     => 'admin/subcategories',
             'route'   => 'voyager.subcategories.index',
         ]);
@@ -233,8 +233,23 @@ class MenuItemsTableSeeder extends Seeder
                 'target'     => '_self',
                 'icon_class' => 'voyager-categories',
                 'color'      => null,
+                'parent_id'  => 15,
+                'order'      => 2,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Каталог'),
+            'url'     => ''
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-list',
+                'color'      => null,
                 'parent_id'  => null,
-                'order'      => 5,
+                'order'      => 4,
             ])->save();
         }
     }

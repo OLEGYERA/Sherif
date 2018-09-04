@@ -44,5 +44,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('product_labels');
 
         Permission::generateFor('subcategories');
+
+        Permission::generateFor('colors');
     }
 }

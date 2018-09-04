@@ -164,6 +164,20 @@ class DataTypesTableSeeder extends Seeder
                 'description'           => '',
             ])->save();
         }
+
+        $dataType = $this->dataType('slug', 'colors');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'colors',
+                'display_name_singular' => __('Color'),
+                'display_name_plural'   => __('Colors'),
+                'icon'                  => '',
+                'model_name'            => 'App\\Color',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
     }
 
     /**
