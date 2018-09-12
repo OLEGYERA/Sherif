@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use App\Currency;//for convertion
-use App\Models\Attribute;
-use App\Product;//for convertion
+use App\Product;
+use App\Interest;
 
-use App\Category;
-use App\Subcategory;
-use App\ProductSubcategoriesPivot;
-
-use App\ProductWholesale;
+use Carbon\Carbon;
 
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
@@ -23,7 +18,7 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
-class ProductsController extends VoyagerBaseController
+class InterestController extends VoyagerBaseController
 {
     //***************************************
     //               ____
@@ -36,6 +31,7 @@ class ProductsController extends VoyagerBaseController
     //      Browse our Data Type (B)READ
     //
     //****************************************
+
     public function index(Request $request)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
@@ -130,7 +126,6 @@ class ProductsController extends VoyagerBaseController
 
     public function show(Request $request, $id)
     {
-
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -162,26 +157,7 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.read";
         }
 
-        /* Currency displaying */
-        if($dataTypeContent->currency_final) {
-            $currency = Currency::where('id', '=', $dataTypeContent->currency_final)->first(); //retrieve currency object
-            $currency_name = $currency->name;
-        } else {
-            $currency_name = '';
-        }
-
-        /* WHolesale price displaying */
-        $wholesale = Product::find($id)->wholesale;
-
-
-        $attributes =  Attribute::all();
-        //$product_attributes = A
-
-        /*All editing info*/
-        $edit_info = DB::table('product_edit_info')->where('product_id', $id)->first();
-
-
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale)->with('edit_info', $edit_info);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     //***************************************
@@ -198,6 +174,7 @@ class ProductsController extends VoyagerBaseController
 
     public function edit(Request $request, $id)
     {
+        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -213,7 +190,6 @@ class ProductsController extends VoyagerBaseController
             $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
-        $categories = Category::get();
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'edit');
 
@@ -229,16 +205,12 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        /* WHolesale price displaying */
-        $wholesale = Product::find($id)->wholesale;
-
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale);
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
-
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -247,159 +219,18 @@ class ProductsController extends VoyagerBaseController
         $id = $id instanceof Model ? $id->{$id->getKeyName()} : $id;
 
         $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
-    
-        /* Final price convertation */
-        if($request->currency_final) {
-            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
-
-            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-
-            $request->merge(['price_final' => $price_final]);
-        }
-
-        //Inserting wholesale options of the product
-        if($slug == 'products') {
-            if(!$request->ajax()) {
-
-                ProductWholesale::where('product_id', '=', $id)->delete();
-
-                $i = 0;
-
-                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
-
-                    $product_wholesale = new ProductWholesale;
-
-                    $product_wholesale->product_id = $data->id;
-                    $product_wholesale->quantity = $request->quantity[$i];
-                    $product_wholesale->unit = $request->unit[$i];;
-                    $product_wholesale->discount = $request->sale[$i];
-
-                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
-                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
-
-                    $product_wholesale->save();
-
-                    $i++;
-                }
-            }
-
-            /* Publication history */
-            if(Product::find($id)->publication == '1') {
-                $last_value = 'on';
-            } else {
-                $last_value = 0;
-            }
-
-            $user_name = \Auth::user()->name;
-            
-            if($request->publication !== $last_value) {
-                if($request->publication == 'on') {
-                    DB::table('product_edit_info')->where('product_id', $id)
-                        ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Опубликовано']);
-                } else {
-                    DB::table('product_edit_info')->where('product_id', $id)
-                        ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Снято с публикации']);
-                }
-            }
-
-            /* Editing history */
-            DB::table('product_edit_info')->where('product_id', $id)->update(['editing_updated_at' => date("Y-m-d H:i:s"), 'editing_user' => $user_name]);
-
-            /* Description editor */
-            $last_description = Product::find($id)->description;
-            if($request->description != $last_description) {
-                DB::table('product_edit_info')->where('product_id', $id)->update(['description_updated_at' => date("Y-m-d H:i:s"), 'description_user' => $user_name]);
-            }
-
-            /* Status date and info */
-            DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_updated_at' => date("Y-m-d H:i:s"), 'status_user' => $user_name, 'status' => DB::table('product_statuses')->where('id', $request->status)->first()->name]);
-            if($request->status == '3') {
-                DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_to_change' => date("Y-m-d H:i:s", strtotime("+10 day", strtotime("now")))]);
-            } else {
-                DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_to_change' => null]);
-            }
-        }
-
-        /*sale price */
-        if($slug == 'products') {
-            if(isset($request->sale_discount)) {
-                $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
-                $sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
-                $request->merge(['sale_price' => $sale_price]);
-            }
-        }
-
-
-
-        /// addimage
-        if ($request->addimage) {
-            $strimage = array();
-            foreach ($request->addimage as $image){
-                if (is_array($image) && isset($image['image'])) {
-                    if (!is_file($image['image'])) {
-                        $strimage[] .= $image['image'];
-                    }
-                }
-            }
-            $data->addimage = json_encode($strimage);
-        }
-        if (!$request->product_belongstomany_attribute_relationship) {
-            $request->merge(['product_belongstomany_attribute_relationship' => []]);
-        } else {
-            $attr = [];
-            foreach ($request->product_belongstomany_attribute_relationship as $attribute) {
-                $attr[$attribute['attribute_id']] = array(
-                    'value' => $attribute['value']
-                );
-            }
-            $request->merge(['product_belongstomany_attribute_relationship' => $attr]);
-        }
-        if($request->concomitant) {
-            $request->merge(['concomitant' =>addslashes(json_encode($request->concomitant))]);
-        } else {
-            $request->merge(['concomitant' =>'']);;
-        }
-        if($request->similar) {
-            $request->merge(['similar' =>addslashes(json_encode($request->similar))]);
-        } else {
-            $request->merge(['similar' =>'']);;
-        }
 
         // Check permission
         $this->authorize('edit', $data);
+
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->editRows, $dataType->name, $id);
 
-        //$date = $request->all();
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
+
         if (!$request->ajax()) {
-
-            //Inserting wholesale options of the product
-            if($slug == 'products') {
-                ProductWholesale::where('product_id', '=', $id)->delete();
-
-                $i = 0;
-
-                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
-
-                    $product_wholesale = new ProductWholesale;
-
-                    $product_wholesale->product_id = $data->id;
-                    $product_wholesale->quantity = $request->quantity[$i];
-                    $product_wholesale->unit = $request->unit[$i];;
-                    $product_wholesale->discount = $request->sale[$i];
-
-                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
-                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
-
-                    $product_wholesale->save();
-
-                    $i++;
-                }
-            }
-
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
             event(new BreadDataUpdated($dataType, $data));
@@ -428,23 +259,31 @@ class ProductsController extends VoyagerBaseController
 
     public function create(Request $request)
     {
+        //get referer url, reverse and get product id
+        if($request->session()->get('product_id')) {
+            $product_id = $request->session()->get('product_id');
+        } else {
+            $str = strrev($request->header()['referer'][0]);
+            $product_id = explode('/', $str, 2)[0];
+            $request->session()->put('product_id', $product_id);
+        }
+
         $slug = $this->getSlug($request);
-        
+
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
         $this->authorize('add', app($dataType->model_name));
 
         $dataTypeContent = (strlen($dataType->model_name) != 0)
-            ? new $dataType->model_name()
-            : false;
+                            ? new $dataType->model_name()
+                            : false;
 
         foreach ($dataType->addRows as $key => $row) {
             $details = json_decode($row->details);
             $dataType->addRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
-        $categories = Category::get();
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'add');
 
@@ -457,7 +296,9 @@ class ProductsController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories);
+        $product = Product::where('id', $product_id)->first();
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('product', $product);
     }
 
     /**
@@ -483,99 +324,14 @@ class ProductsController extends VoyagerBaseController
             return response()->json(['errors' => $val->messages()]);
         }
 
-        /* Final price convertation */
-        if($request->currency_final) {
-            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
-
-            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-
-            $request->merge(['price_final' => $price_final]);
-        }
-
-        $subcategory = Subcategory::where('id', '=', $request->product_belongstomany_subcategory_relationship[0])->first();
-        $category = Category::where('id', '=', $subcategory->category)->first();
-
-        /* URL Generating */
-        $URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug;
-        $request->merge(['URL' => $URL]);
-
-        if($slug == 'products') {
-            if(isset($request->sale_discount)) {
-                $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
-                $sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
-                $request->merge(['sale_price' => $sale_price]);
-            }
-        }
-        
-        //checking if product with same vendor code and manufacturer exists
-        $products = Product::where('vendor_code', $request->vendor_code)->where('manufacturer', $request->manufacturer)->first();
-        if(isset($products)) {
-            return redirect()
-                ->route("voyager.{$dataType->slug}.create")
-                ->withInput()
-                ->with([
-                    'message'    => __('Товар с такими артикулом и производителем уже существуют'),
-                    'alert-type' => 'error',
-                ]); 
-        }
-        
         if (!$request->has('_validate')) {
-
+            
+            //check if there is record with same phone number
+            if(Interest::where("phone_number", $request->phone_number)->where("product_id", $request->product_id)->where('created_at', '>=', Carbon::now()->subMonth())->first()) {
+                Interest::where("phone_number", $request->phone_number)->where("product_id", $request->product_id)->where('created_at', '>=', Carbon::now()->subMonth())->delete();
+            } 
 
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
-
-            //Inserting wholesale options of the product
-            if($slug == 'products') {
-                $i = 0;
-
-                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
-
-                    $product_wholesale = new ProductWholesale;
-
-                    $product_wholesale->product_id = $data->id;
-                    $product_wholesale->quantity = $request->quantity[$i];
-                    $product_wholesale->unit = $request->unit[$i];;
-                    $product_wholesale->discount = $request->sale[$i];
-
-                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
-                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
-
-                    $product_wholesale->save();
-
-                    $i++;
-                }
-
-                //creating row record in product_edit_info
-                DB::table('product_edit_info')->insert(['product_id' => $data->id]);
-
-                /* Publication history */
-                $user_name = \Auth::user()->name;
-
-                if($request->publication == 'on') {
-                    DB::table('product_edit_info')->where('product_id', $data->id)
-                        ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Опубликовано']);
-                } else {
-                    DB::table('product_edit_info')->where('product_id', $data->id)
-                        ->update(['publication_updated_at' => date("Y-m-d H:i:s"), 'publication_user' => $user_name, 'publication_action' => 'Снято с публикации']);
-                }
-
-                /* Editing history */
-                DB::table('product_edit_info')->where('product_id', $data->id)->update(['editing_updated_at' => date("Y-m-d H:i:s"), 'editing_user' => $user_name]);
-
-                /* Description editor */
-                if(isset($request->description)) {
-                    DB::table('product_edit_info')->where('product_id', $data->id)->update(['description_updated_at' => date("Y-m-d H:i:s"), 'description_user' => $user_name]);
-                }
-
-                /* Status date and info */
-                DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_updated_at' => date("Y-m-d H:i:s"), 'status_user' => $user_name, 'status' => DB::table('product_statuses')->where('id', $request->status)->first()->name]);
-                if($request->status == '3') {
-                    DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_to_change' => date("Y-m-d H:i:s", strtotime("+10 day", strtotime("now")))]);
-                } else {
-                    DB::table('product_edit_info')->where('product_id', $data->id)->update(['status_to_change' => null]);
-                }
-                
-            }
 
             event(new BreadDataAdded($dataType, $data));
 
@@ -583,12 +339,23 @@ class ProductsController extends VoyagerBaseController
                 return response()->json(['success' => true, 'data' => $data]);
             }
 
+            /*
+            if($prev_exist) {
+                return redirect()
+                    ->route("voyager.{$dataType->slug}.create")
+                    ->withInput()
+                    ->with([
+                            'message'    => __('Данный номер уже интересовался данным товаром, создана новая запись'),
+                            'alert-type' => 'error',
+                        ]);
+            } */
+
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
                 ->with([
-                    'message'    => __('voyager::generic.successfully_added_new')." {$dataType->display_name_singular}",
-                    'alert-type' => 'success',
-                ]);
+                        'message'    => __('voyager::generic.successfully_added_new')." {$dataType->display_name_singular}",
+                        'alert-type' => 'success',
+                    ]);
         }
     }
 
@@ -622,17 +389,9 @@ class ProductsController extends VoyagerBaseController
             // Single item delete, get ID from URL
             $ids[] = $id;
         }
-
-
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
             $this->cleanup($dataType, $data);
-
-            //delete relations with subcategories
-            $deletedRows = DB::table('product_subcategories_pivot')->where('product_id', '=', $id)->delete();
-
-            //delete relations with wholesaleprices
-            $deletedRows = DB::table('product_wholesales')->where('product_id', '=', $id)->delete();
         }
 
         $displayName = count($ids) > 1 ? $dataType->display_name_plural : $dataType->display_name_singular;
@@ -735,11 +494,11 @@ class ProductsController extends VoyagerBaseController
 
         if (!isset($dataType->order_column) || !isset($dataType->order_display_column)) {
             return redirect()
-                ->route("voyager.{$dataType->slug}.index")
-                ->with([
-                    'message'    => __('voyager::bread.ordering_not_set'),
-                    'alert-type' => 'error',
-                ]);
+            ->route("voyager.{$dataType->slug}.index")
+            ->with([
+                'message'    => __('voyager::bread.ordering_not_set'),
+                'alert-type' => 'error',
+            ]);
         }
 
         $model = app($dataType->model_name);

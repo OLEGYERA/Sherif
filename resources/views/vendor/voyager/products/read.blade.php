@@ -3,6 +3,7 @@
 @section('page_title', __('voyager::generic.view').' '.$dataType->display_name_singular)
 
 @section('page_header')
+<div class="container-fluid">
     <h1 class="page-title">
         <i class="{{ $dataType->icon }}"></i> {{ __('voyager::generic.viewing') }} {{ ucfirst($dataType->display_name_singular) }} &nbsp;
 
@@ -23,7 +24,11 @@
             {{ __('voyager::generic.return_to_list') }}
         </a>
     </h1>
-    @include('voyager::multilingual.language-selector')
+    <a href="{{ route('voyager.interests.create') }}" class="btn btn-success">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;
+        Интересовались
+    </a>
+</div>
 @stop
 
 @section('content')
@@ -130,10 +135,16 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><b>{{$dataType->readRows[10]->display_name}}</b></td>
+                                        <td><b>Цвет</b></td>
                                         <td>
-                                        @if($dataType->readRows[10]->type == 'color')
-                                            <span class="badge badge-lg" style="background-color: {{ $dataTypeContent->{$dataType->readRows[10]->field} }}">{{ $dataTypeContent->{$dataType->readRows[10]->field} }}</span>
+                                        @php $rowDetails = json_decode($dataType->readRows[33]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[33]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>
                                     </tr>

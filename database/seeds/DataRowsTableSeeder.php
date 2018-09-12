@@ -22,6 +22,7 @@ class DataRowsTableSeeder extends Seeder
         $productSubcategoriesDataType = DataType::where('slug', 'subcategories')->firstOrFail();
         $attributeDataType = DataType::where('slug','attribute')->firstOrFail();
         $colorDataType = DataType::where('slug','colors')->firstOrFail();
+        $interestDataType = DataType::where('slug','interests')->firstOrFail();
 
         $dataRow = $this->dataRow($userDataType, 'id');
         if (!$dataRow->exists) {
@@ -1489,6 +1490,173 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 4,
             ])->save();
         }
+
+         /* Interests */
+         $dataRow = $this->dataRow($interestDataType, 'id');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('ID'),
+                 'required'     => 1,
+                 'browse'       => 0,
+                 'read'         => 1,
+                 'edit'         => 0,
+                 'add'          => 0,
+                 'delete'       => 0,
+                 'details'      => '',
+                 'order'        => 1,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'product_id');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('ID товара'),
+                 'required'     => 0,
+                 'browse'       => 1,
+                 'read'         => 1,
+                 'edit'         => 1,
+                 'add'          => 1,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 2,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'phone_number');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('Номер телефона'),
+                 'required'     => 0,
+                 'browse'       => 1,
+                 'read'         => 1,
+                 'edit'         => 1,
+                 'add'          => 1,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 3,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'name');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('ФИО'),
+                 'required'     => 0,
+                 'browse'       => 1,
+                 'read'         => 1,
+                 'edit'         => 1,
+                 'add'          => 1,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 4,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'email');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('Почта'),
+                 'required'     => 0,
+                 'browse'       => 1,
+                 'read'         => 1,
+                 'edit'         => 1,
+                 'add'          => 1,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 5,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'social_media');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('Социальная сеть'),
+                 'required'     => 0,
+                 'browse'       => 1,
+                 'read'         => 1,
+                 'edit'         => 1,
+                 'add'          => 1,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 6,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'product_URL');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('URL товара'),
+                 'required'     => 0,
+                 'browse'       => 1,
+                 'read'         => 1,
+                 'edit'         => 1,
+                 'add'          => 1,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 7,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'created_at');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'timestamp',
+                 'display_name' => __('voyager::seeders.data_rows.created_at'),
+                 'required'     => 0,
+                 'browse'       => 1,
+                 'read'         => 1,
+                 'edit'         => 0,
+                 'add'          => 0,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 8,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'updated_at');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'timestamp',
+                 'display_name' => __('voyager::seeders.data_rows.updated_at'),
+                 'required'     => 0,
+                 'browse'       => 0,
+                 'read'         => 1,
+                 'edit'         => 0,
+                 'add'          => 0,
+                 'delete'       => 0,
+                 'details'      => '',
+                 'order'        => 9,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'vendor_code');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('Артикул'),
+                 'required'     => 0,
+                 'browse'       => 0,
+                 'read'         => 1,
+                 'edit'         => 1,
+                 'add'          => 1,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 10,
+             ])->save();
+         }
+         $dataRow = $this->dataRow($interestDataType, 'code');
+         if (!$dataRow->exists) {
+             $dataRow->fill([
+                 'type'         => 'text',
+                 'display_name' => __('Код товара'),
+                 'required'     => 0,
+                 'browse'       => 0,
+                 'read'         => 1,
+                 'edit'         => 1,
+                 'add'          => 1,
+                 'delete'       => 1,
+                 'details'      => '',
+                 'order'        => 11,
+             ])->save();
+         }
     }
 
     /**

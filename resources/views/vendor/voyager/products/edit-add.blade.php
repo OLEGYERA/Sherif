@@ -73,7 +73,7 @@
                                         </div>
                                     </div>
                                     <div class="panel-footer">
-                                        <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                                        <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                                             </table>
                                         </div><!-- panel-body -->
                                         <div class="panel-footer">
-                                            <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                                            <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
                                         </div>
                                     </div>
                                 </div>
@@ -439,7 +439,7 @@
                                     </script>
 
                                     <div class="panel-footer">
-                                        <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                                        <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
                                     </div>
                                 </div>
                             </div>
@@ -610,7 +610,7 @@
                                         @endif
                                     </div>
                                     <div class="panel-footer">
-                                        <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                                        <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
                                     </div>
                                 </div>
                             </div>
@@ -725,7 +725,7 @@
                                     @endif
                                 </div>
                                 <div class="panel-footer">
-                                    <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                                    <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
                                 </div>
 
                             </div>
@@ -840,7 +840,7 @@
                                     @endif
                                 </div>
                                 <div class="panel-footer">
-                                    <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
+                                    <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
                                 </div>
                             </div>
                         </div>

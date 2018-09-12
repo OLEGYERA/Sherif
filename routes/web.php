@@ -29,6 +29,8 @@ Route::group(['prefix' => 'admin'], function () {
     // Update currency rate
     Route::get('/currency_update', 'Voyager\CurrenciesController@currencyUpdate');
 
+    //Interested list
+
     ////////////abanners
     Route::put('banner/{id}/save', [
         'uses' => 'Voyager\AdminBannerController@storeBanner',
