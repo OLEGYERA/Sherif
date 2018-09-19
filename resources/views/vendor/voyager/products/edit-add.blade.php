@@ -48,36 +48,20 @@
                             $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
                         //dd($dataTypeRows);
                         @endphp
-
+                        <div class="panel panel-default col-lg-12">
+                            <button class="btn btn-success save" id="submit_read">Сохранить</button>
+                            <button class="btn btn-warning save" id="submit_exit">Сохранить и закрыть</button>
+                            <button class="btn btn-primary save" id="submit_add">Сохранить и добавить ещё</button>   
+                        </div><br /><br /><br />
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#tab1">Описание</a></li>
-                            <li><a data-toggle="tab" href="#tab2">Информация о товаре</a></li>
+                            <li class="active"><a data-toggle="tab" href="#tab2">Информация о товаре</a></li>
                             <li><a data-toggle="tab" href="#tab3">Фото</a></li>
                             <li><a data-toggle="tab" href="#tab4">Характеристики</a></li>
                             <li><a data-toggle="tab" href="#tab5">Сопутствующий</a></li>
                             <li><a data-toggle="tab" href="#tab6">Похожие товары</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div id="tab1" class="tab-pane fade in active">
-                                <div class="panel panel-bordered col-lg-12">
-                                    <div class="panel-body">
-                                        <div class="form-group @if($dataTypeRows[13]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
-                                            {{ $dataTypeRows[13]->slugify }}
-                                            <label for="name">Описание</label>
-                                            {!! app('voyager')->formField($dataTypeRows[13], $dataType, $dataTypeContent) !!}
-
-                                            @foreach (app('voyager')->afterFormFields($dataTypeRows[13], $dataType, $dataTypeContent) as $after)
-                                                {!! $after->handle($dataTypeRows[13], $dataType, $dataTypeContent) !!}
-                                            @endforeach
-
-                                        </div>
-                                    </div>
-                                    <div class="panel-footer">
-                                        <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="tab2" class="tab-pane fade">
+                            <div id="tab2" class="tab-pane fade in active">
                                 <div class="col-lg-6">
                                     <div class="panel panel-default">
                                         <div class="panel-body">
@@ -137,9 +121,6 @@
                                                 </tbody>
                                             </table>
                                         </div><!-- panel-body -->
-                                        <div class="panel-footer">
-                                            <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -243,13 +224,13 @@
                                                         <table class="table table-hover">
                                                             <tr>
                                                                 <td>Скидка %</td>
-                                                                <td colspan="2"><input type="text" name="sale[]" id="sale" class="form-control" value="{{$wholesale->discount}}" required></td>
+                                                                <td colspan="2"><input type="text" name="sale[]" id="sale" class="form-control" value="{{$wholesale->discount}}" placeholder="% скидки" required></td>
                                                                 <td><button type="button" id="remove" class="btn btn-danger">Удалить</button></td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Количество от</td>
-                                                                <td><input type="text" name="quantity[]" id="quantity" class="form-control" value="{{$wholesale->quantity}}" required></td>
-                                                                <td><input type="text" name="unit[]" id="unit" class="form-control" value="{{$wholesale->unit}}" required></td>
+                                                                <td><input type="text" name="quantity[]" id="quantity" class="form-control" value="{{$wholesale->quantity}}" placeholder="Количество от" required></td>
+                                                                <td><input type="text" name="unit[]" id="unit" class="form-control" value="{{$wholesale->unit}}" readonly></td>
                                                                 <td>(единицы)</td>
                                                             </tr>
                                                         </table>
@@ -259,10 +240,24 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="panel panel-bordered col-lg-12">
+                                    <div class="panel-body">
+                                        <div class="form-group @if($dataTypeRows[13]->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                            {{ $dataTypeRows[13]->slugify }}
+                                            <label for="name">Описание</label>
+                                            {!! app('voyager')->formField($dataTypeRows[13], $dataType, $dataTypeContent) !!}
+
+                                            @foreach (app('voyager')->afterFormFields($dataTypeRows[13], $dataType, $dataTypeContent) as $after)
+                                                {!! $after->handle($dataTypeRows[13], $dataType, $dataTypeContent) !!}
+                                            @endforeach
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div id="tab3" class="tab-pane fade">
                                 <!-- ### IMAGE ### -->
-                                <div class="panel panel-bordered panel-primary">
+                                <div class="panel panel-bordered panel-primary col-lg-12">
                                     <div class="panel-heading">
                                         <h3 class="panel-title"><i class="icon wb-image"></i> {{ __('voyager::post.image') }}</h3>
                                         <div class="panel-actions">
@@ -437,10 +432,6 @@
                                         }
                                         // });
                                     </script>
-
-                                    <div class="panel-footer">
-                                        <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
-                                    </div>
                                 </div>
                             </div>
                             <div id="tab4" class="tab-pane fade">
@@ -609,13 +600,10 @@
                                         </script>
                                         @endif
                                     </div>
-                                    <div class="panel-footer">
-                                        <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
-                                    </div>
                                 </div>
                             </div>
                             <div id="tab5" class="tab-pane fade">
-                                <div class="panel-body panel-bordered col-lg-12">
+                                <div class="panel panel-bordered col-lg-12">
 
                                     @if (isset($dataTypeRows[26])) {{-- concomitant --}}
                                     @php
@@ -724,13 +712,10 @@
                                     </script>
                                     @endif
                                 </div>
-                                <div class="panel-footer">
-                                    <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
-                                </div>
 
                             </div>
                             <div id="tab6" class="tab-pane fade">
-                                <div class="panel-body panel-bordered col-lg-12">
+                                <div class="panel panel-default col-lg-12">
 
                                     @if (isset($dataTypeRows[27])) {{-- similar --}}
                                     @php
@@ -839,10 +824,6 @@
                                     </script>
                                     @endif
                                 </div>
-                                <div class="panel-footer">
-                                    <button type="submit" class="btn btn-primary save">Сохранить и выйти</button>
-                                </div>
-                            </div>
                         </div>
                 </form>
                 <iframe id="form_target" name="form_target" style="display:none"></iframe>
@@ -888,7 +869,7 @@
 @section('javascript')
     <script>
         //add trade options
-        var additional_field = '<table class="table table-hover"><tr><td>Скидка %</td><td colspan="2"><input type="text" name="sale[]" id="sale" class="form-control" required></td><td><button type="button" id="remove" class="btn btn-danger">Удалить</button></td></tr><tr><td>Количество от</td><td><input type="text" name="quantity[]" id="quantity" class="form-control" required></td><td><input type="text" name="unit[]" id="unit" class="form-control" required></td><td>(единицы)</td></tr></table>';
+        var additional_field = '<table class="table table-hover"><tr><td>Скидка %</td><td colspan="2"><input type="text" name="sale[]" id="sale" class="form-control" placeholder="% скидки" required></td><td><button type="button" id="remove" class="btn btn-danger">Удалить</button></td></tr><tr><td>Количество от</td><td><input type="text" name="quantity[]" id="quantity" class="form-control" placeholder="Количество от" required></td><td><select name="unit[]" id="unit" class="form-control" required><option value="шт.">шт.</option><option value="уп.">уп.</option><option value="кг.">кг.</option><option value="ящ.">ящ.</option></select></td><td>(единицы)</td></tr></table>';
 
         $(document).ready(function () {
             $('#add').click(function(e) {
@@ -963,6 +944,34 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
 
+        /* Submit buttons */
+        jQuery(document).ready(function(){
+            jQuery('#submit_exit').click(function(e){
+               var input = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "button_type").val("submit_exit");
+                $('.form-edit-add').append(input);
+            });
+        });
+        
+        jQuery(document).ready(function(){
+            jQuery('#submit_read').click(function(e){
+               var input = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "button_type").val("submit_read");
+                $('.form-edit-add').append(input);
+            });
+        });
+
+        jQuery(document).ready(function(){
+            jQuery('#submit_add').click(function(e){
+               var input = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "button_type").val("submit_add");
+                $('.form-edit-add').append(input);
+            });
+        });
+            
 
 
         /*

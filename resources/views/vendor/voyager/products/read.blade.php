@@ -36,8 +36,7 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#tab1">Описание</a></li>
-                    <li><a data-toggle="tab" href="#tab2">Информация о товаре</a></li>
+                    <li class="active"><a data-toggle="tab" href="#tab2">Информация о товаре</a></li>
                     <li><a data-toggle="tab" href="#tab3">Фото</a></li>
                     <li><a data-toggle="tab" href="#tab4">Характеристики</a></li>
                     <li><a data-toggle="tab" href="#tab5">Сопутствующий</a></li>
@@ -45,32 +44,18 @@
                     <li><a data-toggle="tab" href="#tab7">История изменений</a></li>
                 </ul>
 
-                <div class="tab-content">
-                    <div id="tab1" class="tab-pane fade in active">
-                        <div class="panel panel-bordered" style="padding-bottom:5px;">
-                            @foreach($dataType->readRows as $row)
-                                @if($row->field == 'description')
-                                    @php $rowDetails = json_decode($row->details);
-                                    if($rowDetails === null){
-                                            $rowDetails=new stdClass();
-                                            $rowDetails->options=new stdClass();
-                                    }
-                                    @endphp
-                                    @if($row->type == 'rich_text_box')
-                                        <div class="panel-heading" style="border-bottom:0;">
-                                            <h3 class="panel-title">{{ $row->display_name }}</h3>
-                                        </div>
-
-                                        <div class="panel-body" style="padding-top:0;">
-                                            @include('voyager::multilingual.input-hidden-bread-read')
-                                            <p>{!! $dataTypeContent->{$row->field} !!}</p>
-                                        </div><!-- panel-body -->
-                                    @endif
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                    <div id="tab2" class="tab-pane fade">
+                    <div class="tab-content">
+                        @foreach($dataType->readRows as $row)
+                            @if($row->field == 'description')
+                                @php $rowDetails = json_decode($row->details);
+                                if($rowDetails === null){
+                                        $rowDetails=new stdClass();
+                                        $rowDetails->options=new stdClass();
+                                }
+                                @endphp
+                            @endif
+                        @endforeach
+                    <div id="tab2" class="tab-pane fade in active">
                     <div class="col-lg-6">
                         <div class="panel panel-bordered" style="padding-bottom:5px;">
                             <table class="table table-bordered">
@@ -105,6 +90,20 @@
                                     <tr>
                                         <td><b>Код Товара</b></td>
                                         <td>{{$dataTypeContent->code}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{{$dataType->readRows[21]->display_name}}</b></td>
+                                        <td>
+                                        @php $rowDetails = json_decode($dataType->readRows[21]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[21]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
+                                        @endif
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><b>{{$dataType->readRows[13]->display_name}}</b></td>
@@ -166,20 +165,6 @@
                                                 {{ $dataTypeContent->{$dataType->readRows[15]->field} }}
                                                 @endif
                                             @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>{{$dataType->readRows[21]->display_name}}</b></td>
-                                        <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[21]->details);
-                                            if($rowDetails === null){
-                                                    $rowDetails=new stdClass();
-                                                    $rowDetails->options=new stdClass();
-                                            }
-                                        @endphp
-                                        @if($dataType->readRows[21]->type == 'relationship')
-                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
-                                        @endif
                                         </td>
                                     </tr>
                                     <tr>
@@ -291,6 +276,30 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                                @foreach($dataType->readRows as $row)
+                                    @if($row->field == 'description')
+                                        @php $rowDetails = json_decode($row->details);
+                                        if($rowDetails === null){
+                                                $rowDetails=new stdClass();
+                                                $rowDetails->options=new stdClass();
+                                        }
+                                        @endphp
+                                        @if($row->type == 'rich_text_box')
+                                            <div class="panel-heading" style="border-bottom:0;">
+                                                <h3 class="panel-title">{{ $row->display_name }}</h3>
+                                            </div>
+
+                                            <div class="panel-body" style="padding-top:0;">
+                                                @include('voyager::multilingual.input-hidden-bread-read')
+                                                <p>{!! $dataTypeContent->{$row->field} !!}</p>
+                                            </div><!-- panel-body -->
+                                        @endif
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
                     </div>

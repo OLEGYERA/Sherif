@@ -130,7 +130,6 @@ class ProductsController extends VoyagerBaseController
 
     public function show(Request $request, $id)
     {
-
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -238,7 +237,6 @@ class ProductsController extends VoyagerBaseController
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
-
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -403,6 +401,24 @@ class ProductsController extends VoyagerBaseController
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
             event(new BreadDataUpdated($dataType, $data));
+
+            
+            if($request->button_type == 'submit_add') {
+                return redirect()
+                ->route("voyager.{$dataType->slug}.create")
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            } elseif($request->button_type == 'submit_read') {
+                return redirect()->action(
+                    'Voyager\ProductsController@show', ['id' => $id]
+                )
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            }
 
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
@@ -583,10 +599,26 @@ class ProductsController extends VoyagerBaseController
                 return response()->json(['success' => true, 'data' => $data]);
             }
 
+            if($request->button_type == 'submit_add') {
+                return redirect()
+                ->route("voyager.{$dataType->slug}.create")
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            } elseif($request->button_type == 'submit_read') {
+                return redirect()->action(
+                    'Voyager\ProductsController@show', ['id' => $data->id]
+                )
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            }
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
                 ->with([
-                    'message'    => __('voyager::generic.successfully_added_new')." {$dataType->display_name_singular}",
+                    'message'    => __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
                     'alert-type' => 'success',
                 ]);
         }
