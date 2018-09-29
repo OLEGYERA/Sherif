@@ -18,11 +18,13 @@ class DataRowsTableSeeder extends Seeder
         $categoriesDataType = DataType::where('slug', 'categories')->firstOrFail();
         $currenciesDataType = DataType::where('slug', 'currencies')->firstOrFail();
         $productStatusesDataType = DataType::where('slug', 'product-statuses')->firstOrFail();
-        $productLabelsDataType = DataType::where('slug', 'product-labels')->firstOrFail();
+        $productLabelsDataType = DataType::where('slug', 'product-label')->firstOrFail();
         $productSubcategoriesDataType = DataType::where('slug', 'subcategories')->firstOrFail();
         $attributeDataType = DataType::where('slug','attribute')->firstOrFail();
         $colorDataType = DataType::where('slug','colors')->firstOrFail();
         $interestDataType = DataType::where('slug','interests')->firstOrFail();
+        $productServiceStatusesDataType = DataType::where('slug','product-service-statuses')->firstOrFail();
+        $providersDataType = DataType::where('slug','providers')->firstOrFail();
 
         $dataRow = $this->dataRow($userDataType, 'id');
         if (!$dataRow->exists) {
@@ -397,7 +399,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => __('voyager::seeders.data_rows.name'),
+                'display_name' => __('Название'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -427,7 +429,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => __('Vendor Code'),
+                'display_name' => __('Артикул'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -459,7 +461,7 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'number',
                 'display_name' => __('EUR'),
                 'required'     => 0,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
@@ -474,7 +476,7 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'number',
                 'display_name' => __('USD'),
                 'required'     => 0,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
@@ -489,7 +491,7 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'number',
                 'display_name' => __('UAH'),
                 'required'     => 0,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
@@ -669,7 +671,7 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'text',
                 'display_name' => __('Учётная валюта'),
                 'required'     => 0,
-                'browse'       => 0,
+                'browse'       => 1,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
@@ -802,7 +804,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'image',
-                'display_name' => __('voyager::seeders.data_rows.mainimage'),
+                'display_name' => __('Основное фото'),
                 'required' => 0,
                 'browse' => 1,
                 'read' => 0,
@@ -834,7 +836,7 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'multiple_images',
                 'display_name' => __('Изображения'),
                 'required' => 0,
-                'browse' => 1,
+                'browse' => 0,
                 'read' => 1,
                 'edit' => 1,
                 'add' => 1,
@@ -918,6 +920,96 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 1,
                 'details' => {"model":"App\\\Color","table":"colors","type":"belongsTo","column":"color","key":"id","label":"name","pivot_table":"attribute","pivot":"0","taggable":"0"},
                 'order' => 36,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'service_status');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Service Status'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 37,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'storage');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Склад'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 38,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'box');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Ящик'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 39,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'product_belongsto_product_service_status_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Служебный статус'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\ProductServiceStatus","table":"product_service_statuses","type":"belongsTo","column":"service_status","key":"id","label":"name","pivot_table":"attribute","pivot":"0","taggable":null}',
+                'order' => 40,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'provider');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('provider'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 42,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'product_belongstomany_provider_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Поставщики'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\Provider","table":"providers","type":"belongsToMany","column":"id","key":"id","label":"name","pivot_table":"product_provider_pivot","pivot":"1","taggable":"0"}',
+                'order' => 41,
             ])->save();
         }
 
@@ -1098,8 +1190,8 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'text',
                 'display_name' => __('ID'),
                 'required'     => 1,
-                'browse'       => 0,
-                'read'         => 0,
+                'browse'       => 1,
+                'read'         => 1,
                 'edit'         => 0,
                 'add'          => 0,
                 'delete'       => 0,
@@ -1111,7 +1203,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => __('Name'),
+                'display_name' => __('Название'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1126,7 +1218,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'timestamp',
-                'display_name' => __('voyager::seeders.data_rows.created_at'),
+                'display_name' => __('Создано'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1141,7 +1233,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'timestamp',
-                'display_name' => __('voyager::seeders.data_rows.updated_at'),
+                'display_name' => __('Обновлено'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1173,7 +1265,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => __('Name'),
+                'display_name' => __('Название'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1188,7 +1280,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'timestamp',
-                'display_name' => __('voyager::seeders.data_rows.created_at'),
+                'display_name' => __('Создано'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1203,7 +1295,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'timestamp',
-                'display_name' => __('voyager::seeders.data_rows.updated_at'),
+                'display_name' => __('Обновлено'),
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1657,7 +1749,147 @@ class DataRowsTableSeeder extends Seeder
                  'order'        => 11,
              ])->save();
          }
+        
+         /* Product Service Statuses  */
+        $dataRow = $this->dataRow($productServiceStatusesDataType, 'id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('ID'),
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 1,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productServiceStatusesDataType, 'name');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Название'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 2,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productServiceStatusesDataType, 'created_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('Создано'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 3,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productServiceStatusesDataType, 'updated_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('Обновлено'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 4,
+            ])->save();
+        }
     }
+
+    /* Providers */
+    $dataRow = $this->dataRow($providersDataType, 'id');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('ID'),
+            'required'     => 1,
+            'browse'       => 0,
+            'read'         => 1,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 0,
+            'details'      => '',
+            'order'        => 1,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($providersDataType, 'name');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('Название'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 2,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($providersDataType, 'status');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('Статус'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 3,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($providersDataType, 'created_at');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'timestamp',
+            'display_name' => __('Добавлен'),
+            'required'     => 0,
+            'browse'       => 0,
+            'read'         => 0,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 4,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($providersDataType, 'updated_at');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'timestamp',
+            'display_name' => __('Обновлен'),
+            'required'     => 0,
+            'browse'       => 0,
+            'read'         => 0,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 5,
+        ])->save();
+    }
+}
 
     /**
      * [dataRow description].

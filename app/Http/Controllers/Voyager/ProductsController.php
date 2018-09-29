@@ -130,6 +130,7 @@ class ProductsController extends VoyagerBaseController
 
     public function show(Request $request, $id)
     {
+        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -142,7 +143,7 @@ class ProductsController extends VoyagerBaseController
             // If Model doest exist, get data from table name
             $dataTypeContent = DB::table($dataType->name)->where('id', $id)->first();
         }
-
+        //dd($dataTypeContent);
         // Replace relationships' keys for labels and create READ links if a slug is provided.
         $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType, true);
 
@@ -179,7 +180,6 @@ class ProductsController extends VoyagerBaseController
         /*All editing info*/
         $edit_info = DB::table('product_edit_info')->where('product_id', $id)->first();
 
-
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('currency_name', $currency_name)->with('wholesales', $wholesale)->with('edit_info', $edit_info);
     }
 
@@ -197,6 +197,7 @@ class ProductsController extends VoyagerBaseController
 
     public function edit(Request $request, $id)
     {
+        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -211,7 +212,7 @@ class ProductsController extends VoyagerBaseController
             $details = json_decode($row->details);
             $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
-
+//dd($dataTypeContent);
         $categories = Category::get();
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'edit');
@@ -231,12 +232,16 @@ class ProductsController extends VoyagerBaseController
         /* WHolesale price displaying */
         $wholesale = Product::find($id)->wholesale;
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale);
+        /*All editing info*/
+        $edit_info = DB::table('product_edit_info')->where('product_id', $id)->first();
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale)->with('edit_info', $edit_info);
     }
 
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
+        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -248,11 +253,15 @@ class ProductsController extends VoyagerBaseController
     
         /* Final price convertation */
         if($request->currency_final) {
-            $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
+            if($request->profitability != Product::select('profitability')->where('id', $id)->first()->profitability) { //if entered profitability percent is different from such in db, then count new profitability percent
+                $currency = Currency::where('id', '=', $request->currency_final)->first(); //retrieve currency object
 
-            $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
-
-            $request->merge(['price_final' => $price_final]);
+                $price_final =  ($request[$currency->name]) * ($request->profitability / 100) * $currency->rate;
+                
+                $request->merge(['price_final' => $price_final]);
+            } else {
+                $price_final = $request->price_final;
+            }//if not save corrected new final price
         }
 
         //Inserting wholesale options of the product
@@ -321,12 +330,14 @@ class ProductsController extends VoyagerBaseController
         /*sale price */
         if($slug == 'products') {
             if(isset($request->sale_discount)) {
-                $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
-                $sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
-                $request->merge(['sale_price' => $sale_price]);
+                if($request->sale_discount != Product::select('sale_discount')->where('id', $id)->first()->sale_discount) { //if entered profitability percent is different from such in db, then count new profitability percent
+                    $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
+                    //$sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
+                    $sale_price = ceil($sale_price);
+                    $request->merge(['sale_price' => $sale_price]);
+                }
             }
         }
-
 
 
         /// addimage
@@ -512,13 +523,19 @@ class ProductsController extends VoyagerBaseController
         $category = Category::where('id', '=', $subcategory->category)->first();
 
         /* URL Generating */
-        $URL = $request->root() . '/' . $category->slug  . '/' . $subcategory->slug . '/' . $request->slug;
-        $request->merge(['URL' => $URL]);
-
+        if(!$request->generate_url) {
+            $URL = $request->root() . '/' . $category->slug  . '/' . $request->slug;
+            $request->merge(['URL' => $URL]);
+        } else {
+            $URL = $request->root() . '/' . $request->slug;
+            $request->merge(['URL' => $URL]);
+        }
+        
         if($slug == 'products') {
             if(isset($request->sale_discount)) {
                 $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
                 $sale_price = round($sale_price, 2, PHP_ROUND_HALF_UP);
+                $sale_price = ceil($sale_price);
                 $request->merge(['sale_price' => $sale_price]);
             }
         }

@@ -43,7 +43,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-images',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 7,
+                'order'      => 8,
             ])->save();
         }
 
@@ -90,7 +90,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-tools',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 8,
+                'order'      => 9,
             ])->save();
         }
 
@@ -170,7 +170,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-settings',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 9,
+                'order'      => 10,
             ])->save();
         }
 
@@ -218,7 +218,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-dollar',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 6,
+                'order'      => 7,
             ])->save();
         }
 
@@ -265,6 +265,96 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-exclamation',
                 'color'      => null,
                 'parent_id'  => null,
+                'order'      => 6,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Метки'),
+            'url'     => 'admin/product-label'
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-tag',
+                'color'      => null,
+                'parent_id'  => 20,
+                'order'      => 2,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Статусы'),
+            'url'     => 'admin/product-statuses'
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-truck',
+                'color'      => null,
+                'parent_id'  => 20,
+                'order'      => 1,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Товар'),
+            'url'     => ''
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-bag',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 3,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Служебные статусы'),
+            'url'     => 'admin/product-service-statuses'
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-truck',
+                'color'      => null,
+                'parent_id'  => 20,
+                'order'      => 3,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Цвета'),
+            'url'     => 'admin/colors'
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-paint-bucket',
+                'color'      => null,
+                'parent_id'  => 20,
+                'order'      => 4,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Поставщики'),
+            'url'     => 'admin/providers'
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-group',
+                'color'      => null,
+                'parent_id'  => 20,
                 'order'      => 5,
             ])->save();
         }

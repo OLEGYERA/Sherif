@@ -109,13 +109,13 @@ class DataTypesTableSeeder extends Seeder
             ])->save();
         }
 
-        $dataType = $this->dataType('slug', 'product-labels');
+        $dataType = $this->dataType('slug', 'product-label');
         if (!$dataType->exists) {
             $dataType->fill([
                 'name'                  => 'product-labels',
                 'display_name_singular' => __('Product Label'),
                 'display_name_plural'   => __('Product Labels'),
-                'icon'                  => '',
+                'icon'                  => 'voyager-tag',
                 'model_name'            => 'App\\ProductLabel',
                 'controller'            => '',
                 'generate_permissions'  => 1,
@@ -188,6 +188,34 @@ class DataTypesTableSeeder extends Seeder
                 'icon'                  => 'voyager-exclamation',
                 'model_name'            => 'App\\Interest',
                 'controller'            => '\\App\Http\\Controllers\\Voyager\\InterestController',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+
+        $dataType = $this->dataType('slug', 'product-service-statuses');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'product_service_statuses',
+                'display_name_singular' => __('Product Service Status'),
+                'display_name_plural'   => __('Product Service Statuses'),
+                'icon'                  => 'voyager-truck',
+                'model_name'            => 'App\ProductServiceStatus',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+
+        $dataType = $this->dataType('slug', 'providers');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'providers',
+                'display_name_singular' => __('Provider'),
+                'display_name_plural'   => __('Providers'),
+                'icon'                  => 'voyager-group',
+                'model_name'            => 'App\Provider',
+                'controller'            => '',
                 'generate_permissions'  => 1,
                 'description'           => '',
             ])->save();

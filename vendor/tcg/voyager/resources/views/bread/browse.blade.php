@@ -83,7 +83,7 @@
                                             @endif
                                         </th>
                                         @endforeach
-                                        <th class="actions text-right">{{ __('voyager::generic.actions') }}</th>
+                                        <th class="actions text-right"><!--{{ __('voyager::generic.actions') }}--></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -184,7 +184,7 @@
                                                 @endif
                                             </td>
                                         @endforeach
-                                        <td class="no-sort no-click" id="bread-actions">
+                                        <td class="no-sort no-click" id="bread-actions" style="display: flex; flex-direction: row-reverse;">
                                             @foreach(Voyager::actions() as $action)
                                                 @include('voyager::bread.partials.actions', ['action' => $action])
                                             @endforeach

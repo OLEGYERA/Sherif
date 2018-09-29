@@ -47,6 +47,7 @@
                         @php
                             $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
                         //dd($dataTypeRows);
+                        
                         @endphp
                         <div class="panel panel-default col-lg-12">
                             <button class="btn btn-success save" id="submit_read">Сохранить</button>
@@ -59,6 +60,9 @@
                             <li><a data-toggle="tab" href="#tab4">Характеристики</a></li>
                             <li><a data-toggle="tab" href="#tab5">Сопутствующий</a></li>
                             <li><a data-toggle="tab" href="#tab6">Похожие товары</a></li>
+                            @if($dataTypeContent->exists)
+                            <li><a data-toggle="tab" href="#tab7">История изменений</a></li>
+                            @endif
                         </ul>
                         <div class="tab-content">
                             <div id="tab2" class="tab-pane fade in active">
@@ -76,7 +80,6 @@
                                                         $row->field == 'USD' ||
                                                         $row->field == 'EUR' ||
                                                         $row->field == 'UAH' ||
-                                                        $row->field == 'URL' ||
                                                         $row->field == 'code' ||
                                                         $row->field == 'price_final' ||
                                                         $row->field == 'product_hasone_currency_relationship' ||
@@ -89,7 +92,8 @@
                                                         $row->field == 'similar' ||
                                                         $row->field == 'concomitant' ||
                                                         $row->field == 'addimage' ||
-                                                        $row->field == 'product_belongstomany_attribute_relationship')
+                                                        $row->field == 'product_belongstomany_attribute_relationship' ||
+                                                        $row->field == 'provider')
                                                         <?php continue; ?>
                                                     @endif
                                                     <!-- GET THE DISPLAY OPTIONS -->
@@ -117,6 +121,12 @@
                                                         @endif
                                                     </tr>
                                                 @endforeach
+                                                @if(!$dataTypeContent->exists);
+                                                <tr>   
+                                                    <td>Не формировать URL</td>
+                                                    <td><input type="checkbox" name="generate_url" value="1"></td>
+                                                </tr>
+                                                @endif
 
                                                 </tbody>
                                             </table>
@@ -148,6 +158,7 @@
                                                             @else
                                                                 {{ $row->slugify }}
                                                                 <td><label for="name">{{ $row->display_name }}</label></td>
+                                                                
                                                                 @include('voyager::multilingual.input-hidden-bread-edit-add')
                                                                 @if($row->type == 'relationship')
                                                                     <td>@include('voyager::formfields.relationship')</td>
@@ -192,6 +203,7 @@
                                                             @else
                                                                 {{ $row->slugify }}
                                                                 <td><label for="name">{{ $row->display_name }}</label> </td>
+                                                                
                                                                 @include('voyager::multilingual.input-hidden-bread-edit-add')
                                                                 @if($row->type == 'relationship')
                                                                     <td>@include('voyager::formfields.relationship') </td>
@@ -825,6 +837,114 @@
                                     @endif
                                 </div>
                         </div>
+                        @if($dataTypeContent->exists);
+                        <div id="tab7" class="tab-pane fade">
+                    <div class="col-lg-6">
+                        <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="3">
+                                            <h4>История публикаций</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><b>Дата</b></th>
+                                        <th><b>Пользователь</b></th>
+                                        <th><b>Примечание</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$edit_info->publication_updated_at}}</td>
+                                        <td>{{$edit_info->publication_user}}</td>
+                                        <td>{{$edit_info->publication_action}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h4>История правок</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><b>Дата</b></th>
+                                        <th><b>Пользователь</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$edit_info->editing_updated_at}}</td>
+                                        <td>{{$edit_info->editing_user}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h4>История описания</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><b>Дата</b></th>
+                                        <th><b>Пользователь</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$edit_info->description_updated_at}}</td>
+                                        <td>{{$edit_info->description_user}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="3">
+                                            <h4>История статуса</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><b>Пользователь</b></th>
+                                        <th><b>Установлен статус</b></th>
+                                        <th><b>Дата</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{$edit_info->status_user}}</td>
+                                        <td>{{$edit_info->status}}</td>
+                                        <td>{{$edit_info->status_updated_at}}</td>
+                                    </tr>
+                                    @if(isset($edit_info->status_to_change))
+                                        <tr>
+                                            <td colspan='2'> Статус будет изменен на "В Наличии"</td>
+                                            <td>{{$edit_info->status_to_change}}</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                </div>
                 </form>
                 <iframe id="form_target" name="form_target" style="display:none"></iframe>
                 <form id="my_form" action="{{ route('voyager.upload') }}" target="form_target" method="post"

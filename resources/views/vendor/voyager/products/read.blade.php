@@ -92,6 +92,28 @@
                                         <td>{{$dataTypeContent->code}}</td>
                                     </tr>
                                     <tr>
+                                        <td><b>Склад</b></td>
+                                        <td>{{$dataTypeContent->storage}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Ящик</b></td>
+                                        <td>{{$dataTypeContent->box}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{{$dataType->readRows[38]->display_name}}</b></td>
+                                        <td>
+                                        @php $rowDetails = json_decode($dataType->readRows[38]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[38]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
+                                        @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td><b>{{$dataType->readRows[21]->display_name}}</b></td>
                                         <td>
                                         @php $rowDetails = json_decode($dataType->readRows[21]->details);
@@ -122,27 +144,19 @@
                                     <tr>
                                         <td><b>Главная подкатегория</b></td>
                                         <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[30]->details);
-                                            if($rowDetails === null){
-                                                    $rowDetails=new stdClass();
-                                                    $rowDetails->options=new stdClass();
-                                            }
-                                        @endphp
-                                        @if($dataType->readRows[30]->type == 'relationship')
-                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
-                                        @endif
+                                        <!-- Изменить -->
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><b>Цвет</b></td>
                                         <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[33]->details);
+                                        @php $rowDetails = json_decode($dataType->readRows[36]->details);
                                             if($rowDetails === null){
                                                     $rowDetails=new stdClass();
                                                     $rowDetails->options=new stdClass();
                                             }
                                         @endphp
-                                        @if($dataType->readRows[33]->type == 'relationship')
+                                        @if($dataType->readRows[36]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>
@@ -177,6 +191,20 @@
                                             }
                                         @endphp
                                         @if($dataType->readRows[23]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
+                                        @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Служебный статус</b></td>
+                                        <td>
+                                        @php $rowDetails = json_decode($dataType->readRows[37]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[37]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>
