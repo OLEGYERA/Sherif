@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Voyager;
 
 use App\Product;
 use App\Subcategory;
+use App\Category;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -356,6 +357,8 @@ class CategoriesController extends VoyagerBaseController
 
     public function destroy(Request $request, $id)
     {
+        //dd($request);
+        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -372,6 +375,20 @@ class CategoriesController extends VoyagerBaseController
             // Single item delete, get ID from URL
             $ids[] = $id;
         }
+        
+        //Deleting products in category subcategories
+        $relatedSubcategory = Subcategory::where('category', $ids)->get();
+        
+        foreach($relatedSubcategory as $subcategory) {
+            $relatedProducts = DB::table('product_subcategories_pivot')->where('subcategory_id', $subcategory->id)->get();
+            Subcategory::where('id', $subcategory->id)->delete();
+            foreach($relatedProducts as $product) {
+                Product::where('id', $product->product_id)->delete();
+            }
+        }
+        
+        
+
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
             $this->cleanup($dataType, $data);

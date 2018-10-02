@@ -52,5 +52,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('product-service-statuses');
 
         Permission::generateFor('providers');
+
+        Permission::generateFor('articles');
     }
 }

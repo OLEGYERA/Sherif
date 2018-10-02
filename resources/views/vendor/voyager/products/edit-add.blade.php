@@ -93,7 +93,8 @@
                                                         $row->field == 'concomitant' ||
                                                         $row->field == 'addimage' ||
                                                         $row->field == 'product_belongstomany_attribute_relationship' ||
-                                                        $row->field == 'provider')
+                                                        $row->field == 'provider' ||
+                                                        $row->field == 'concomitant_subcategory')
                                                         <?php continue; ?>
                                                     @endif
                                                     <!-- GET THE DISPLAY OPTIONS -->

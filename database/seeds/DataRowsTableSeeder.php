@@ -25,6 +25,7 @@ class DataRowsTableSeeder extends Seeder
         $interestDataType = DataType::where('slug','interests')->firstOrFail();
         $productServiceStatusesDataType = DataType::where('slug','product-service-statuses')->firstOrFail();
         $providersDataType = DataType::where('slug','providers')->firstOrFail();
+        $articlesDataType = DataType::where('slug','articles')->firstOrFail();
 
         $dataRow = $this->dataRow($userDataType, 'id');
         if (!$dataRow->exists) {
@@ -1012,6 +1013,36 @@ class DataRowsTableSeeder extends Seeder
                 'order' => 41,
             ])->save();
         }
+        $dataRow = $this->dataRow($productsDataType, 'concomitant_subcategory');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Concomitant Subcategory'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => NULL,
+                'order' => 43,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($productsDataType, 'product_belongstomany_subcategory_relationship_1');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Сопутствующая подкатегория'),
+                'required' => 0,
+                'browse' => 0,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\Subcategory","table":"subcategories","type":"belongsToMany","column":"id","key":"id","label":"name","pivot_table":"product_concomitant_subcategory_pivot","pivot":"1","taggable":"0"}',
+                'order' => 44,
+            ])->save();
+        }
 
         /* Categories */
         $dataRow = $this->dataRow($categoriesDataType, 'id');
@@ -1887,6 +1918,113 @@ class DataRowsTableSeeder extends Seeder
             'delete'       => 1,
             'details'      => '',
             'order'        => 5,
+        ])->save();
+    }
+
+    /* Articles */
+    $dataRow = $this->dataRow($articlesDataType, 'id');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('ID'),
+            'required'     => 1,
+            'browse'       => 0,
+            'read'         => 1,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 0,
+            'details'      => '',
+            'order'        => 1,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'heading');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('Заголовок'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 2,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'text');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'rich_text_box',
+            'display_name' => __('Текст'),
+            'required'     => 0,
+            'browse'       => 0,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 3,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'author');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('Автор'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 4,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'editor');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('Правщик'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 5,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'created_at');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'timestamp',
+            'display_name' => __('Добавлена'),
+            'required'     => 0,
+            'browse'       => 0,
+            'read'         => 1,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 6,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'updated_at');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'timestamp',
+            'display_name' => __('Обновлена'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 0,
+            'details'      => '',
+            'order'        => 7,
         ])->save();
     }
 }
