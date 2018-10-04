@@ -40,6 +40,12 @@ Route::group(['prefix' => 'admin'], function () {
         'uses' => 'Voyager\AdminBannerController@storeBanner',
         'as'   => 'admin.banner.store'
     ]);
+  /*  Route::post('attribute_values/save', [
+        'uses' => 'Voyager\AttributeValuesController@store',
+        'as'   => 'voyager.attribute-values.store'
+    ]);*/
+
+  Route::post('/get_attributes_id','Voyager\AttributeController@getAttribValues');
 
    
 });

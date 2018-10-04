@@ -21,7 +21,7 @@ class Image extends BaseType
 
             $filename = $this->generateFileName($file, $path);
 
-            $image = InterventionImage::make($file);
+            $image = InterventionImage::make($file);//->exif(); //exif
 
             $fullPath = $path.$filename.'.'.$file->getClientOriginalExtension();
 

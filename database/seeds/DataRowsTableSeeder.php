@@ -25,6 +25,7 @@ class DataRowsTableSeeder extends Seeder
         $interestDataType = DataType::where('slug','interests')->firstOrFail();
         $productServiceStatusesDataType = DataType::where('slug','product-service-statuses')->firstOrFail();
         $providersDataType = DataType::where('slug','providers')->firstOrFail();
+        $attrvalDataType = DataType::where('slug','attribute_values')->firstOrFail();
 
         $dataRow = $this->dataRow($userDataType, 'id');
         if (!$dataRow->exists) {
@@ -918,7 +919,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => {"model":"App\\\Color","table":"colors","type":"belongsTo","column":"color","key":"id","label":"name","pivot_table":"attribute","pivot":"0","taggable":"0"},
+                'details' => '{"model":"App\\\Color","table":"colors","type":"belongsTo","column":"color","key":"id","label":"name","pivot_table":"attribute","pivot":"0","taggable":"0"}',
                 'order' => 36,
             ])->save();
         }
@@ -1428,6 +1429,22 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 7,
                 ])->save();
         }
+        $dataRow = $this->dataRow($productSubcategoriesDataType, 'subcategory_belongstomany_attribute_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'relationship',
+                'display_name' => __('Атрибуты категории'),
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"model":"App\\\\Models\\\\Attribute","table":"attribute","type":"belongsToMany","column":"id","key":"id","label":"name","pivot_table":"category_attributes_pivot","pivot":"1","taggable":"0"}',
+                'order' => 8,
+            ])->save();
+        }
+
         $dataRow = $this->dataRow($attributeDataType, 'id');
         if (!$dataRow->exists) {
             $dataRow->fill([
@@ -1811,85 +1828,162 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 4,
             ])->save();
         }
-    }
 
-    /* Providers */
-    $dataRow = $this->dataRow($providersDataType, 'id');
-    if (!$dataRow->exists) {
-        $dataRow->fill([
-            'type'         => 'text',
-            'display_name' => __('ID'),
-            'required'     => 1,
-            'browse'       => 0,
-            'read'         => 1,
-            'edit'         => 0,
-            'add'          => 0,
-            'delete'       => 0,
-            'details'      => '',
-            'order'        => 1,
-        ])->save();
+        /* Providers */
+        $dataRow = $this->dataRow($providersDataType, 'id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('ID'),
+                'required'     => 1,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 1,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($providersDataType, 'name');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Название'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 2,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($providersDataType, 'status');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('Статус'),
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 3,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($providersDataType, 'created_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('Добавлен'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 0,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 4,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($providersDataType, 'updated_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => __('Обновлен'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 0,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 5,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($attrvalDataType,'id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type' => 'text',
+                'display_name' => __('ID'),
+                'required'     => 1,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+                'order'        => 1,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($attrvalDataType,'attribite_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type' => 'text',
+                'display_name' => 'Attribite Id',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '',
+                'order' => 2,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($attrvalDataType,'value');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type' => 'text',
+                'display_name' => 'Value',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '',
+                'order' => 3,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($attrvalDataType,'created_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type' => 'timestamp',
+                'display_name' => 'Created At',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 0,
+                'delete' => 1,
+                'details' => '',
+                'order' => 4,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($attrvalDataType,'updated_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type' => 'timestamp',
+                'display_name' => 'Updated At',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 0,
+                'delete' => 1,
+                'details' => '',
+                'order' => 5,
+            ])->save();
+        }
     }
-    $dataRow = $this->dataRow($providersDataType, 'name');
-    if (!$dataRow->exists) {
-        $dataRow->fill([
-            'type'         => 'text',
-            'display_name' => __('Название'),
-            'required'     => 0,
-            'browse'       => 1,
-            'read'         => 1,
-            'edit'         => 1,
-            'add'          => 1,
-            'delete'       => 1,
-            'details'      => '',
-            'order'        => 2,
-        ])->save();
-    }
-    $dataRow = $this->dataRow($providersDataType, 'status');
-    if (!$dataRow->exists) {
-        $dataRow->fill([
-            'type'         => 'text',
-            'display_name' => __('Статус'),
-            'required'     => 0,
-            'browse'       => 1,
-            'read'         => 1,
-            'edit'         => 1,
-            'add'          => 1,
-            'delete'       => 1,
-            'details'      => '',
-            'order'        => 3,
-        ])->save();
-    }
-    $dataRow = $this->dataRow($providersDataType, 'created_at');
-    if (!$dataRow->exists) {
-        $dataRow->fill([
-            'type'         => 'timestamp',
-            'display_name' => __('Добавлен'),
-            'required'     => 0,
-            'browse'       => 0,
-            'read'         => 0,
-            'edit'         => 0,
-            'add'          => 0,
-            'delete'       => 1,
-            'details'      => '',
-            'order'        => 4,
-        ])->save();
-    }
-    $dataRow = $this->dataRow($providersDataType, 'updated_at');
-    if (!$dataRow->exists) {
-        $dataRow->fill([
-            'type'         => 'timestamp',
-            'display_name' => __('Обновлен'),
-            'required'     => 0,
-            'browse'       => 0,
-            'read'         => 0,
-            'edit'         => 0,
-            'add'          => 0,
-            'delete'       => 1,
-            'details'      => '',
-            'order'        => 5,
-        ])->save();
-    }
-}
+//}
 
     /**
      * [dataRow description].

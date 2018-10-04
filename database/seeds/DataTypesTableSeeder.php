@@ -220,6 +220,21 @@ class DataTypesTableSeeder extends Seeder
                 'description'           => '',
             ])->save();
         }
+
+        $dataType = $this->dataType('slug','attribute_values');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name' => 'attribute_values',
+                'display_name_singular' => 'Attribute Value',
+                'display_name_plural' => 'Attribute Values',
+                'icon'                  => 'voyager-group',
+                'model_name' => 'App\Models\AttributeValue',
+                'controller' => '',
+                'description' => '',
+                'generate_permissions' => 1,
+                'details' => '{"order_column":null,"order_display_column":null}',
+            ])->save();
+        }
     }
 
     /**

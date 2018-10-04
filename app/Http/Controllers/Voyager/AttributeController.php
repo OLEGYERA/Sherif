@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Voyager;
 
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
@@ -502,5 +504,11 @@ class AttributeController extends VoyagerBaseController
             $i->$column = ($key + 1);
             $i->save();
         }
+    }
+
+    public function getAttribValues(Request $request) {
+        return Response::json(Attribute::i()->getAttributesValue($request->get('attr_id')));
+
+        //return Response::json(Attribute::where('id','=',$request->get('attr_id'))->get());
     }
 }

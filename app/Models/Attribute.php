@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Attribute extends Model
 {
@@ -22,5 +23,12 @@ class Attribute extends Model
         return static::$_instance;
     }
 
-
+    public function getAttributesValue($key)
+    {
+        return DB::table('attribute_values as av')
+            ->join('attribute_value_pivot as avp', 'avp.attribute_value_id','av.id')
+            ->join('attribute as a', 'a.id','avp.attribute_id')
+            ->where('avp.attribute_id','=',$key)
+            ->get();
+    }
 }

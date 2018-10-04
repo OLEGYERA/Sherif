@@ -20,7 +20,7 @@ class MultipleImage extends BaseType
         $files = $this->request->file($this->row->field);
         if (isset($files)) {
             foreach ($files as $file) {
-                $image = InterventionImage::make($file);
+                $image = InterventionImage::make($file);//->exif();
 
                 $resize_width = null;
                 $resize_height = null;

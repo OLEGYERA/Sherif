@@ -476,21 +476,32 @@
                                         @endphp
 
                                         <div id="table-attr" class="table-editable">
-                                            <span class="table-add-attr glyphicon glyphicon-plus"></span>
-                                            <table class="table">
-                                                <tr>
-                                                    <th>Имя Атрибута</th>
-                                                    <th>Значение</th>
-                                                    <th></th>
-                                                </tr>
-                                                @php $r = 0; @endphp
-
-                                                @foreach($selected_values as $k => $key)
+                                            <div id="tab5" class="tab-pane">
+                                                <table id="attribute" class="table table-striped table-bordered table-hover">
+                                                    <thead>
                                                     <tr>
+                                                        <td class="text-left">{!! trans('admin.product-attributes') !!}</td>
+                                                        <td class="text-left">{!! trans('admin.product-attributes-text') !!}
+                                                            <div class="pull-right">
+                                                                <div class="btn-group">
+                                                                    <!--<button type="button" id="template-view" class="btn btn-default btn-info"><i class="fa fa-th-list"></i> Шаблоны</button>
+                                                                    <button type="button" id="values-view" class="btn btn-default"><i class="fa fa-th"></i> Значения</button>-->
+                                                                    <button type="button" id="appendAttr" class="btn btn-default"><i class="fa fa-th"></i> Заполнить атрибуты</button>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @php $r = 0; @endphp
+                                                    <?php $attribute_row = 0;  ?>
+                                                    <?php foreach ($selected_values as $k => $key) { ?>
+                                                    <tr id="attribute-row{{$attribute_row}}">
                                                         <td contenteditable="true">
                                                             @if(isset($options->model) && isset($options->type))
                                                                 @if(class_exists($options->model))
-                                                                    <select class="form-control select2 select-{{$r}}" name="{{ $relationshipField }}[{{$k }}][attribute_id]">
+                                                                    <select class="attrselect form-control select2 select-{{$r}}" name="{{ $relationshipField }}[{{$k }}][attribute_id]">
 
                                                                         @foreach($relationshipOptions as $relationshipOption)
 
@@ -500,116 +511,50 @@
                                                                 @endif
                                                             @endif
                                                         </td>
-                                                        <td>
-                                                            <input  class="form-control" name="{{ $relationshipField }}[{{$k}}][value]" value="{{ $key->pivot->value }}">
-                                                        </td>
-                                                        <td>
-                                                            <span class="table-remove glyphicon glyphicon-remove"></span>
-                                                        </td>
-                                                    </tr>
-                                                @php $r++; @endphp
-                                            @endforeach
-                                            <!-- This is our clonable table line -->
-                                                <tr class="hide">
-                                                    <td contenteditable="true">
-                                                        @if(isset($options->model) && isset($options->type))
-                                                            @if(class_exists($options->model))
-                                                                <select class="form-control hiddenatr select_new_row_attr">
+                                                        <td class="text-left">
+                                                            @php
+                                                                $key->pivot->value = explode('/',$key->pivot->value);
+                                                                $attribvalue = app('\App\Models\Attribute')::i()->getAttributesValue($key->id)->toArray();
 
-                                                                    @foreach($relationshipOptions as $relationshipOption)
-                                                                        <option value="{{ $relationshipOption->{$options->key} }}">{{ $relationshipOption->{$options->label} }}</option>
+                                                            @endphp
+
+                                                            @if ($key->type == 'selectmultilpy')
+                                                                <select class="form-control select2" name="{{ $relationshipField }}[{{$k}}][value][]" multiple>
+                                                                    @foreach($attribvalue as $aval)
+                                                                        <option value="{{$aval->value}}"
+                                                                            @if(in_array($aval->value,$key->pivot->value)) {{'selected="selected"' }}
+                                                                        @endif>{{$aval->value}}</option>
                                                                     @endforeach
                                                                 </select>
+                                                            @elseif ($key->type == 'select' )
+                                                                <select class="form-control select2" name="{{ $relationshipField }}[{{$k}}][value]">
+                                                                    @foreach($attribvalue as $aval)
+                                                                        <option value="{{$aval->value}}"
+                                                                        @if(in_array($aval->value,$key->pivot->value)) {{'selected="selected"' }}
+                                                                                @endif>{{$aval->value}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+
+                                                               <input  class="form-control" name="{{ $relationshipField }}[{{$k}}][value]" value="{{ $key->pivot->value[0] }}">
                                                             @endif
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control select_new_attr_val_row">
-                                                    </td>
-                                                    <td>
-                                                        <span class="table-remove glyphicon glyphicon-remove"></span>
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                                        </td>
+                                                        <td class="text-left"><button type="button" onclick="$('#attribute-row<?php echo $attribute_row; ?>').remove(); console.log('#attribute-row<?php echo $attribute_row; ?>');" data-toggle="tooltip" title="Удалить" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>
+                                                    </tr>
+                                                    <?php $attribute_row++; ?>
+                                                    <?php } ?>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <td colspan="2"></td>
+                                                        <td class="text-left"><button type="button" onclick="addAttribute();" data-toggle="tooltip" title="{!! trans('admin.button-attribute-add') !!}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+                                                    </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+
                                         </div>
-                                        <script type="text/javascript">
-                                            var $TABLEATTR = $('#table-attr');
-                                            var $BTN = $('#export-btn');
-                                            var $EXPORT = $('#export');
-                                            var $rowattr = {{ $r }} ;
-                                            var $fieldnameattr = 'product_belongstomany_attribute_relationship';//'{{ $relationshipField }}';
-                                            // $('select.hiddenatr').select2({
-                                            //    width: "100%"
-                                            // });
-                                            $(document).ready(function() {
 
-                                                //function to initialize select2
-                                                function initializeSelect2(selectElementObj) {
-                                                    selectElementObj.select2({
-                                                        width: "100%"
-                                                    });
-                                                }
-
-                                                $('.table-add-attr').click(function () {
-                                                    var $clone = $TABLEATTR.find('tr.hide').clone(true).removeClass('hide table-line').addClass('addtr'+$rowattr);
-                                                    $clone.find('select.select_new_row_attr').attr("name",$fieldnameattr+'['+$rowattr+']'+'[attribute_id]');
-                                                    $clone.find('.select_new_attr_val_row').attr("name",$fieldnameattr+'['+$rowattr+']'+'[value]');
-                                                    $TABLEATTR.find('table').append($clone);
-                                                    $('tr.addtr'+$rowattr+' select.select_new_row_attr').select2({
-                                                        width: "100%"
-                                                    });
-                                                    $rowattr++;
-                                                });
-
-                                                $('.table-remove').click(function () {
-                                                    $(this).parents('tr').detach();
-                                                });
-
-                                                $('.table-up').click(function () {
-                                                    var $row = $(this).parents('tr');
-                                                    if ($row.index() === 1) return; // Don't go above the header
-                                                    $row.prev().before($row.get(0));
-                                                });
-
-                                                $('.table-down').click(function () {
-                                                    var $row = $(this).parents('tr');
-                                                    $row.next().after($row.get(0));
-                                                });
-                                            });
-
-
-                                            // A few jQuery helpers for exporting only
-                                            jQuery.fn.pop = [].pop;
-                                            jQuery.fn.shift = [].shift;
-
-                                            $BTN.click(function () {
-                                                var $rows = $TABLE.find('tr:not(:hidden)');
-                                                var headers = [];
-                                                var data = [];
-
-                                                // Get the headers (add special header logic here)
-                                                $($rows.shift()).find('th:not(:empty)').each(function () {
-                                                    headers.push($(this).text().toLowerCase());
-                                                });
-
-                                                // Turn all existing rows into a loopable array
-                                                $rows.each(function () {
-                                                    var $td = $(this).find('td');
-                                                    var h = {};
-
-                                                    // Use the headers from earlier to name our hash keys
-                                                    headers.forEach(function (header, i) {
-                                                        h[header] = $td.eq(i).text();
-                                                    });
-
-                                                    data.push(h);
-                                                });
-
-
-                                                /////////////////////////add image /////
-
-                                            });
-                                        </script>
                                         @endif
                                     </div>
                                 </div>
@@ -635,6 +580,7 @@
                                         $relationshipData = (isset($data)) ? $data : $dataTypeContent;
                                         //$selected_values = isset($relationshipData) ? $relationshipData->belongsToMany($options->model, $options->pivot_table)->withPivot('value')->get() : array();
                                        // dd($dataTypeContent->belongsToMany($options->model, $options->pivot_table)->get());
+                                        //dd();
                                     @endphp
 
                                     <div id="tableconcomitant" class="table-editable">
@@ -995,6 +941,11 @@
             $('#add').click(function(e) {
                 $('.panel-body.dynamic').append(additional_field);
             });
+            
+            
+            $('#add_attributes').click(function (e) {
+
+            })
         });
 
         $(document).ready(function () {
@@ -1108,5 +1059,289 @@
          var button_id = $(this).attr("id");
          $("#row"+button_id+"").remove();
          });*/
+    </script>
+
+
+
+
+    <script type="text/javascript">
+
+        var attribute_row = <?php echo $attribute_row?>;
+        var $row = {!! $dataTypeRows[25] !!};
+        var $options = JSON.parse($row['details']);
+        var $relationshipOptions = {!! app('App\Models\Attribute')->all()!!};
+        var $selected_values = {!! $relationshipData->belongsToMany('App\Models\Attribute', 'product_attributes_pivot')->withPivot('value')->get(); !!}
+        console.log($selected_values);
+       //  var $selected_values =
+                @php
+
+                   // $row = $dataTypeRows[25];
+                   // $options = json_decode($row->details);
+                  // $display_options = isset($options->display) ? $options->display : NULL;
+
+                  //  $relationshipOptions = app($options->model)->all();
+                  //  $relationshipField = $row->field;
+                 //   $relationshipData = (isset($data)) ? $data : $dataTypeContent;
+                  //  $selected_values = isset($relationshipData) ? $relationshipData->belongsToMany($options->model, $options->pivot_table)->withPivot('value')->get() : array();
+                    //dd($relationshipData);
+                @endphp
+
+        var product_attribute_id = new Array();
+        $('body').on('change', 'input[name=\'product_category[]\'], select[name=\'main_category_id\']', function(e) {
+            if($(this).is(":checked") || (this.tagName == "SELECT" && $(this).val() != 0)) {
+                newCategory($(this).val())
+            }
+        });
+
+        function newCategory(category_id) {
+            $.ajax({
+                url: '/admin/ajax/get-attrib-category',
+                data:{term:category_id},
+                dataType: 'json',
+                success: function(json) {
+                    $.each(json, function(key, attribute) {
+                        if (!in_array(attribute['attribute_id'],product_attribute_id)) {
+                            //console.log(json);
+                            var row = attribute_row;
+                            addAttribute();
+                            $('input[name="product_attribute[' + row + '][name]"]').val(attribute['name']);
+                            $('input[name="product_attribute[' + row + '][attribute_id]"]').val(attribute['attribute_id']);
+                            addAttributeValues(attribute['attribute_id'], row);
+                            addAttributeDuty(attribute['attribute_id'], row);
+                            product_attribute_id.push(attribute['attribute_id']);
+                        }
+                    });
+                }
+            });
+
+        }
+        function in_array(value, array) {
+            for(var i = 0; i < array.length; i++) {
+                if(array[i] == value) return true;
+            }
+            return false;
+        }
+
+        function addAttributeValues(attribute_id, attribute_row) {
+            $.ajax({
+                url: '/admin/ajax/get-attrib-values',// +  attribute_id + '&method=' + localStorage.getItem('display_attribute'),
+                data:{term:attribute_id},
+                dataType: 'json',
+                success: function(json) {
+                    $.each(json, function(language_id, select) {
+                        console.log(json);
+                        var textarea = $('textarea[name="product_attribute\[' + attribute_row + '\]\[product_attribute_description\]\[' + language_id + '\]\[text\]"]');
+                        $('select[language_id="' + language_id + '"]', textarea.parent()).remove();
+                        textarea.before(select);
+                        textarea.attr('rows',1);
+                    });
+                }
+            });
+        }
+
+        function addAttributeDuty(attribute_id, attribute_row) {
+            $.ajax({
+                url: '/admin/ajax/get-attrib-values-duty',// +  attribute_id,
+                data: {term:attribute_id},
+                dataType: 'json',
+                success: function(json) {
+
+                    $.each(json, function(language_id, duty) {
+                        var textarea = $('textarea[name="product_attribute\[' + attribute_row + '\]\[product_attribute_description\]\[' + language_id + '\]\[text\]"]');
+                        textarea.val(duty);
+                    });
+                }
+            });
+        }
+
+        $('#attribute tbody').on('change', 'select',function(){
+
+            var select = $(this);
+            var textarea_val = select.next('textarea').val();
+            textarea_val = (textarea_val == '') ? textarea_val : textarea_val + '/';
+
+            if (localStorage.getItem('display_attribute') == 'template') {
+                select.next('textarea').val(select.val());
+            } else {
+                select.next('textarea').val(textarea_val + select.val());
+            }
+        });
+        $('#attribute tbody').on('change', 'select.attrselect',function() {
+            var attribute_row = $(this).closest('tr').attr('id').split('attribute-row')[1];
+            //console.log(attribute_row);
+            attributeautocomplete(attribute_row);
+        });
+
+
+        if (localStorage.getItem('display_attribute') == 'template') {
+            $('#values-view').removeClass('btn-info');
+            $('#template-view').addClass('btn-info');
+        } else {
+            $('#values-view').addClass('btn-info');
+            $('#template-view').removeClass('btn-info');
+        }
+
+        $('#template-view').click(function() {
+            localStorage.setItem('display_attribute', 'template');
+            $(this).addClass('btn-info');
+            $('#values-view').removeClass('btn-info');
+            $('#attribute tbody tr').each(function(index, element) {
+
+                var	attribute_id = $('[name="product_attribute\[' + index + '\]\[attribute_id\]"]').val();
+                addAttributeValues(attribute_id, index);
+                product_attribute_id.push(attribute_id);
+
+
+            });
+        });
+
+        // Attribute Values
+        $('#values-view').click(function() {
+            localStorage.setItem('display_attribute', 'values');
+            $(this).addClass('btn-info');
+            $('#template-view').removeClass('btn-info');
+            $('#attribute tbody tr').each(function(index, element) {
+
+                var	attribute_id = $('[name="product_attribute\[' + index + '\]\[attribute_id\]"]').val();
+                addAttributeValues(attribute_id, index);
+                product_attribute_id.push(attribute_id);
+
+                var	attribute_id = $('[name="product_attribute\[' + index + '\]\[attribute_id\]"]').val();
+                addAttributeValues(attribute_id, index);
+            });
+        });
+        //append attributes
+        $('#appendAttr').click(function(){
+            //newCategory($('[name="main-category_id"]').val());
+            //console.log($('[name="main-category_id"]').val());
+            category_id = $('[name="main_category_id"]').val()
+            product_attribute_id.length = 0;
+            console.log('pr='+product_attribute_id.length);
+            $('#attribute tbody tr').each(function(index, element) {
+                //var	attribute_id = $('[name="product_attribute\[' + index + '\]\[attribute_id\]"]').val();
+                var	attribute_id = $(element).find('input[type="hidden"]').val();
+                product_attribute_id.push(attribute_id);
+            });
+            console.log('pr11='+product_attribute_id.length);
+            // for
+            $.ajax({
+                url: '/admin/ajax/get-attrib-category',
+                data:{term:category_id},
+                dataType: 'json',
+                success: function(json) {
+
+                    $.each(json, function(key, attribute) {
+
+                        if (!in_array(attribute['attribute_id'],product_attribute_id)) {
+                            console.log('attribute_id='+attribute['attribute_id']);
+                            var row = attribute_row;
+                            addAttribute();
+                            $('input[name="product_attribute[' + row + '][name]"]').val(attribute['name']);
+                            $('input[name="product_attribute[' + row + '][attribute_id]"]').val(attribute['attribute_id']);
+                            addAttributeValues(attribute['attribute_id'], row);
+                            addAttributeDuty(attribute['attribute_id'], row);
+                            product_attribute_id.push(attribute['attribute_id']);
+                        }
+
+                    });
+
+                }
+            });
+        });
+
+        function addAttribute() {
+
+            var $r = 0;
+           // console.log({{$options}});
+
+
+                html  = '<tr id="attribute-row'+attribute_row+'"><td contenteditable="true">';
+                            html += '<select class="attrselect form-control select2 select-'+attribute_row+'" name="product_belongstomany_attribute_relationship['+attribute_row +'][attribute_id]" multiply>';
+                            $relationshipOptions.forEach(function ($relationshipOption) {
+                                html += '<option value="'+$relationshipOption.id+'">'+$relationshipOption.name+'</option>';
+                            });
+
+                             html += '</select>';
+
+            html += '</td>';
+            html += '<td class="text-left">';
+            html += '<input  class="form-control" name="{{ $relationshipField }}[{{$k}}][value]" value="">';
+            html += '</td>';
+            html += '<td class="text-left"><button type="button" onclick="$(\'#attribute-row'+attribute_row+'\').remove(); " data-toggle="tooltip" title="Удалить" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+
+
+            $('#attribute tbody').append(html);
+
+            attributeautocomplete(attribute_row);
+            $('#attribute-row'+attribute_row + ' select.attrselect').select2({
+                width: "100%",
+                tags: true,
+                tokenSeparators: [",", " "],
+            });
+            attribute_row++;
+        }
+
+        function attributeautocomplete(attribute_row) {
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+            $.ajax({
+                url: '/admin/get_attributes_id',
+                type: 'POST',
+                data: {attr_id: $('#attribute-row' + attribute_row + ' select.attrselect').find("option:selected").attr('value'), token: CSRF_TOKEN},
+                dataType: 'JSON',
+                success: function (data) {
+
+                    if (data.length>0) {
+                        if (data[0]['type'] == 'selectmultilpy') {
+
+                            $('#attribute-row' + attribute_row + ' td:nth-child(2)').html('');
+                            html = '<select class="attrvalue form-control select2" multiple name="product_belongstomany_attribute_relationship[' + attribute_row + '][value][]">';
+                            data.forEach(function ($option) {
+                                console.log($option['value']);
+                                html += '<option value="' + $option['value'] + '">' + $option['value'] + '</option>';
+                            });
+                            html += '</select>';
+                            $('#attribute-row' + attribute_row + ' td:nth-child(2)').html(html);
+                            $('#attribute-row' + attribute_row + ' td:nth-child(2) select.attrvalue').select2({
+                                tags: true,
+                                width: '100%',
+                            });
+
+                        }
+                        else if (data[0]['type'] == 'select') {
+                            $('#attribute-row' + attribute_row + ' td:nth-child(2)').html('');
+                            html = '<select class="attrvalue form-control select2" name="product_belongstomany_attribute_relationship[' + attribute_row + '][value]">';
+                            data.forEach(function ($option) {
+                                html += '<option value="' + $option['value'] + '">' + $option['value'] + '</option>';
+                            });
+                            html += '</select>';
+                            $('#attribute-row' + attribute_row + ' td:nth-child(2)').html(html);
+                            $('#attribute-row' + attribute_row + ' td:nth-child(2) select.attrvalue').select2({
+                                tags: false,
+                                width: '100%',
+                            });
+                        } else {
+                            html = '<input class="form-control" name="product_belongstomany_attribute_relationship['+attribute_row+'][value]" value="">'
+                            $('#attribute-row' + attribute_row + ' td:nth-child(2)').html(html);
+                        }
+                    }
+                }
+            });
+
+        }
+        $(document).ready(function () {
+
+            $('#attribute tbody tr').each(function(index, element) {
+
+                //var	attribute_id = $('[name="product_attribute\[' + index + '\]\[attribute_id\]"]').val();
+                //addAttributeValues(attribute_id, index);
+                //product_attribute_id.push(attribute_id);
+
+               // attributeautocomplete(index);
+
+            });
+        })
+
+
     </script>
 @stop
