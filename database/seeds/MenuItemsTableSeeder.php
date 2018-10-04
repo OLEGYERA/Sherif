@@ -43,7 +43,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-images',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 8,
+                'order'      => 9,
             ])->save();
         }
 
@@ -90,7 +90,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-tools',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 9,
+                'order'      => 10,
             ])->save();
         }
 
@@ -218,7 +218,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-dollar',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 7,
+                'order'      => 8,
             ])->save();
         }
 
@@ -356,6 +356,21 @@ class MenuItemsTableSeeder extends Seeder
                 'color'      => null,
                 'parent_id'  => 20,
                 'order'      => 5,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Статьи'),
+            'url'     => 'admin/articles'
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-news',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 7,
             ])->save();
         }
     }

@@ -28,6 +28,13 @@
         <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;
         Интересовались
     </a>
+    @php $s = DB::table('product_statuses')->where('id', $dataTypeContent->status)->first()->name; @endphp
+    @if($s != "Снят с производства" && $s != "Нет в наличии")
+    <a href="#" class="btn btn-success">
+        <span class="glyphicon glyphicon-envelope"></span>&nbsp;
+        Сообщить о снижении цены
+    </a>
+    @endif
 </div>
 @stop
 
@@ -148,6 +155,20 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><b>Сопутствующая</b></td>
+                                        <td>
+                                        @php $rowDetails = json_decode($dataType->readRows[41]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[41]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
+                                        @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td><b>Цвет</b></td>
                                         <td>
                                         @php $rowDetails = json_decode($dataType->readRows[36]->details);
@@ -196,15 +217,29 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><b>Служебный статус</b></td>
+                                        <td><b>{{$dataType->readRows[40]->display_name}}</b></td>
                                         <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[37]->details);
+                                        @php $rowDetails = json_decode($dataType->readRows[40]->details);
                                             if($rowDetails === null){
                                                     $rowDetails=new stdClass();
                                                     $rowDetails->options=new stdClass();
                                             }
                                         @endphp
-                                        @if($dataType->readRows[37]->type == 'relationship')
+                                        @if($dataType->readRows[40]->type == 'relationship')
+                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
+                                        @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{{$dataType->readRows[39]->display_name}}</b></td>
+                                        <td>
+                                        @php $rowDetails = json_decode($dataType->readRows[39]->details);
+                                            if($rowDetails === null){
+                                                    $rowDetails=new stdClass();
+                                                    $rowDetails->options=new stdClass();
+                                            }
+                                        @endphp
+                                        @if($dataType->readRows[39]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>

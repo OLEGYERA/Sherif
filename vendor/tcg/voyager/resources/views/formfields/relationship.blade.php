@@ -181,6 +181,22 @@
 									<option value="{{ $relationshipOption->{$options->key} }}" @if(in_array($relationshipOption->{$options->key}, $selected_values)){{ 'selected="selected"' }}@endif>{{ $relationshipOption->{$options->label} }}</option>
 								@endforeach
 							@endif
+						@elseif($relationshipField == 'product_belongstomany_subcategory_relationship_1')
+							@if(isset($categories))
+								@foreach($categories as $category)
+									<optgroup label="{{$category->name}}">
+										@foreach($relationshipOptions as $relationshipOption)
+											@if($relationshipOption->category == $category->id)
+												<option value="{{ $relationshipOption->{$options->key} }}" @if(in_array($relationshipOption->{$options->key}, $selected_values)){{ 'selected="selected"' }}@endif>{{ $relationshipOption->{$options->label} }}</option>
+											@endif
+										@endforeach
+									</optcategory>
+								@endforeach
+							@else
+								@foreach($relationshipOptions as $relationshipOption)
+									<option value="{{ $relationshipOption->{$options->key} }}" @if(in_array($relationshipOption->{$options->key}, $selected_values)){{ 'selected="selected"' }}@endif>{{ $relationshipOption->{$options->label} }}</option>
+								@endforeach
+							@endif
 						@else
 							@foreach($relationshipOptions as $relationshipOption)
 									<option value="{{ $relationshipOption->{$options->key} }}" @if(in_array($relationshipOption->{$options->key}, $selected_values)){{ 'selected="selected"' }}@endif>{{ $relationshipOption->{$options->label} }}</option>

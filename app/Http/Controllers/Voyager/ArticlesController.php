@@ -2,21 +2,18 @@
 
 namespace App\Http\Controllers\Voyager;
 
-use App\Product;
-use App\Subcategory;
-use App\Category;
-
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
+use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\DB;
-use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
 use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
-use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
-class CategoriesController extends VoyagerBaseController
+class ArticlesController extends VoyagerBaseController
 {
     //***************************************
     //               ____
@@ -226,21 +223,9 @@ class CategoriesController extends VoyagerBaseController
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
-        
-        /* adding discount to all subcategories and their products */
-        $subcategories = Subcategory::where('category', '=', $id)->get();
-        foreach($subcategories as $subcategory) {
-            $subcategory->sale_discount = $request->sale_discount;
-            $subcategory->save();
-            $products_ids = DB::table('product_subcategories_pivot')->where('subcategory_id', '=', $subcategory->id)->get();
 
-            foreach($products_ids as $product_id) {
-                $product = Product::find($product_id->product_id);
-                $product->sale_discount = $request->sale_discount;
-                $product->sale_price = $product->price_final * (100 - $request->sale_discount) / 100;
-                $product->save();
-            }
-        }
+        //Add editor name
+        $request->merge(['editor' => \Auth::user()->name]);
 
         if (!$request->ajax()) {
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
@@ -311,6 +296,7 @@ class CategoriesController extends VoyagerBaseController
      */
     public function store(Request $request)
     {
+        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -324,6 +310,10 @@ class CategoriesController extends VoyagerBaseController
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
+
+        //Add creator's name
+        $request->merge(['author' => \Auth::user()->name]);
+        $request->merge(['editor' => \Auth::user()->name]);
 
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
@@ -357,8 +347,6 @@ class CategoriesController extends VoyagerBaseController
 
     public function destroy(Request $request, $id)
     {
-        //dd($request);
-        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -375,20 +363,6 @@ class CategoriesController extends VoyagerBaseController
             // Single item delete, get ID from URL
             $ids[] = $id;
         }
-        
-        //Deleting products in category subcategories
-        $relatedSubcategory = Subcategory::where('category', $ids)->get();
-        
-        foreach($relatedSubcategory as $subcategory) {
-            $relatedProducts = DB::table('product_subcategories_pivot')->where('subcategory_id', $subcategory->id)->get();
-            Subcategory::where('id', $subcategory->id)->delete();
-            foreach($relatedProducts as $product) {
-                Product::where('id', $product->product_id)->delete();
-            }
-        }
-        
-        
-
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
             $this->cleanup($dataType, $data);
@@ -410,8 +384,6 @@ class CategoriesController extends VoyagerBaseController
         if ($res) {
             event(new BreadDataDeleted($dataType, $data));
         }
-
-        
 
         return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
     }

@@ -46,6 +46,7 @@ class CreateProductsTable extends Migration {
 			$table->string('storage')->nullable();
 			$table->string('box')->nullable();
 			$table->integer('provider')->nullable();
+			$table->integer('concomitant_subcategory')->nullable();
 		});
 	}
 
