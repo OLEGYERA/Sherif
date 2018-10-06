@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Voyager;
 
 use App\Product;
-use App\Subcategory;
 use App\Category;
 
 use Illuminate\Http\Request;
@@ -71,7 +70,7 @@ class CategoriesController extends VoyagerBaseController
                     $getter,
                 ]);
             } elseif ($model->timestamps) {
-                $dataTypeContent = call_user_func([$query->latest($model::CREATED_AT), $getter]);
+                $dataTypeContent = call_user_func([$query->oldest($model::CREATED_AT), $getter]);
             } else {
                 $dataTypeContent = call_user_func([$query->orderBy($model->getKeyName(), 'DESC'), $getter]);
             }
@@ -89,6 +88,11 @@ class CategoriesController extends VoyagerBaseController
             $dataTypeContent->load('translations');
         }
 
+        //display only categories of the first level or depth
+        foreach($dataTypeContent as $key => $item) {
+            if($item->depth != 1) unset($dataTypeContent[$key]);
+        }
+
         // Check if server side pagination is enabled
         $isServerSide = isset($dataType->server_side) && $dataType->server_side;
 
@@ -97,7 +101,7 @@ class CategoriesController extends VoyagerBaseController
         if (view()->exists("voyager::$slug.browse")) {
             $view = "voyager::$slug.browse";
         }
-
+        
         return Voyager::view($view, compact(
             'dataType',
             'dataTypeContent',
@@ -139,7 +143,7 @@ class CategoriesController extends VoyagerBaseController
 
         // Replace relationships' keys for labels and create READ links if a slug is provided.
         $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType, true);
-
+        
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'read');
 
@@ -154,7 +158,7 @@ class CategoriesController extends VoyagerBaseController
         if (view()->exists("voyager::$slug.read")) {
             $view = "voyager::$slug.read";
         }
-
+        
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
@@ -202,7 +206,9 @@ class CategoriesController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        $categories = Category::where('id', '!=', $id)->get();
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories);
     }
 
     // POST BR(E)AD
@@ -226,26 +232,53 @@ class CategoriesController extends VoyagerBaseController
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
-        
-        /* adding discount to all subcategories and their products */
-        $subcategories = Subcategory::where('category', '=', $id)->get();
-        foreach($subcategories as $subcategory) {
-            $subcategory->sale_discount = $request->sale_discount;
-            $subcategory->save();
-            $products_ids = DB::table('product_subcategories_pivot')->where('subcategory_id', '=', $subcategory->id)->get();
 
-            foreach($products_ids as $product_id) {
-                $product = Product::find($product_id->product_id);
-                $product->sale_discount = $request->sale_discount;
-                $product->sale_price = $product->price_final * (100 - $request->sale_discount) / 100;
-                $product->save();
+        if($request->sale_discount) {
+             /* adding discount to all subcategories and their products */
+            $categories = Category::where('id', $id)->get();
+            foreach($categories as $category) {
+                $products_ids = DB::table('product_categories_pivot')->where('category_id', '=', $category->id)->get();
+
+                foreach($products_ids as $product_id) {
+                    $product = Product::find($product_id->product_id);
+                    $product->sale_discount = $request->sale_discount;
+                    $product->sale_price = $product->price_final * (100 - $request->sale_discount) / 100;
+                    $product->save();
+                }
             }
         }
+        
+        //define depth of new category
+        if(isset($request->parent_id)) {
+            $depth = Category::where('id', $request->parent_id)->first()->depth + 1;
+            $request->merge(['depth' => $depth]);
+        } else {
+            $request->merge(['depth' => 1]);
+            $request->merge(['parent_id' => 0]);
+        }
+
 
         if (!$request->ajax()) {
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
             event(new BreadDataUpdated($dataType, $data));
+
+            if($request->button_type == 'submit_add') {
+                return redirect()
+                ->route("voyager.{$dataType->slug}.create")
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            } elseif($request->button_type == 'submit_read') {
+                return redirect()->action(
+                    'Voyager\CategoriesController@edit', ['id' => $id]
+                )
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ])->withInput();
+            }
 
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
@@ -287,6 +320,8 @@ class CategoriesController extends VoyagerBaseController
             $dataType->addRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
+        $categories = Category::get();
+
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'add');
 
@@ -299,7 +334,7 @@ class CategoriesController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories);
     }
 
     /**
@@ -311,6 +346,7 @@ class CategoriesController extends VoyagerBaseController
      */
     public function store(Request $request)
     {
+        
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -324,6 +360,16 @@ class CategoriesController extends VoyagerBaseController
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
+        
+        //define depth of new category
+        if($request->parent_id) {
+            $depth = Category::where('id', $request->parent_id)->first()->depth + 1;
+            $request->merge(['depth' => $depth]);
+        } else {
+            $request->merge(['depth' => 1]);
+            $request->merge(['parent_id' => 0]);
+        }
+        
 
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
@@ -333,6 +379,24 @@ class CategoriesController extends VoyagerBaseController
             if ($request->ajax()) {
                 return response()->json(['success' => true, 'data' => $data]);
             }
+            
+            if($request->button_type == 'submit_add') {
+                return redirect()
+                ->route("voyager.{$dataType->slug}.create")
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            } elseif($request->button_type == 'submit_read') {
+                return redirect()->action(
+                    'Voyager\CategoriesController@edit', ['id' => $data->id]
+                )
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ])->withInput();
+            }
+
 
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
@@ -539,5 +603,43 @@ class CategoriesController extends VoyagerBaseController
             $i->$column = ($key + 1);
             $i->save();
         }
+    }
+
+    /**
+     * Method for getting next level categories
+     */
+    public function showsecond(Request $request) {
+
+        $next_categories = Category::where('parent_id', '=', $request->input('id'))->get();
+
+        // GET THE DataType based on the slug
+        $dataType = Voyager::model('DataType')->where('slug', '=', 'categories')->first();
+
+        $output = '';
+        
+        $tabs = '&emsp;';
+
+        foreach($next_categories as $next_category) {
+
+            $output .='
+            <tr><td>
+                <input type="checkbox" name="row_id" id="checkbox_'.$next_category->getKey().'" value="'.$next_category->getKey().'">
+            </td>
+            <td class="some" id="'.$next_category->id.'">'.str_repeat($tabs, $next_category->depth).''.$next_category->name.'</td>
+            <td class="no-sort no-click" id="bread-actions" style="display: flex; flex-direction: row-reverse;">';
+            foreach(Voyager::actions() as $action) {
+                $action = new $action($dataType, $next_category);
+                $output .= '<a href="'.$action->getRoute($dataType->name).'" title="'.$action->getTitle().'"'.$action->convertAttributesToHtml().'>
+                <i class="'.$action->getIcon().'"></i> <span class="hidden-xs hidden-sm"></span>
+            </a>';
+            }
+                
+            
+            $output .= '</td></tr><tr class='.$next_category->id.'></tr>';
+        }
+
+    
+        echo $output;
+
     }
 }

@@ -135,7 +135,7 @@ Route::group(['as' => 'voyager.'], function () {
             Route::get('/', ['uses' => $namespacePrefix.'VoyagerCompassController@index',  'as' => 'index']);
             Route::post('/', ['uses' => $namespacePrefix.'VoyagerCompassController@index',  'as' => 'post']);
         });
-
+        
         event(new RoutingAdminAfter());
     });
     event(new RoutingAfter());

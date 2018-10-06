@@ -224,22 +224,6 @@ class MenuItemsTableSeeder extends Seeder
 
         $menuItem = MenuItem::firstOrNew([
             'menu_id' => $menu->id,
-            'title'   => __('Подкатегории'),
-            'url'     => 'admin/subcategories',
-            'route'   => 'voyager.subcategories.index',
-        ]);
-        if (!$menuItem->exists) {
-            $menuItem->fill([
-                'target'     => '_self',
-                'icon_class' => 'voyager-categories',
-                'color'      => null,
-                'parent_id'  => 15,
-                'order'      => 2,
-            ])->save();
-        }
-
-        $menuItem = MenuItem::firstOrNew([
-            'menu_id' => $menu->id,
             'title'   => __('Каталог'),
             'url'     => ''
         ]);
@@ -368,6 +352,36 @@ class MenuItemsTableSeeder extends Seeder
             $menuItem->fill([
                 'target'     => '_self',
                 'icon_class' => 'voyager-news',
+                'color'      => null,
+                'parent_id'  => 26,
+                'order'      => 2,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Категории статей'),
+            'url'     => 'admin/articles-categories'
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-documentation',
+                'color'      => null,
+                'parent_id'  => 26,
+                'order'      => 1,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Блог'),
+            'url'     => ''
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-documentation',
                 'color'      => null,
                 'parent_id'  => null,
                 'order'      => 7,

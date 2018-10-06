@@ -22,6 +22,7 @@ Route::get('/catalog', 'IndexController@getCatalog')->name('catalog');
 Route::get('/stock', 'IndexController@getStock')->name('stock');
 
 
+
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 
@@ -29,7 +30,11 @@ Route::group(['prefix' => 'admin'], function () {
     // Update currency rate
     Route::get('/currency_update', 'Voyager\CurrenciesController@currencyUpdate');
 
-    //Interested list
+    //expand categories as tree
+    Route::post('treeajax', 'Voyager\CategoriesController@showsecond');
+
+    //expand articles categories as tree
+    Route::post('treeajax_articles', 'Voyager\ArticlesCategoriesController@showsecond');
 
     ////////////abanners
     Route::put('banner/{id}/save', [

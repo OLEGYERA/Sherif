@@ -123,19 +123,6 @@ class DataTypesTableSeeder extends Seeder
             ])->save();
         }
         
-        $dataType = $this->dataType('slug', 'subcategories');
-        if (!$dataType->exists) {
-            $dataType->fill([
-                'name'                  => 'subcategories',
-                'display_name_singular' => __('Subcategory'),
-                'display_name_plural'   => __('Subcategories'),
-                'icon'                  => 'voyager-categories',
-                'model_name'            => 'App\\Subcategory',
-                'controller'            => '\\App\\Http\\Controllers\\Voyager\\SubcategoriesController',
-                'generate_permissions'  => 1,
-                'description'           => '',
-            ])->save();
-        }
 
         $dataType = $this->dataType('slug', 'banner');
         if (!$dataType->exists) {
@@ -229,7 +216,21 @@ class DataTypesTableSeeder extends Seeder
                 'display_name_plural'   => __('Articles'),
                 'icon'                  => 'voyager-news',
                 'model_name'            => 'App\Article',
-                'controller'            => '\\App\Http\\Controllers\\Voyager\\ArticlesController',
+                'controller'            => '\\App\\Http\\Controllers\\Voyager\\ArticlesController',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+
+        $dataType = $this->dataType('slug', 'articles_categories');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'articles-categories',
+                'display_name_singular' => __('Articles Category'),
+                'display_name_plural'   => __('Articles Categories'),
+                'icon'                  => 'voyager-documentation',
+                'model_name'            => 'App\ArticlesCategory',
+                'controller'            => '\\App\\Http\\Controllers\\Voyager\\ArticlesCategoriesController',
                 'generate_permissions'  => 1,
                 'description'           => '',
             ])->save();

@@ -150,12 +150,10 @@
                                     </tr>
                                     <tr>
                                         <td><b>Главная подкатегория</b></td>
-                                        <td>
-                                        <!-- Изменить -->
-                                        </td>
+                                        <td>{{$dataTypeContent->maincategory->name}}</td>
                                     </tr>
                                     <tr>
-                                        <td><b>Сопутствующая</b></td>
+                                        <td><b>Сопутствующая подкатегория</b></td>
                                         <td>
                                         @php $rowDetails = json_decode($dataType->readRows[41]->details);
                                             if($rowDetails === null){
@@ -164,20 +162,6 @@
                                             }
                                         @endphp
                                         @if($dataType->readRows[41]->type == 'relationship')
-                                            @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
-                                        @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>Цвет</b></td>
-                                        <td>
-                                        @php $rowDetails = json_decode($dataType->readRows[36]->details);
-                                            if($rowDetails === null){
-                                                    $rowDetails=new stdClass();
-                                                    $rowDetails->options=new stdClass();
-                                            }
-                                        @endphp
-                                        @if($dataType->readRows[36]->type == 'relationship')
                                             @include('voyager::formfields.relationship', ['view' => 'read', 'options' => $rowDetails])
                                         @endif
                                         </td>

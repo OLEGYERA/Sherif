@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class ProductSubcategoriesPivot extends Model
+class ArticlesCategory extends Model
 {
     
 }

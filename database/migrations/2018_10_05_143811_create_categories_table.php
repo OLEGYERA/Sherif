@@ -19,6 +19,12 @@ class CreateCategoriesTable extends Migration {
 			$table->string('slug', 191)->unique();
 			$table->timestamps();
 			$table->integer('sale_discount')->nullable();
+			$table->text('description', 65535)->nullable();
+			$table->integer('parent_id')->nullable();
+			$table->integer('depth')->nullable();
+			$table->string('meta_title')->nullable();
+			$table->string('meta_description')->nullable();
+			$table->string('image')->nullable();
 		});
 	}
 

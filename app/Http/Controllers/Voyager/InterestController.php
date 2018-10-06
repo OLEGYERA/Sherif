@@ -260,13 +260,8 @@ class InterestController extends VoyagerBaseController
     public function create(Request $request)
     {
         //get referer url, reverse and get product id
-        if($request->session()->get('product_id')) {
-            $product_id = $request->session()->get('product_id');
-        } else {
-            $str = strrev($request->header()['referer'][0]);
-            $product_id = explode('/', $str, 2)[0];
-            $request->session()->put('product_id', $product_id);
-        }
+        $str = strrev($request->header()['referer'][0]);
+        $product_id = explode('/', $str, 3)[1];
 
         $slug = $this->getSlug($request);
 
@@ -295,7 +290,7 @@ class InterestController extends VoyagerBaseController
         if (view()->exists("voyager::$slug.edit-add")) {
             $view = "voyager::$slug.edit-add";
         }
-
+        
         $product = Product::where('id', $product_id)->first();
 
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('product', $product);

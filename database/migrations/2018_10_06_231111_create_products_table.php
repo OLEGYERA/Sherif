@@ -47,6 +47,11 @@ class CreateProductsTable extends Migration {
 			$table->string('box')->nullable();
 			$table->integer('provider')->nullable();
 			$table->integer('concomitant_subcategory')->nullable();
+			$table->integer('url_option')->nullable();
+			$table->string('meta_title')->nullable();
+			$table->string('meta_description')->nullable();
+			$table->string('meta_heading')->nullable();
+			$table->string('meta_keywords')->nullable();
 		});
 	}
 

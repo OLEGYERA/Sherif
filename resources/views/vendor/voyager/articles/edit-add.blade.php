@@ -19,7 +19,6 @@
         <div class="row">
             <div class="col-md-12">
 
-                <div class="panel panel-bordered">
                     <!-- form start -->
                     <form role="form"
                             class="form-edit-add"
@@ -33,7 +32,6 @@
                         <!-- CSRF TOKEN -->
                         {{ csrf_field() }}
 
-                        <div class="panel-body">
 
                             @if (count($errors) > 0)
                                 <div class="alert alert-danger">
@@ -44,46 +42,141 @@
                                     </ul>
                                 </div>
                             @endif
-
                             <!-- Adding / Editing -->
                             @php
                                 $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
                             @endphp
-
-                            @foreach($dataTypeRows as $row)
-                                <!-- GET THE DISPLAY OPTIONS -->
-                                @php
-                                    $options = json_decode($row->details);
-                                    $display_options = isset($options->display) ? $options->display : NULL;
-                                @endphp
-                                @if ($options && isset($options->legend) && isset($options->legend->text))
-                                    <legend class="text-{{$options->legend->align or 'center'}}" style="background-color: {{$options->legend->bgcolor or '#f0f0f0'}};padding: 5px;">{{$options->legend->text}}</legend>
+                            <div class="panel panel-default col-lg-12">
+                                <button class="btn btn-success save" id="submit_read">Сохранить</button>
+                                <button class="btn btn-warning save" id="submit_exit">Сохранить и закрыть</button>
+                                <button class="btn btn-primary save" id="submit_add">Сохранить и добавить ещё</button>   
+                            </div><br /><br /><br />
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab1">Информация о статье</a></li>
+                                <li><a data-toggle="tab" href="#tab2">Мета теги</a></li>
+                                @if($dataTypeContent->exists)
+                                <li><a data-toggle="tab" href="#tab3">История изменений</a></li>
                                 @endif
-                                @if ($options && isset($options->formfields_custom))
-                                    @include('voyager::formfields.custom.' . $options->formfields_custom)
-                                @else
-                                    <div class="form-group @if($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
-                                        {{ $row->slugify }}
-                                        <label for="name">{{ $row->display_name }}</label>
-                                        @include('voyager::multilingual.input-hidden-bread-edit-add')
-                                        @if($row->type == 'relationship')
-                                            @include('voyager::formfields.relationship')
-                                        @else
-                                            {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
-                                        @endif
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab1" class="tab-pane fade in active">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                @foreach($dataTypeRows as $row)
+                                                    @if($row->field == 'meta_title' ||
+                                                        $row->field == 'meta_description' ||
+                                                        $row->field == 'meta_heading' ||
+                                                        $row->field == 'meta_keywords')
+                                                        <?php continue; ?>
+                                                    @endif
+                                                    <!-- GET THE DISPLAY OPTIONS -->
+                                                    @php
+                                                        $options = json_decode($row->details);
+                                                        $display_options = isset($options->display) ? $options->display : NULL;
+                                                    @endphp
+                                                    @if ($options && isset($options->legend) && isset($options->legend->text))
+                                                        <legend class="text-{{$options->legend->align or 'center'}}" style="background-color: {{$options->legend->bgcolor or '#f0f0f0'}};padding: 5px;">{{$options->legend->text}}</legend>
+                                                    @endif
+                                                    @if ($options && isset($options->formfields_custom))
+                                                        @include('voyager::formfields.custom.' . $options->formfields_custom)
+                                                    @else
+                                                        <div class="form-group @if($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                                            {{ $row->slugify }}
+                                                            <label for="name">{{ $row->display_name }}</label>
+                                                            @include('voyager::multilingual.input-hidden-bread-edit-add')
+                                                            @if($row->type == 'relationship')
+                                                                @include('voyager::formfields.relationship')
+                                                            @else
+                                                                {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
+                                                            @endif
 
-                                        @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
-                                            {!! $after->handle($row, $dataType, $dataTypeContent) !!}
-                                        @endforeach
+                                                            @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
+                                                                {!! $after->handle($row, $dataType, $dataTypeContent) !!}
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+                                <div id="tab2" class="tab-pane fade">
+                                        
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                @foreach($dataTypeRows as $row)
+                                                    @if($row->field == 'heading' ||
+                                                        $row->field == 'text' ||
+                                                        $row->field == 'author' ||
+                                                        $row->field == 'editor')
+                                                        <?php continue; ?>
+                                                    @endif
+                                                    <!-- GET THE DISPLAY OPTIONS -->
+                                                    @php
+                                                        $options = json_decode($row->details);
+                                                        $display_options = isset($options->display) ? $options->display : NULL;
+                                                    @endphp
+                                                    @if ($options && isset($options->legend) && isset($options->legend->text))
+                                                        <legend class="text-{{$options->legend->align or 'center'}}" style="background-color: {{$options->legend->bgcolor or '#f0f0f0'}};padding: 5px;">{{$options->legend->text}}</legend>
+                                                    @endif
+                                                    @if ($options && isset($options->formfields_custom))
+                                                        @include('voyager::formfields.custom.' . $options->formfields_custom)
+                                                    @else
+                                                        <div class="form-group @if($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                                            {{ $row->slugify }}
+                                                            <label for="name">{{ $row->display_name }}</label>
+                                                            @include('voyager::multilingual.input-hidden-bread-edit-add')
+                                                            @if($row->type == 'relationship')
+                                                                @include('voyager::formfields.relationship')
+                                                            @else
+                                                                {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
+                                                            @endif
+
+                                                            @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
+                                                                {!! $after->handle($row, $dataType, $dataTypeContent) !!}
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if($dataTypeContent->exists)
+                                <div id="tab3" class="tab-pane fade">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <h4>История правок</h4>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <th><b>Пользователь</b></th>
+                                                        <th><b>Дата</b></th>
+                                                    </tr>
+                                                    
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($article_editors as $editor)
+                                                    <tr>
+                                                        <td>{{$editor->editor_name}}</td>
+                                                        <td>{{$editor->updated_at}}</td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                                 @endif
-                            @endforeach
-
-                        </div><!-- panel-body -->
-
-                        <div class="panel-footer">
-                            <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>
-                        </div>
+                            </div>
+                            
                     </form>
 
                     <iframe id="form_target" name="form_target" style="display:none"></iframe>
@@ -127,6 +220,35 @@
 
 @section('javascript')
     <script>
+
+        /* Submit buttons */
+        jQuery(document).ready(function(){
+            jQuery('#submit_exit').click(function(e){
+               var input = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "button_type").val("submit_exit");
+                $('.form-edit-add').append(input);
+            });
+        });
+        
+        jQuery(document).ready(function(){
+            jQuery('#submit_read').click(function(e){
+               var input = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "button_type").val("submit_read");
+                $('.form-edit-add').append(input);
+            });
+        });
+
+        jQuery(document).ready(function(){
+            jQuery('#submit_add').click(function(e){
+               var input = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "button_type").val("submit_add");
+                $('.form-edit-add').append(input);
+            });
+        });
+
         var params = {}
         var $image
 

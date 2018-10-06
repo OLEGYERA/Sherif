@@ -12,6 +12,17 @@
         {{ __('voyager::generic.'.(!is_null($dataTypeContent->getKey()) ? 'edit' : 'add')).' '.$dataType->display_name_singular }}
     </h1>
     @include('voyager::multilingual.language-selector')
+    <a href="{{ route('voyager.interests.create') }}" class="btn btn-success">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;
+        Интересовались
+    </a>
+    @php $s = DB::table('product_statuses')->where('id', $dataTypeContent->status)->first()->name; @endphp
+    @if($s != "Снят с производства" && $s != "Нет в наличии")
+    <a href="#" class="btn btn-success">
+        <span class="glyphicon glyphicon-envelope"></span>&nbsp;
+        Сообщить о снижении цены
+    </a>
+    @endif
 @stop
 
 @section('content')
@@ -46,8 +57,6 @@
                     <!-- Adding / Editing -->
                         @php
                             $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
-                        //dd($dataTypeRows);
-                        
                         @endphp
                         <div class="panel panel-default col-lg-12">
                             <button class="btn btn-success save" id="submit_read">Сохранить</button>
@@ -60,6 +69,7 @@
                             <li><a data-toggle="tab" href="#tab4">Характеристики</a></li>
                             <li><a data-toggle="tab" href="#tab5">Сопутствующий</a></li>
                             <li><a data-toggle="tab" href="#tab6">Похожие товары</a></li>
+                            <li><a data-toggle="tab" href="#tab8">Мета-теги</a></li>
                             @if($dataTypeContent->exists)
                             <li><a data-toggle="tab" href="#tab7">История изменений</a></li>
                             @endif
@@ -80,6 +90,7 @@
                                                         $row->field == 'USD' ||
                                                         $row->field == 'EUR' ||
                                                         $row->field == 'UAH' ||
+                                                        $row->field == 'URL' ||
                                                         $row->field == 'code' ||
                                                         $row->field == 'price_final' ||
                                                         $row->field == 'product_hasone_currency_relationship' ||
@@ -94,8 +105,13 @@
                                                         $row->field == 'addimage' ||
                                                         $row->field == 'product_belongstomany_attribute_relationship' ||
                                                         $row->field == 'provider' ||
-                                                        $row->field == 'concomitant_subcategory')
-                                                        <?php continue; ?>
+                                                        $row->field == 'concomitant_subcategory' ||
+                                                        $row->field == 'maincategory' ||
+                                                        $row->field == 'meta_heading' ||
+                                                        $row->field == 'meta_title' ||
+                                                        $row->field == 'meta_description' ||
+                                                        $row->field == 'meta_keywords')
+                                                        <?php continue ?>
                                                     @endif
                                                     <!-- GET THE DISPLAY OPTIONS -->
                                                         @php
@@ -122,13 +138,12 @@
                                                         @endif
                                                     </tr>
                                                 @endforeach
-                                                @if(!$dataTypeContent->exists);
-                                                <tr>   
-                                                    <td>Не формировать URL</td>
-                                                    <td><input type="checkbox" name="generate_url" value="1"></td>
-                                                </tr>
-                                                @endif
-
+                                                <tr><td><label for="sel1">Главная подкатегория</label></td>
+                                                <td><select class="form-control" name='maincategory'>
+                                                    @foreach($categories_list as $item)
+                                                    <option value="{{$item->id}}" {{ old('maincategory') == $item->id ? 'selected' : ''}}>{{$item->name}}</option>
+                                                    @endforeach
+                                                </select></td></tr>
                                                 </tbody>
                                             </table>
                                         </div><!-- panel-body -->
@@ -838,7 +853,7 @@
                                     @endif
                                 </div>
                         </div>
-                        @if($dataTypeContent->exists);
+                        @if($dataTypeContent->exists)
                         <div id="tab7" class="tab-pane fade">
                     <div class="col-lg-6">
                         <div class="panel panel-bordered" style="padding-bottom:5px;">
@@ -940,6 +955,47 @@
                                     @endif
                                 </tbody>
                             </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab8" class="tab-pane fade">
+                    <div class="col-lg-12">
+                        <div class="panel panel-bordered" style="padding-bottom:5px;">
+                            <div class="panel-body">
+                            @foreach($dataTypeRows as $row)
+                                @if($row->field == 'meta_title' ||
+                                    $row->field == 'meta_heading' ||
+                                    $row->field == 'meta_description' ||
+                                    $row->field == 'meta_keywords')
+                                
+                                <!-- GET THE DISPLAY OPTIONS -->
+                                @php
+                                    $options = json_decode($row->details);
+                                    $display_options = isset($options->display) ? $options->display : NULL;
+                                @endphp
+                                @if ($options && isset($options->legend) && isset($options->legend->text))
+                                    <legend class="text-{{$options->legend->align or 'center'}}" style="background-color: {{$options->legend->bgcolor or '#f0f0f0'}};padding: 5px;">{{$options->legend->text}}</legend>
+                                @endif
+                                @if ($options && isset($options->formfields_custom))
+                                    @include('voyager::formfields.custom.' . $options->formfields_custom)
+                                @else
+                                    <div class="form-group @if($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width or 12 }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                        {{ $row->slugify }}
+                                        <label for="name">{{ $row->display_name }}</label>
+                                        @include('voyager::multilingual.input-hidden-bread-edit-add')
+                                        @if($row->type == 'relationship')
+                                            @include('voyager::formfields.relationship')
+                                        @else
+                                            {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
+                                        @endif
+
+                                        @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
+                                            {!! $after->handle($row, $dataType, $dataTypeContent) !!}
+                                        @endforeach
+                                    </div>
+                                @endif
+                                @endif
+                            @endforeach
                             </div>
                         </div>
                     </div>
@@ -1093,7 +1149,6 @@
             });
         });
             
-
 
         /*
          $(document).ready(function() {

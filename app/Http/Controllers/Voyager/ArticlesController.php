@@ -199,7 +199,9 @@ class ArticlesController extends VoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        $article_editors = DB::table('articles_editors')->where('article_id', $id)->get();
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('article_editors', $article_editors);
     }
 
     // POST BR(E)AD
@@ -230,7 +232,30 @@ class ArticlesController extends VoyagerBaseController
         if (!$request->ajax()) {
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
 
+            /* Adding editors history */
+            if(count(DB::table('articles_editors')->where('article_id', $id)->get()) == 10) {
+                DB::table('articles_editors')->delete(DB::table('articles_editors')->where('article_id', $id)->oldest()->first()->id);
+            }
+            DB::table('articles_editors')->insert(['article_id' => $id, 'updated_at' => date("Y-m-d H:i:s"), 'editor_name' => \Auth::user()->name]);
+
             event(new BreadDataUpdated($dataType, $data));
+
+            if($request->button_type == 'submit_add') {
+                return redirect()
+                ->route("voyager.{$dataType->slug}.create")
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            } elseif($request->button_type == 'submit_read') {
+                return redirect()->action(
+                    'Voyager\ArticlesController@edit', ['id' => $id]
+                )
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            }
 
             return redirect()
                 ->route("voyager.{$dataType->slug}.index")
@@ -312,16 +337,37 @@ class ArticlesController extends VoyagerBaseController
         }
 
         //Add creator's name
-        $request->merge(['author' => \Auth::user()->name]);
         $request->merge(['editor' => \Auth::user()->name]);
+
+        
 
         if (!$request->has('_validate')) {
             $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
             event(new BreadDataAdded($dataType, $data));
 
+            /* Adding editors history */
+            DB::table('articles_editors')->update(['article_id' => $id, 'updated_at' => date("Y-m-d H:i:s"), 'editor_name' => \Auth::user()->name]);
+
             if ($request->ajax()) {
                 return response()->json(['success' => true, 'data' => $data]);
+            }
+
+            if($request->button_type == 'submit_add') {
+                return redirect()
+                ->route("voyager.{$dataType->slug}.create")
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
+            } elseif($request->button_type == 'submit_read') {
+                return redirect()->action(
+                    'Voyager\ArticlesController@edit', ['id' => $data->id]
+                )
+                ->with([
+                    'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",
+                    'alert-type' => 'success',
+                ]);
             }
 
             return redirect()

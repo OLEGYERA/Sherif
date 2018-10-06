@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateColorsTable extends Migration {
+class CreateProductCategoriesPivotTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,10 +12,11 @@ class CreateColorsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('colors', function(Blueprint $table)
+		Schema::create('product_categories_pivot', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('name')->nullable();
+			$table->integer('product_id')->nullable();
+			$table->integer('category_id')->nullable();
 			$table->timestamps();
 		});
 	}
@@ -28,7 +29,7 @@ class CreateColorsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('colors');
+		Schema::drop('product_categories_pivot');
 	}
 
 }
