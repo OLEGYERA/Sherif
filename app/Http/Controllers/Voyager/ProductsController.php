@@ -214,6 +214,7 @@ class ProductsController extends VoyagerBaseController
             $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
         }
 
+        //dd(Product::i()->SubcategoryAttributes($dataTypeContent->maincategory));
         $categories = Category::get();
         // If a column has a relationship associated with it, we do not want to show that field
         $this->removeRelationshipField($dataType, 'edit');
@@ -391,11 +392,24 @@ class ProductsController extends VoyagerBaseController
             $request->merge(['product_belongstomany_attribute_relationship' => []]);
         } else {
             $attr = [];
+
             foreach ($request->product_belongstomany_attribute_relationship as $attribute) {
-                $attr[$attribute['attribute_id']] = array(
-                    'value' => $attribute['value']
-                );
+
+                if(is_array($attribute['value'])) {
+                    $valstr = '';
+                    foreach ($attribute['value'] as $val) {
+                        $valstr = $valstr . '/' . $val;
+                    };
+                    $attr[$attribute['attribute_id']] = array(
+                        'value' => substr($valstr, 1)//$attribute['value']
+                    );
+                } else {
+                    $attr[$attribute['attribute_id']] = array(
+                        'value' => $attribute['value']
+                    );
+                }
             }
+            //dd($request->product_belongstomany_attribute_relationship);
             $request->merge(['product_belongstomany_attribute_relationship' => $attr]);
         }
         if($request->concomitant) {
@@ -811,6 +825,12 @@ class ProductsController extends VoyagerBaseController
         if ($rows->count() > 0) {
             event(new BreadImagesDeleted($data, $rows));
         }
+        //$this->deleteFileIfExists($path.$data->mainimage);
+        $imagesarr = json_decode($data->addimage);
+        foreach ($imagesarr as $addimg) {
+            $this->deleteFileIfExists($addimg);
+        }
+        //dd($imagesarr);
     }
 
     /**
