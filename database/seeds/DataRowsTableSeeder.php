@@ -29,7 +29,6 @@ class DataRowsTableSeeder extends Seeder
 
         $attrvalDataType = DataType::where('slug', 'attribute_values')->firstOrFail();
 
-        $articlesDataType = DataType::where('slug', 'articles')->firstOrFail();
 
 
         $dataRow = $this->dataRow($userDataType, 'id');
