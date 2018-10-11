@@ -208,21 +208,6 @@ class CategoriesController extends VoyagerBaseController
 
         $categories = Category::where('id', '!=', $id)->get();
 
-        $last_category_children = Category::where('parent_id', '=', $id)->get();
-        
-        
-
-                $category[] = $last_category_parent;
-                $i = 1;
-                while(end($category)->parent_id != NULL) {
-                    
-                    $last_category_parent = Category::where('id', '=', $last_category_parent->parent_id)->first();//second closest category and so on...
-                    $category[$i] = $last_category_parent;
-                    $i++;
-                }
-
-        dd($dataTypeContent);
-
         return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories);
     }
 
