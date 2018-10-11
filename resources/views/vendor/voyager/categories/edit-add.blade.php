@@ -7,11 +7,7 @@
 @section('page_title', __('voyager::generic.'.(!is_null($dataTypeContent->getKey()) ? 'edit' : 'add')).' '.$dataType->display_name_singular)
 
 @section('page_header')
-    <h1 class="page-title">
-        <i class="{{ $dataType->icon }}"></i>
-        {{ __('voyager::generic.'.(!is_null($dataTypeContent->getKey()) ? 'edit' : 'add')).' '.$dataType->display_name_singular }}
-    </h1>
-    @include('voyager::multilingual.language-selector')
+    @include('layouts.bread_head_buttons')
 @stop
 
 @section('content')
@@ -21,10 +17,7 @@
 
                 <div class="panel panel-bordered">
                     <!-- form start -->
-                    <form role="form"
-                            class="form-edit-add"
-                            action="@if(!is_null($dataTypeContent->getKey())){{ route('voyager.'.$dataType->slug.'.update', $dataTypeContent->getKey()) }}@else{{ route('voyager.'.$dataType->slug.'.store') }}@endif"
-                            method="POST" enctype="multipart/form-data">
+                   
                         <!-- PUT Method if we are editing -->
                         @if(!is_null($dataTypeContent->getKey()))
                             {{ method_field("PUT") }}
@@ -49,12 +42,6 @@
                             @php
                                 $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
                             @endphp
-
-                            <div class="panel panel-default col-lg-12">
-                                <button class="btn btn-success save" id="submit_read">Сохранить</button>
-                                <button class="btn btn-warning save" id="submit_exit">Сохранить и закрыть</button>
-                                <button class="btn btn-primary save" id="submit_add">Сохранить и добавить ещё</button>   
-                            </div><br /><br /><br />
                             
                             @foreach($dataTypeRows as $row)
                                 <!-- GET THE DISPLAY OPTIONS -->
@@ -115,13 +102,13 @@
                                  onchange="$('#my_form').submit();this.value='';">
                         <input type="hidden" name="type_slug" id="type_slug" value="{{ $dataType->slug }}">
                         {{ csrf_field() }}
-                    </form>
+                    
 
                 </div>
             </div>
         </div>
     </div>
-
+</form>
     <div class="modal fade modal-danger" id="confirm_delete_modal">
         <div class="modal-dialog">
             <div class="modal-content">

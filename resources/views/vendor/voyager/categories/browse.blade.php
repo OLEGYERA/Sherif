@@ -77,7 +77,7 @@
                                                 <input type="checkbox" name="row_id" id="checkbox_{{ $data->getKey() }}" value="{{ $data->getKey() }}">
                                             </td>
                                         @endcan
-                                            <td class='some' id='{{$data->id}}'>{{$data->name}}</td>
+                                            <td class='some' id='{{$data->id}}' style="cursor: pointer;">{{$data->name}}</td>
                                             <td class="no-sort no-click" id="bread-actions" style="display: flex; flex-direction: row-reverse;">
                                                 @foreach(Voyager::actions() as $action)
                                                     @include('voyager::bread.partials.actions', ['action' => $action])

@@ -376,7 +376,7 @@ class ArticlesCategoriesController extends VoyagerBaseController
                 ]);
             } elseif($request->button_type == 'submit_read') {
                 return redirect()->action(
-                    'Voyager\ArticlesCategoriesController@edit', ['id' => $id]
+                    'Voyager\ArticlesCategoriesController@edit', ['id' => $data->id]
                 )
                 ->with([
                     'message'    =>  __('voyager::generic.successfully_updated')." {$dataType->display_name_singular}",

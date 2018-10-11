@@ -148,10 +148,12 @@
                                         @endif
                                         </td>
                                     </tr>
-                                    <tr>
+                                    @if(isset($dataTypeContent->maincategory->name))<tr>
+                                        
                                         <td><b>Главная подкатегория</b></td>
                                         <td>{{$dataTypeContent->maincategory->name}}</td>
-                                    </tr>
+                                        
+                                    </tr>@endif
                                     <tr>
                                         <td><b>Сопутствующая подкатегория</b></td>
                                         <td>

@@ -7,11 +7,7 @@
 @section('page_title', __('voyager::generic.'.(!is_null($dataTypeContent->getKey()) ? 'edit' : 'add')).' '.$dataType->display_name_singular)
 
 @section('page_header')
-    <h1 class="page-title">
-        <i class="{{ $dataType->icon }}"></i>
-        {{ __('voyager::generic.'.(!is_null($dataTypeContent->getKey()) ? 'edit' : 'add')).' '.$dataType->display_name_singular }}
-    </h1>
-    @include('voyager::multilingual.language-selector')
+    @include('layouts.bread_head_buttons')
 @stop
 
 @section('content')
@@ -20,10 +16,7 @@
             <div class="col-md-12">
 
                     <!-- form start -->
-                    <form role="form"
-                            class="form-edit-add"
-                            action="@if(!is_null($dataTypeContent->getKey())){{ route('voyager.'.$dataType->slug.'.update', $dataTypeContent->getKey()) }}@else{{ route('voyager.'.$dataType->slug.'.store') }}@endif"
-                            method="POST" enctype="multipart/form-data">
+                    
                         <!-- PUT Method if we are editing -->
                         @if(!is_null($dataTypeContent->getKey()))
                             {{ method_field("PUT") }}
@@ -46,11 +39,6 @@
                             @php
                                 $dataTypeRows = $dataType->{(!is_null($dataTypeContent->getKey()) ? 'editRows' : 'addRows' )};
                             @endphp
-                            <div class="panel panel-default col-lg-12">
-                                <button class="btn btn-success save" id="submit_read">Сохранить</button>
-                                <button class="btn btn-warning save" id="submit_exit">Сохранить и закрыть</button>
-                                <button class="btn btn-primary save" id="submit_add">Сохранить и добавить ещё</button>   
-                            </div><br /><br /><br />
                             <ul class="nav nav-tabs">
                                 <li class="active"><a data-toggle="tab" href="#tab1">Информация о статье</a></li>
                                 <li><a data-toggle="tab" href="#tab2">Мета теги</a></li>
@@ -110,7 +98,8 @@
                                                     @if($row->field == 'heading' ||
                                                         $row->field == 'text' ||
                                                         $row->field == 'author' ||
-                                                        $row->field == 'editor')
+                                                        $row->field == 'editor' ||
+                                                        $row->field == 'slug')
                                                         <?php continue; ?>
                                                     @endif
                                                     <!-- GET THE DISPLAY OPTIONS -->
@@ -176,22 +165,12 @@
                                 </div>
                                 @endif
                             </div>
-                            
-                    </form>
-
-                    <iframe id="form_target" name="form_target" style="display:none"></iframe>
-                    <form id="my_form" action="{{ route('voyager.upload') }}" target="form_target" method="post"
-                            enctype="multipart/form-data" style="width:0;height:0;overflow:hidden">
-                        <input name="image" id="upload_file" type="file"
-                                 onchange="$('#my_form').submit();this.value='';">
-                        <input type="hidden" name="type_slug" id="type_slug" value="{{ $dataType->slug }}">
-                        {{ csrf_field() }}
-                    </form>
 
                 </div>
             </div>
         </div>
     </div>
+    </form>
 
     <div class="modal fade modal-danger" id="confirm_delete_modal">
         <div class="modal-dialog">

@@ -114,12 +114,6 @@ abstract class Controller extends BaseController
 
         $data->save();
 
-        if($slug == 'products' && !$data->code) {
-            /* Generating product code */
-            $data->code = $code = $request->product_belongstomany_subcategory_relationship[0] . '-' . $data->id;  
-            $data->save();
-        }   
-
         // Save translations
         if (count($translations) > 0) {
             $data->saveTranslations($translations);
