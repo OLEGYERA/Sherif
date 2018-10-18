@@ -150,10 +150,19 @@ body textarea:required:valid {
 									-ms-align-items: center;
 									align-items: flex-start;
 									justify-content: space-between;
+									position: relative;
+									padding-bottom: 15px; 
 								}
 									.sherif_sidebar_catalog-content .panel-title a{
 										font-size: .9em;
 										color: #26394d;
+									}
+									.sherif_sidebar_catalog-content .panel-title a svg{
+										font-size: 1.4em;
+									    color: #26394d;
+									    position: absolute;
+									    bottom: -5px;
+									    right: 0;
 									}
 									.promotion a{
 										font-size: 1.2em;
