@@ -434,7 +434,7 @@ class ProductsController extends VoyagerBaseController
             return response()->json(['errors' => $val->messages()]);
         }
         if (!$request->ajax()) {
-            
+            /*
             //decrementing old categories and incrementing new
             $old_categories = DB::table('product_categories_pivot')->where('product_id', '=', $id)->get();
             foreach($old_categories as $old_category) {
@@ -442,7 +442,7 @@ class ProductsController extends VoyagerBaseController
             }
             foreach($request->product_belongstomany_сategory_relationship as $new_category) {
                 Category::where('id', $new_category)->increment('in_stock');
-            }
+            }*/
 
             //Inserting wholesale options of the product
             if($slug == 'products') {
@@ -648,10 +648,10 @@ class ProductsController extends VoyagerBaseController
                 
             }   
 
-            /* Increasing quantity of stock in related categories */
+            /* Increasing quantity of stock in related categories 
             foreach($request->product_belongstomany_сategory_relationship as $item) {
                 Category::where('id', '=', $item )->increment('in_stock');
-            }
+            }*/
 
             //Inserting wholesale options of the product
             if($slug == 'products') {
@@ -767,14 +767,14 @@ class ProductsController extends VoyagerBaseController
             // Single item delete, get ID from URL
             $ids[] = $id;
         }
-
+/*
         foreach($ids as $id) {
             //decrementing old categories and incrementing new
             $old_categories = DB::table('product_categories_pivot')->where('product_id', '=', $id)->get();
             foreach($old_categories as $old_category) {
                 Category::where('id', $old_category->category_id)->decrement('in_stock');
             }
-        }
+        }*/
         
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);

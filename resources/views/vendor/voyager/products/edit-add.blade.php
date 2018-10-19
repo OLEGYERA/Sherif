@@ -521,7 +521,7 @@
                                                     <tfoot>
                                                         <tr>
                                                             <select class="attrselect form-control select2" name="">
-                                                            </select>s
+                                                            </select>
                                                             <td><input type="text" class="select_characteristic" autocomplete="off"></td>
                                                             <td><input type="text"></td>
                                                             <td>123</td>
