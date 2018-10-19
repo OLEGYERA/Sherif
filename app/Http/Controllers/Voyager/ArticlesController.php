@@ -347,7 +347,7 @@ class ArticlesController extends VoyagerBaseController
             event(new BreadDataAdded($dataType, $data));
 
             /* Adding editors history */
-            DB::table('articles_editors')->update(['article_id' => $id, 'updated_at' => date("Y-m-d H:i:s"), 'editor_name' => \Auth::user()->name]);
+            DB::table('articles_editors')->update(['article_id' => $data->id, 'updated_at' => date("Y-m-d H:i:s"), 'editor_name' => \Auth::user()->name]);
 
             if ($request->ajax()) {
                 return response()->json(['success' => true, 'data' => $data]);

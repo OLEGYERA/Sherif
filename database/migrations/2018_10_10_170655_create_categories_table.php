@@ -25,6 +25,7 @@ class CreateCategoriesTable extends Migration {
 			$table->string('meta_title')->nullable();
 			$table->string('meta_description')->nullable();
 			$table->string('image')->nullable();
+			$table->integer('in_stock')->nullable()->default(0);
 		});
 	}
 

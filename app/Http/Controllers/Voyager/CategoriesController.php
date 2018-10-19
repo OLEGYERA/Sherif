@@ -440,12 +440,12 @@ class CategoriesController extends VoyagerBaseController
             $ids[] = $id;
         }
         
-        //Deleting products in category subcategories
-        $relatedSubcategory = Subcategory::where('category', $ids)->get();
+        //Deleting products in categories
+        $relatedCategory = Category::where('parent_id', $ids)->get();//get subcategories
         
-        foreach($relatedSubcategory as $subcategory) {
-            $relatedProducts = DB::table('product_subcategories_pivot')->where('subcategory_id', $subcategory->id)->get();
-            Subcategory::where('id', $subcategory->id)->delete();
+        foreach($relatedCategory as $category) {
+            $relatedProducts = DB::table('product_categories_pivot')->where('category_id', $category->id)->get();
+            Category::where('id', $category->id)->delete();
             foreach($relatedProducts as $product) {
                 Product::where('id', $product->product_id)->delete();
             }
@@ -625,7 +625,7 @@ class CategoriesController extends VoyagerBaseController
             <tr><td>
                 <input type="checkbox" name="row_id" id="checkbox_'.$next_category->getKey().'" value="'.$next_category->getKey().'">
             </td>
-            <td class="some" id="'.$next_category->id.'">'.str_repeat($tabs, $next_category->depth).''.$next_category->name.'</td>
+            <td class="some" id="'.$next_category->id.'" style="cursor: pointer;">'.str_repeat($tabs, $next_category->depth).''.$next_category->name.'</td>
             <td class="no-sort no-click" id="bread-actions" style="display: flex; flex-direction: row-reverse;">';
             foreach(Voyager::actions() as $action) {
                 $action = new $action($dataType, $next_category);

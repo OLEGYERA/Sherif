@@ -1107,6 +1107,21 @@ class DataRowsTableSeeder extends Seeder
                 'order' => 49,
             ])->save();
         }
+        $dataRow = $this->dataRow($productsDataType, 'in_stock');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('В наличии'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 49,
+            ])->save();
+        }
 
         /* Categories */
         $dataRow = $this->dataRow($categoriesDataType, 'id');
@@ -1287,6 +1302,21 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 1,
                 'details'      => '',
                 'order'        => 12,
+            ])->save();
+        }
+        $dataRow = $this->dataRow($categoriesDataType, 'in_stock');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => __('В наличии'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+                'order'        => 13,
             ])->save();
         }
         
@@ -2029,193 +2059,111 @@ class DataRowsTableSeeder extends Seeder
             ])->save();
         }
 
-        $dataRow = $this->dataRow($attrvalDataType, 'id');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'text',
-                'display_name' => __('ID'),
-                'required' => 1,
-                'browse' => 0,
-                'read' => 1,
-                'edit' => 0,
-                'add' => 0,
-                'delete' => 0,
-                'details' => '',
-                'order' => 1,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($attrvalDataType, 'attribite_id');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'text',
-                'display_name' => 'Attribite Id',
-                'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 1,
-                'delete' => 1,
-                'details' => '',
-                'order' => 2,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($attrvalDataType, 'value');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'text',
-                'display_name' => 'Value',
-                'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 1,
-                'delete' => 1,
-                'details' => '',
-                'order' => 3,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($attrvalDataType, 'created_at');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'timestamp',
-                'display_name' => 'Created At',
-                'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 0,
-                'delete' => 1,
-                'details' => '',
-                'order' => 4,
-            ])->save();
-        }
-
-        $dataRow = $this->dataRow($attrvalDataType, 'updated_at');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'timestamp',
-                'display_name' => 'Updated At',
-                'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 0,
-                'delete' => 1,
-                'details' => '',
-                'order' => 5,
-            ])->save();
-        }
-        //   }
-
-//}
-
-
-        /* Articles */
-        $dataRow = $this->dataRow($articlesDataType, 'id');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'text',
-                'display_name' => __('ID'),
-                'required' => 1,
-                'browse' => 0,
-                'read' => 1,
-                'edit' => 0,
-                'add' => 0,
-                'delete' => 0,
-                'details' => '',
-                'order' => 1,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($articlesDataType, 'heading');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'text',
-                'display_name' => __('Заголовок'),
-                'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 1,
-                'delete' => 1,
-                'details' => '',
-                'order' => 2,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($articlesDataType, 'text');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'rich_text_box',
-                'display_name' => __('Текст'),
-                'required' => 0,
-                'browse' => 0,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 1,
-                'delete' => 1,
-                'details' => '',
-                'order' => 3,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($articlesDataType, 'author');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'text',
-                'display_name' => __('Автор'),
-                'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 1,
-                'delete' => 1,
-                'details' => '',
-                'order' => 4,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($articlesDataType, 'editor');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'text',
-                'display_name' => __('Правщик'),
-                'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 1,
-                'add' => 1,
-                'delete' => 1,
-                'details' => '',
-                'order' => 5,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($articlesDataType, 'created_at');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'timestamp',
-                'display_name' => __('Добавлена'),
-                'required' => 0,
-                'browse' => 0,
-                'read' => 1,
-                'edit' => 0,
-                'add' => 0,
-                'delete' => 1,
-                'details' => '',
-                'order' => 6,
-            ])->save();
-        }
-        $dataRow = $this->dataRow($articlesDataType, 'updated_at');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type' => 'timestamp',
-                'display_name' => __('Обновлена'),
-                'required' => 0,
-                'browse' => 1,
-                'read' => 1,
-                'edit' => 0,
-                'add' => 0,
-                'delete' => 0,
-                'details' => '',
-                'order' => 7,
-            ])->save();
-        }
+    /* Articles */
+    $dataRow = $this->dataRow($articlesDataType, 'id');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('ID'),
+            'required'     => 1,
+            'browse'       => 0,
+            'read'         => 1,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 0,
+            'details'      => '',
+            'order'        => 1,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'heading');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('Заголовок'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 2,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'text');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'rich_text_box',
+            'display_name' => __('Текст'),
+            'required'     => 0,
+            'browse'       => 0,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 4,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'author');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('Автор'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 5,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'editor');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'text',
+            'display_name' => __('Правщик'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 1,
+            'add'          => 1,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 6,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'created_at');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'timestamp',
+            'display_name' => __('Добавлена'),
+            'required'     => 0,
+            'browse'       => 0,
+            'read'         => 1,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 1,
+            'details'      => '',
+            'order'        => 7,
+        ])->save();
+    }
+    $dataRow = $this->dataRow($articlesDataType, 'updated_at');
+    if (!$dataRow->exists) {
+        $dataRow->fill([
+            'type'         => 'timestamp',
+            'display_name' => __('Обновлена'),
+            'required'     => 0,
+            'browse'       => 1,
+            'read'         => 1,
+            'edit'         => 0,
+            'add'          => 0,
+            'delete'       => 0,
+            'details'      => '',
+            'order'        => 8,
+        ])->save();
     }
     $dataRow = $this->dataRow($articlesDataType, 'meta_title');
     if (!$dataRow->exists) {
@@ -2229,7 +2177,7 @@ class DataRowsTableSeeder extends Seeder
             'add'          => 1,
             'delete'       => 1,
             'details'      => '',
-            'order'        => 8,
+            'order'        => 9,
         ])->save();
     }
     $dataRow = $this->dataRow($articlesDataType, 'meta_description');
@@ -2244,7 +2192,7 @@ class DataRowsTableSeeder extends Seeder
             'add'          => 1,
             'delete'       => 1,
             'details'      => '',
-            'order'        => 9,
+            'order'        => 10,
         ])->save();
     }
     $dataRow = $this->dataRow($articlesDataType, 'meta_heading');
@@ -2259,7 +2207,7 @@ class DataRowsTableSeeder extends Seeder
             'add'          => 1,
             'delete'       => 1,
             'details'      => '',
-            'order'        => 10,
+            'order'        => 11,
         ])->save();
     }
     $dataRow = $this->dataRow($articlesDataType, 'meta_keywords');
@@ -2274,9 +2222,24 @@ class DataRowsTableSeeder extends Seeder
             'add'          => 1,
             'delete'       => 1,
             'details'      => '',
-            'order'        => 11,
+            'order'        => 12,
         ])->save();
     }
+    $dataRow = $this->dataRow($articlesDataType, 'slug');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => __('SEO URL'),
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '{"slugify":{"origin":"heading","forceUpdate":true}}',
+                'order'        => 3,
+            ])->save();
+        }
 
     /* Article categories */
     $dataRow = $this->dataRow($articlesCategoriesDataType, 'id');
