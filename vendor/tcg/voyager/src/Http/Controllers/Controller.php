@@ -42,7 +42,6 @@ abstract class Controller extends BaseController
 
     public function insertUpdateData($request, $slug, $rows, $data)
     {
-         
         $multi_select = [];
         
         /*
@@ -113,7 +112,7 @@ abstract class Controller extends BaseController
         }
 
         $data->save();
-
+        
         if($slug == 'products' && !$data->code) {
             /* Generating product code */
             $data->code = $code = $request->product_belongstomany_subcategory_relationship[0] . '-' . $data->id;  

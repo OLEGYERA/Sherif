@@ -99,11 +99,11 @@
                                     <div class="panel panel-default">
                                         <div class="panel-body">
                                             <h4>Основная информация</h4>
-                                            <table class="table table-hover">
+                                            <table class="table table-hover" id="table_inform">
                                                 <tbody>
                                                 @foreach($dataTypeRows as $row)
 
-                                                    <tr>
+                                                    <tr name="{{$row->field}}">
                                                     @if($row->field == 'description' ||
                                                         $row->field == 'characteristics' ||
                                                         $row->field == 'USD' ||
@@ -129,7 +129,8 @@
                                                         $row->field == 'meta_heading' ||
                                                         $row->field == 'meta_title' ||
                                                         $row->field == 'meta_description' ||
-                                                        $row->field == 'meta_keywords')
+                                                        $row->field == 'meta_keywords' ||
+                                                        $row->field == 'label_end_date')
                                                         <?php continue ?>
                                                     @endif
                                                     <!-- GET THE DISPLAY OPTIONS -->
@@ -155,7 +156,14 @@
                                                                 <td>{!! $after->handle($row, $dataType, $dataTypeContent) !!}</td>
                                                             @endforeach
                                                         @endif
+                                                        
                                                     </tr>
+                                                        @if($row->display_name == 'Метка' && $dataTypeContent->label != null)
+                                                        <tr id="label_row">
+                                                            <td>Дата окончания</td>
+                                                            <td><input class="form-control" type="date" value="{{$dataTypeContent->label_end_date}}" name="label_end_date" required></td>
+                                                        </tr>
+                                                        @endif
                                                 @endforeach
                                                 @if($dataTypeContent->exists)
                                                 <tr><td><label for="sel1">Главная подкатегория</label></td>
@@ -502,7 +510,6 @@
                                         @endphp
 
                                         <div id="table-attr" class="table-editable">
-                                            <div id="tab5" class="tab-pane">
                                                 <table id="attribute" class="table table-striped table-bordered table-hover">
                                                     <thead>
                                                         <tr>
@@ -528,7 +535,6 @@
                                                         </tr>
                                                     </tfoot>
                                                 </table>
-                                            </div>
 
                                         </div>
 
@@ -1052,6 +1058,17 @@
             });
         });
             
+        //Label date choosing
+        $("#table_inform").on('change', "select[name='label']", function() {
+            if ($(this).val() != '') {
+                if(($("#table_inform").find( "#label_row" ).length) < 1) {
+                    $("tr[name='product_belongsto_product_label_relationship']").after('<tr id="label_row"><td>Дата окончания</td><td><input class="form-control" type="date" name="label_end_date" required></td></tr>');
+                }
+            }
+            if ($(this).val() == '') {
+                    $("#label_row").remove();
+            }
+        }); 
 
         /*
          $(document).ready(function() {

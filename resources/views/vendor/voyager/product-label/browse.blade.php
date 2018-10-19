@@ -184,10 +184,20 @@
                                                 @endif
                                             </td>
                                         @endforeach
+                                        @php 
+                                        $arr = [];
+                                        foreach($dataTypeContent as $item) {
+                                            $labels_arr[] = $item->name;
+                                        }
+                                        @endphp
                                         <td class="no-sort no-click" id="bread-actions" style="display: flex; flex-direction: row-reverse;">
                                             @foreach(Voyager::actions() as $action)
                                                 @if($action == 'TCG\Voyager\Actions\ViewAction')
                                                     @php continue; @endphp
+                                                @elseif(in_array('+ подарок' || 'Акция' || 'Распродажа' || 'Скидка',$labels_arr))
+                                                    @if($action == 'TCG\Voyager\Actions\DeleteAction')
+                                                        @php continue; @endphp
+                                                    @endif
                                                 @endif
                                                 @include('voyager::bread.partials.actions', ['action' => $action])
                                             @endforeach
