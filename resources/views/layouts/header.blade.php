@@ -58,9 +58,9 @@
         <div class="sherif_row">
             <div class="sherif_home_header-content_arrange">
                 <div class="sherif_left_column">
-                    <div class="sherif_home_header-logo">
+                    <a href="{{url('/')}}" class="sherif_home_header-logo">
                         <img src="{{asset('/assets/img/Sherif_logo.png')}}" alt="" class="sherif_home_header-logo_img">
-                    </div>
+                    </a>
                 </div>
                 <!-- Mobile -->
                 <div class="sherif_home_header-content-mobile">

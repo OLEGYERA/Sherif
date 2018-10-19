@@ -16,6 +16,10 @@
 
 @endsection
 
+@section('left_sidebar')
+    {!!$left_side_bar!!}
+@endsection
+
 @section("main_column")
     <div class="sherif_center_column">
         @include("layouts.chat")

@@ -36,7 +36,7 @@ class ProductsController extends VoyagerBaseController
     //
     //****************************************
     public function index(Request $request)
-    {
+    {   
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
@@ -388,30 +388,31 @@ class ProductsController extends VoyagerBaseController
             }
             $data->addimage = json_encode($strimage);
         }
-        if (!$request->product_belongstomany_attribute_relationship) {
-            $request->merge(['product_belongstomany_attribute_relationship' => []]);
-        } else {
-            $attr = [];
+        
+        // if (!$request->product_belongstomany_attribute_relationship) {
+        //     $request->merge(['product_belongstomany_attribute_relationship' => []]);
+        // } else {
+        //     $attr = [];
 
-            foreach ($request->product_belongstomany_attribute_relationship as $attribute) {
+        //     foreach ($request->product_belongstomany_attribute_relationship as $attribute) {
 
-                if(is_array($attribute['value'])) {
-                    $valstr = '';
-                    foreach ($attribute['value'] as $val) {
-                        $valstr = $valstr . '/' . $val;
-                    };
-                    $attr[$attribute['attribute_id']] = array(
-                        'value' => substr($valstr, 1)//$attribute['value']
-                    );
-                } else {
-                    $attr[$attribute['attribute_id']] = array(
-                        'value' => $attribute['value']
-                    );
-                }
-            }
-            //dd($request->product_belongstomany_attribute_relationship);
-            $request->merge(['product_belongstomany_attribute_relationship' => $attr]);
-        }
+        //         if(is_array($attribute['value'])) {
+        //             $valstr = '';
+        //             foreach ($attribute['value'] as $val) {
+        //                 $valstr = $valstr . '/' . $val;
+        //             };
+        //             $attr[$attribute['attribute_id']] = array(
+        //                 'value' => substr($valstr, 1)//$attribute['value']
+        //             );
+        //         } else {
+        //             $attr[$attribute['attribute_id']] = array(
+        //                 'value' => $attribute['value']
+        //             );
+        //         }
+        //     }
+        //     //dd($request->product_belongstomany_attribute_relationship);
+        //     $request->merge(['product_belongstomany_attribute_relationship' => $attr]);
+        // }
         if($request->concomitant) {
             $request->merge(['concomitant' =>addslashes(json_encode($request->concomitant))]);
         } else {
