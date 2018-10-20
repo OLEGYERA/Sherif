@@ -21,9 +21,6 @@ use Illuminate\Support\Facades\Response;
 
 class CharacteristicsController extends VoyagerBaseController
 {
-    
-
-
    public function showList(Request $request)
     {   
         // GET THE SLUG, ex. 'posts', 'pages', etc.
@@ -265,5 +262,17 @@ class CharacteristicsController extends VoyagerBaseController
 
         }return Response::json("None");
         
-    }
+	}
+	
+	public function addCharacteristicOptions(Request $request) {
+		
+		$str = [];
+		$options = CO::where('id_characteristic', $request->data)->select('value')->get()->toArray();
+		
+		foreach($options as $i) {
+			$str[] = $i['value'];
+		}
+		
+		echo implode(', ', $str);
+	}
 }

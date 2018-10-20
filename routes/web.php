@@ -81,6 +81,8 @@ Route::group(['prefix' => 'admin'], function () {
    Route::delete('/delete/characteristic/{id}', 'Voyager\CharacteristicsController@deleteCharacteristic');
    Route::get('/get/characteristic/{id}', 'Voyager\CharacteristicsController@getcharacteristic');
 
+   //options for table in product card
+   Route::post('characteristics_options', 'Voyager\CharacteristicsController@addCharacteristicOptions')->name('char_opt');
 
    /*In product*/
 

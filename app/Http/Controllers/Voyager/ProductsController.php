@@ -244,13 +244,16 @@ class ProductsController extends VoyagerBaseController
         /*All editing info*/
         $edit_info = DB::table('product_edit_info')->where('product_id', $id)->first();
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale)->with('edit_info', $edit_info)->with('categories_list', $categories_list);
+        
+        $characteristics = DB::table('characteristics')->get();
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale)->with('edit_info', $edit_info)->with('categories_list', $categories_list)->with('characteristics', $characteristics);
     }
 
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
-        //dd($request);
+    
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -352,29 +355,6 @@ class ProductsController extends VoyagerBaseController
                 }
             }
         }
-
-        if($request->url_option == '1') {
-            //generate URL from main category
-            $last_category_parent = Category::where('id', '=', $request->maincategory)->first();//first closest category
-            $category[] = $last_category_parent;
-            $i = 1;
-            while(end($category)->parent_id != NULL) {
-                
-                $last_category_parent = Category::where('id', '=', $last_category_parent->parent_id)->first();//second closest category and so on...
-                $category[$i] = $last_category_parent;
-                $i++;
-            }
-            $category = array_reverse($category);//reverse array for url generating
-            $url = $request->root() .'/';
-            foreach($category as $item) {
-                $url .= $item->slug . '/';
-            }
-            $url .= $request->slug; //this is full URL
-            $request->merge(['URL' => $url]);
-        } elseif($request->url_option == '2') {
-            $URL = $request->root() . '/' . $request->slug;
-            $request->merge(['URL' => $URL]);
-        }
         
         /// addimage
         if ($request->addimage) {
@@ -421,9 +401,9 @@ class ProductsController extends VoyagerBaseController
         if($request->similar) {
             $request->merge(['similar' =>addslashes(json_encode($request->similar))]);
         } else {
-            $request->merge(['similar' =>'']);;
+            $request->merge(['similar' =>'']);
         }
-
+        
         // Check permission
         $this->authorize('edit', $data);
         // Validate fields with ajax
@@ -434,7 +414,6 @@ class ProductsController extends VoyagerBaseController
             return response()->json(['errors' => $val->messages()]);
         }
         if (!$request->ajax()) {
-            /*
             //decrementing old categories and incrementing new
             $old_categories = DB::table('product_categories_pivot')->where('product_id', '=', $id)->get();
             foreach($old_categories as $old_category) {
@@ -442,7 +421,7 @@ class ProductsController extends VoyagerBaseController
             }
             foreach($request->product_belongstomany_сategory_relationship as $new_category) {
                 Category::where('id', $new_category)->increment('in_stock');
-            }*/
+            }
 
             //Inserting wholesale options of the product
             if($slug == 'products') {
@@ -469,6 +448,13 @@ class ProductsController extends VoyagerBaseController
             }
 
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+
+            //if label is set to None
+            if(!isset($request->label)) {
+                $data->label_end_date = null;
+                $data->label = null;
+                $data->save();  
+            }
 
             event(new BreadDataUpdated($dataType, $data));
 
@@ -578,42 +564,6 @@ class ProductsController extends VoyagerBaseController
             $request->merge(['price_final' => $price_final]);
         }
         
-        /* URL Generating */
-        //if product is being updated
-            if($request->url_option == '1') {
-                if(isset($request->maincategory)) {
-                    //generate URL from main category
-                    $last_category_parent = Category::where('id', '=', $request->maincategory)->first();//first closest category
-                    
-                } else {//if product is being created
-                    //generating from first chosen category
-                    $last_category_parent = Category::where('id', '=', $request->product_belongstomany_сategory_relationship[0] )->first();
-                }
-
-                $category[] = $last_category_parent;
-                $i = 1;
-                while(end($category)->parent_id != NULL) {
-                    
-                    $last_category_parent = Category::where('id', '=', $last_category_parent->parent_id)->first();//second closest category and so on...
-                    $category[$i] = $last_category_parent;
-                    $i++;
-                }
-                
-
-                $category = array_reverse($category);//reverse array for url generating
-                $url = $request->root() .'/';
-                foreach($category as $item) {
-                    $url .= $item->slug . '/';
-                }
-                $url .= $request->slug; //this is full URL
-                $request->merge(['URL' => $url]);
-            } elseif($request->url_option == '2') {
-                $URL = $request->root() . '/' . $request->slug;
-                $request->merge(['URL' => $URL]);
-            }
-        
-        
-        
         if($slug == 'products') {
             if(isset($request->sale_discount)) {
                 $sale_price = $request->price_final * (100 - $request->sale_discount) / 100;
@@ -648,10 +598,10 @@ class ProductsController extends VoyagerBaseController
                 
             }   
 
-            /* Increasing quantity of stock in related categories 
+            /* Increasing quantity of stock in related categories */
             foreach($request->product_belongstomany_сategory_relationship as $item) {
                 Category::where('id', '=', $item )->increment('in_stock');
-            }*/
+            }
 
             //Inserting wholesale options of the product
             if($slug == 'products') {
@@ -767,14 +717,14 @@ class ProductsController extends VoyagerBaseController
             // Single item delete, get ID from URL
             $ids[] = $id;
         }
-/*
+
         foreach($ids as $id) {
             //decrementing old categories and incrementing new
             $old_categories = DB::table('product_categories_pivot')->where('product_id', '=', $id)->get();
             foreach($old_categories as $old_category) {
                 Category::where('id', $old_category->category_id)->decrement('in_stock');
             }
-        }*/
+        }
         
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);

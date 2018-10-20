@@ -99,11 +99,11 @@
                                     <div class="panel panel-default">
                                         <div class="panel-body">
                                             <h4>Основная информация</h4>
-                                            <table class="table table-hover">
+                                            <table class="table table-hover" id="table_inform">
                                                 <tbody>
                                                 @foreach($dataTypeRows as $row)
 
-                                                    <tr>
+                                                    <tr name="{{$row->field}}">
                                                     @if($row->field == 'description' ||
                                                         $row->field == 'characteristics' ||
                                                         $row->field == 'USD' ||
@@ -129,7 +129,8 @@
                                                         $row->field == 'meta_heading' ||
                                                         $row->field == 'meta_title' ||
                                                         $row->field == 'meta_description' ||
-                                                        $row->field == 'meta_keywords')
+                                                        $row->field == 'meta_keywords' ||
+                                                        $row->field == 'label_end_date')
                                                         <?php continue ?>
                                                     @endif
                                                     <!-- GET THE DISPLAY OPTIONS -->
@@ -155,7 +156,14 @@
                                                                 <td>{!! $after->handle($row, $dataType, $dataTypeContent) !!}</td>
                                                             @endforeach
                                                         @endif
+                                                        
                                                     </tr>
+                                                        @if($row->display_name == 'Метка' && $dataTypeContent->label != null)
+                                                        <tr id="label_row">
+                                                            <td>Дата окончания</td>
+                                                            <td><input class="form-control" type="date" value="{{$dataTypeContent->label_end_date}}" name="label_end_date" required></td>
+                                                        </tr>
+                                                        @endif
                                                 @endforeach
                                                 @if($dataTypeContent->exists)
                                                 <tr><td><label for="sel1">Главная подкатегория</label></td>
@@ -486,53 +494,26 @@
                             <div id="tab4" class="tab-pane fade">
                                 <div class="panel panel-bordered col-lg-12">
                                     <div class="panel-body panel-bordered col-lg-12">
-
-                                        @if (isset($dataTypeRows[25])) {{-- product_belongstomany_attribute_relationship --}}
-                                        @php
-
-                                            $row = $dataTypeRows[25];
-                                            $options = json_decode($row->details);
-                                            $display_options = isset($options->display) ? $options->display : NULL;
-                                            //$selected_values = isset($dataTypeContent) ? $dataTypeContent->belongsToMany($options->model, $options->pivot_table)->pluck($options->table.'.'.$options->key)->all() : array();
-                                            $relationshipOptions = app($options->model)->all();
-                                            $relationshipField = $row->field;
-                                            $relationshipData = (isset($data)) ? $data : $dataTypeContent;
-                                            $selected_values = isset($relationshipData) ? $relationshipData->belongsToMany($options->model, $options->pivot_table)->withPivot('value')->get() : array();
-                                            //dd($relationshipData);
-                                        @endphp
-
                                         <div id="table-attr" class="table-editable">
-                                            <div id="tab5" class="tab-pane">
-                                                <table id="attribute" class="table table-striped table-bordered table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Название Характеристики</th>
-                                                            <th>Опция</th>
-                                                            <th>Управление</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>123</td>
-                                                            <td>123</td>
-                                                            <td>123</td>
-                                                        </tr>
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <select class="attrselect form-control select2" name="">
-                                                            </select>
-                                                            <td><input type="text" class="select_characteristic" autocomplete="off"></td>
-                                                            <td><input type="text"></td>
-                                                            <td>123</td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-
+                                            <table id="attribute" class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Название Характеристики</th>
+                                                        <th>Опции</th>
+                                                        <th>Управление</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id='ctbody'>
+                                                    
+                                                </tbody>
+                                                    <tr>
+                                                        <td colspan='3'>
+                                                            <button type="button" class="btn btn-primary btn-sm" id='addRow'><span class="glyphicon glyphicon-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                                <input type="hidden" id="count_row" value="0">
+                                            </table>
                                         </div>
-
-                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -943,6 +924,48 @@
 
 @section('javascript')
     <script>
+        //adding characteristics row
+        
+        var count = $('#count_row').val();
+        
+        //var html = '<tr class="chosen_char" id_row="'+count+'"><td><select class="form-control chosen_select" name="select_characteristic" id_row="'+count+'"><option value="">None</option><?php foreach($characteristics as $item): ?><option value="<?php echo $item->id ?>"><?php echo $item->name ?></option><?php endforeach; ?></select></td><td name="characteristic_options option_'+count+'"></td><td><button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
+        
+        $('#addRow').click(function(){
+            $('#ctbody').append('<tr class="chosen_char" id_row="'+count+'"><td><select class="form-control chosen_select" name="select_characteristic" id_row="'+count+'"><option value="">None</option><?php foreach($characteristics as $item): ?><option value="<?php echo $item->id ?>"><?php echo $item->name ?></option><?php endforeach; ?></select></td><td name="characteristic_options option_'+count+'"></td><td><button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button></td></tr>');
+            count++;
+            console.log(count);
+        });
+        $(document).on('click', '#dltRow', function(){
+            $(this).parents('tr').remove();
+        });
+
+        
+
+        $(document).on('change', "select[name='select_characteristic']", function() {
+            var id_row = $(this).attr('id_row');
+            if($(this).val() != '') {
+                $('td[name="characteristic_options"]').empty();
+                var data = $(this).val(); 
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url:'{{ route("char_opt") }}',
+                    method:"POST",
+                    data: {data: data},  
+                    success: function (data) {
+                        $('.option_'+id_row).empty();
+                        $('.option_'+id_row).append(data);
+                        count++;
+                    }
+                });
+            }
+            if ($(this).val() == '') {
+                $('td[name="characteristic_options"]').empty();
+            }
+        }); 
+                                        
+
         //add trade options
         var additional_field = '<table class="table table-hover"><tr><td>Скидка %</td><td colspan="2"><input type="text" name="sale[]" id="sale" class="form-control" placeholder="% скидки" required></td><td><button type="button" id="remove" class="btn btn-danger">Удалить</button></td></tr><tr><td>Количество от</td><td><input type="text" name="quantity[]" id="quantity" class="form-control" placeholder="Количество от" required></td><td><select name="unit[]" id="unit" class="form-control" required><option value="шт.">шт.</option><option value="уп.">уп.</option><option value="кг.">кг.</option><option value="ящ.">ящ.</option></select></td><td>(единицы)</td></tr></table>';
 
@@ -1052,6 +1075,17 @@
             });
         });
             
+        //Label date choosing
+        $("#table_inform").on('change', "select[name='label']", function() {
+            if ($(this).val() != '') {
+                if(($("#table_inform").find( "#label_row" ).length) < 1) {
+                    $("tr[name='product_belongsto_product_label_relationship']").after('<tr id="label_row"><td>Дата окончания</td><td><input class="form-control" type="date" name="label_end_date" required></td></tr>');
+                }
+            }
+            if ($(this).val() == '') {
+                    $("#label_row").remove();
+            }
+        }); 
 
         /*
          $(document).ready(function() {
