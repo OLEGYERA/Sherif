@@ -244,7 +244,10 @@ class ProductsController extends VoyagerBaseController
         /*All editing info*/
         $edit_info = DB::table('product_edit_info')->where('product_id', $id)->first();
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale)->with('edit_info', $edit_info)->with('categories_list', $categories_list);
+        
+        $characteristics = DB::table('characteristics')->get();
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale)->with('edit_info', $edit_info)->with('categories_list', $categories_list)->with('characteristics', $characteristics);
     }
 
     // POST BR(E)AD
