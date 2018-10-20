@@ -110,8 +110,8 @@
                                 <i class="fas fa-shopping-cart"></i>
                             </div>
                             <div class="sherif_home_header-content_buyer-basket_info">
-                                <h4 class="price">5300 <span class="currency"> грн</span></h4>
-                                <a href="#myModal"  class="sherif_issue_purchase" data-toggle="modal">ОФОРМИТЬ</a>
+                                <h4 class="price"><span id="final_basket">{{$data['curr_price']}}</span> <span class="currency"> грн</span></h4>
+                                <a href="#Basket"  class="sherif_issue_purchase" data-toggle="modal">ОФОРМИТЬ</a>
                             </div>
                         </div>
                         <div class="sherif_home_header-content_buyer-compare">
@@ -178,11 +178,13 @@
                         <a href="#">Мой аккаунт</a>
                         <a href="#">Мой список желаний</a>
                         <a href="#">Программа лояльности</a>
-                        <a href="#">Вход</a>
+                        <a href="{{url('/login')}}">Вход</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @include("layouts.basket")
+    @section('basket')
+        {!!$basket!!}
+    @show
 </header>

@@ -68,7 +68,7 @@
                     <div class="tab-pane active fade in" id="tab-1">
                         <div class="sherif_main-box_cabinet_profile">
                             <div class="cabinet_profile_user">
-                                <img id="span_img" class="cabinet_profile_user_img" src="{{get_url_image($user->avatar, 250,250)}}" alt="{{$user->name}} {{$user->lastname}}">
+                                <img id="span_img" class="cabinet_profile_user_img" src="" alt="{{$user->name}} {{$user->lastname}}">
                                 <span id="span_name" class="cabinet_profile_user_data">{{$user->name}} {{$user->lastname}}</span>
                                 <span id="span_phone"  class="cabinet_profile_user_data">Тел: {{$user->phone}}</span>
                                 <span class="cabinet_profile_user_data">email: {{$user->email}}</span>
@@ -507,7 +507,7 @@
                     <label for="inputImg">Miniature</label>
                     @if(!empty($user) && !empty($user->avatar))
                         <br />
-                        <img src="{{get_url_image($user->avatar, 250,250) }}" alt="">
+                        <img src="" alt="">
                     @endif
                     <input type="file" id="inputImg" name="avatar" class="" >
                 </div>

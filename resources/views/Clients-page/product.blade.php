@@ -1,4 +1,10 @@
 @extends("layouts.app")
+
+@section('meta-tegs')
+    <link rel="canonical" href="{{url('/')}}">
+@endsection
+
+
 @section("css_files")
     loadCSS("{{asset('assets/_header.css')}}");//Header Styles (compress & paste to header after release)
     @if($is_admin)
@@ -17,6 +23,10 @@
     //User Styles: Media
     @endif
 
+@endsection
+
+@section('header')
+    {!!$header!!}
 @endsection
 
 @section('left_sidebar')
@@ -55,7 +65,7 @@
                     <p>Артикул:{{$product->vendor_code}}</p>
                 </div>
                 <div class="sherif_home_main-product-rating-product_code">
-                    <p>Код товара:{{$CurrentSubCategory->id}}-{{$product->id}}</p>
+                    <p>Код товара:{{$product->code}}</p>
                 </div>
             </div>
             <?php  $img_cropped = explode('.', $product->mainimage)?>
@@ -100,7 +110,7 @@
                             <p>Цена: 1820.00 грн</p>
                         </div>
                         <div class="sherif_home_main-product-good_block-info-description-new_price">
-                            <p>Цена: <b>{{$product->sale_price}}.00</b> грн</p>
+                            <p>Цена: <b>{{$product->price_final}}.00</b> грн</p>
                         </div>
                         <div class="sherif_home_main-product-good_block-info-description-wholesale_price">
                             <p>Оптовая цена: 770.00 грн (от 10шт.)</p>
@@ -109,22 +119,22 @@
                             <p><i class="fas fa-arrow-down"></i> <a href="#">Нашли дешевле?</a></p>
                             <p><i class="fas fa-chart-area"></i> <a href="#">Следить за ценой</a></p>
                         </div>
-                        <div class="sherif_home_main-product-good_block-info-description-in_basket">
-                            <div class="sherif_home_main-product-good_block-info-description-in_basket-button">
-                                <a class="btn-sherif product_in_basket" href=""><span></span><i class="fas fa-shopping-cart"></i>
-                                    <strong>В корзину</strong></a>
-                                </div>
-                                <div class="sherif_home_main-product-good_block-info-description-in_basket-counter">
-                                    <input placeholder="1">
-                                    <div class="sherif_home_main-product-good_block-info-description-in_basket-counter-button">
-                                        <button class="basket_counter_button"><i class="fas fa-caret-up"></i></button>
-                                        <button class="basket_counter_button"><i class="fas fa-caret-down"></i></button>
+                            <div class="sherif_home_main-product-good_block-info-description-in_basket">
+                                <div class="sherif_home_main-product-good_block-info-description-in_basket-button">
+                                    <a class="btn-sherif product_in_basket" id_product="{{$product->id}}"><span></span><i class="fas fa-shopping-cart"></i>
+                                        <strong>В корзину</strong></a>
                                     </div>
-                                </div>
+                                    <div class="sherif_home_main-product-good_block-info-description-in_basket-counter">
+                                        <input type="text" id="product_amount_{{$product->id}}" class="product_amount_input" value="1" id_product="{{$product->id}}">
+                                        <div class="sherif_home_main-product-good_block-info-description-in_basket-counter-button product_amount">
+                                            <button class="basket_counter_button product_togglers" togglers="up" id_product="{{$product->id}}" ><i class="fas fa-caret-up"></i></button>
+                                            <button class="basket_counter_button product_togglers" togglers="down" id_product="{{$product->id}}"><i class="fas fa-caret-down"></i></button>
+                                        </div>
+                                    </div>
                             </div>
-                            <div class="sherif_home_main-product-good_block-info-description-buy_by_click">
-                                <a class="btn-sherif buy_by_click" href=""><span></span><i class="far fa-hand-point-up"></i></i>
-                                    <strong>Купить в один клик</strong></a>
+                                <div class="sherif_home_main-product-good_block-info-description-buy_by_click">
+                                    <a class="btn-sherif buy_by_click" href=""><span></span><i class="far fa-hand-point-up"></i></i>
+                                        <strong>Купить в один клик</strong></a>
                                 </div>
                                 <div class="sherif_home_main-product-good_block-info-description-abotu_manufactor">
                                     <div class="sherif_home_main-product-good_block-info-description-abotu_manufactor-left">
@@ -143,7 +153,7 @@
                                         <h4>Подобрать товары того же цвета</h4>
                                     </a>
                                 </div>  
-                                <div class="sherif_home_main-product-good_block-info-description-pick_up_goods">
+                                <!-- <div class="sherif_home_main-product-good_block-info-description-pick_up_goods">
 
                                     <div class="sherif_home_main-product-good_block-info-description-pick_up_goods-product">
                                         <div class="sherif_home_main-product-good_block-info-description-pick_up_goods-product-pic">
@@ -175,7 +185,7 @@
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> -->
                             </div>
                             
                         </div>
@@ -398,293 +408,26 @@
                                             </li>
                                             <li>
                                                 <span class="page">1.2 кг/span>
-                                                </li>
-                                                <li>
-                                                    <span class="page">Черный</span>
-                                                </li>
-                                                <li>
-                                                    <span class="page">Тайвань</span>
-                                                </li>
-                                                <li>
-                                                    <span class="page">36 месяцев</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="#video_review" class="tabe-pane"></div>
-                                <div id="#reviews" class="tabe-pane"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sherif_home_main-mobile_bar air-show">
-                        <div class="sherif_home_mobile_ads">
-                            <a href="#" style="background-image:url(img/pic/Air_Show.jpg);" class="sherif_home_main-box-right_bar-advertising-pic"  >
-                            </a>
-                            <a href="#" style="background-image:url(img/pic/Air_Show.jpg);" class="sherif_home_main-box-right_bar-advertising-pic"  >
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="sherif_home_main-box_recommended sherif_main_looked">
-                        
-                        <div class="flex_row_mobile">
-                            <h3>Вы просматривали:</h3>
-                            <a class="mobile_toggle" toggle-object="looked" toggle="off"><i class="far fa-arrow-alt-circle-down"></i></a>
-                        </div>
-                        <div class="toggle_mobile_looked">
-                            <div class="sherif_home_main-box_scroll">
-                                <div class="sherif-product">
-                                    <div class="sherif-product_content">
-                                        <div class="sherif-product_content-img_box">
-                                            <img class="sherif-product_content_img" src="img/recommended/icon2.png" alt="">
-                                        </div>
-                                        <a href="#" class="sherif-product_content_link">Костюм ПОЛИЦИЯ нового образца, Тип А</a><br />
-                                        <span class="sherif-product_content_vendor-code">Артикул: 30700А</span><br />
-                                        <span class="sherif-product_content_prev-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                        <span class="sherif-product_content_current-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                    </div>
-                                    <div class="sherif-product-buttons">
-                                        <a href="#" class="sherif-btn btn-sherif-product"><span></span><i class="fas fa-shopping-cart"></i><strong>В корзину</strong></a>
-                                        <div class="sherif-product_other">
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-phone-volume fa-lg"></i><strong></strong></a>
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-heart fa-lg"></i><strong></strong></a>
-                                        </div>      
-                                    </div>
-                                </div>
-                                <div class="sherif-product">
-                                    <div class="sherif-product_content">
-                                        <div class="sherif-product_content-img_box">
-                                            <img class="sherif-product_content_img" src="img/recommended/icon1.png" alt="">
-                                        </div>
-                                        <a href="#" class="sherif-product_content_link">Сумка-рюкзак Arm-tec тк. Cordura Digital ВСУ, 70л</a><br />
-                                        <span class="sherif-product_content_vendor-code">Артикул: 30700А</span><br />
-                                        <span class="sherif-product_content_prev-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                        <span class="sherif-product_content_current-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                    </div>
-                                    <div class="sherif-product-buttons">
-                                        <a href="#" class="sherif-btn btn-sherif-product"><span></span><i class="fas fa-shopping-cart"></i><strong>В корзину</strong></a>
-                                        <div class="sherif-product_other">
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-phone-volume fa-lg"></i><strong></strong></a>
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-heart fa-lg"></i><strong></strong></a>
-                                        </div>      
-                                    </div>
-                                </div>
-                                <div class="sherif-product">
-                                    <div class="sherif-product_content">
-                                        <div class="sherif-product_content-img_box">
-                                            <img class="sherif-product_content_img" src="img/recommended/icon3.png" alt="">
-                                        </div>
-                                        <a href="#" class="sherif-product_content_link">Сумка-рюкзак Arm-tec тк. Cordura Digital ВСУ, 70л</a><br />
-                                        <span class="sherif-product_content_vendor-code">Артикул: 30700А</span><br />
-                                        <span class="sherif-product_content_prev-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                        <span class="sherif-product_content_current-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                    </div>
-                                    <div class="sherif-product-buttons">
-                                        <a href="#" class="sherif-btn btn-sherif-product"><span></span><i class="fas fa-shopping-cart"></i><strong>В корзину</strong></a>
-                                        <div class="sherif-product_other">
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-phone-volume fa-lg"></i><strong></strong></a>
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-heart fa-lg"></i><strong></strong></a>
-                                        </div>  
-                                    </div>
-                                </div>
-                                <div class="sherif-product">
-                                    <div class="sherif-product_content">
-                                        <div class="sherif-product_content-img_box">
-                                            <img class="sherif-product_content_img" src="img/recommended/icon4.png" alt="">
-                                        </div>
-                                        <a href="#" class="sherif-product_content_link">Сумка-рюкзак Arm-tec тк. Cordura Digital ВСУ, 70л</a><br />
-                                        <span class="sherif-product_content_vendor-code">Артикул: 30700А</span><br />
-                                        <span class="sherif-product_content_prev-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                        <span class="sherif-product_content_current-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                    </div>
-                                    <div class="sherif-product-buttons">
-                                        <a href="#" class="sherif-btn btn-sherif-product"><span></span><i class="fas fa-shopping-cart"></i><strong>В корзину</strong></a>
-                                        <div class="sherif-product_other">
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-phone-volume fa-lg"></i><strong></strong></a>
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-heart fa-lg"></i><strong></strong></a>
-                                        </div>      
-                                    </div>
-                                </div>
-                                <div class="sherif-product">
-                                    <div class="sherif-product_content">
-                                        <div class="sherif-product_content-img_box">
-                                            <img class="sherif-product_content_img" src="img/recommended/icon1.png" alt="">
-                                        </div>
-                                        <a href="#" class="sherif-product_content_link">Сумка-рюкзак Arm-tec тк. Cordura Digital ВСУ, 70л</a><br />
-                                        <span class="sherif-product_content_vendor-code">Артикул: 30700А</span><br />
-                                        <span class="sherif-product_content_prev-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                        <span class="sherif-product_content_current-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                    </div>
-                                    <div class="sherif-product-buttons">
-                                        <a href="#" class="sherif-btn btn-sherif-product"><span></span><i class="fas fa-shopping-cart"></i><strong>В корзину</strong></a>
-                                        <div class="sherif-product_other">
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-phone-volume fa-lg"></i><strong></strong></a>
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-heart fa-lg"></i><strong></strong></a>
-                                        </div>  
-                                    </div>
-                                </div>
-                                <div class="sherif-product">
-                                    <div class="sherif-product_content">
-                                        <div class="sherif-product_content-img_box">
-                                            <img class="sherif-product_content_img" src="img/recommended/icon1.png" alt="">
-                                        </div>
-                                        <a href="#" class="sherif-product_content_link">Костюм ПОЛИЦИЯ нового образца, Тип А</a><br />
-                                        <span class="sherif-product_content_vendor-code">Артикул: 30700А</span><br />
-                                        <span class="sherif-product_content_prev-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                        <span class="sherif-product_content_current-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                    </div>
-                                    <div class="sherif-product-buttons">
-                                        <a href="#" class="sherif-btn btn-sherif-product"><span></span><i class="fas fa-shopping-cart"></i><strong>В корзину</strong></a>
-                                        <div class="sherif-product_other">
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-phone-volume fa-lg"></i><strong></strong></a>
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-heart fa-lg"></i><strong></strong></a>
-                                        </div>  
-                                    </div>
-                                </div>
-                                <div class="sherif-product">
-                                    <div class="sherif-product_content">
-                                        <div class="sherif-product_content-img_box">
-                                            <img class="sherif-product_content_img" src="img/recommended/icon1.png" alt="">
-                                        </div>
-                                        <a href="#" class="sherif-product_content_link">Сумка-рюкзак Arm-tec тк. Cordura Digital ВСУ, 70л</a><br />
-                                        <span class="sherif-product_content_vendor-code">Артикул: 30700А</span><br />
-                                        <span class="sherif-product_content_prev-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                        <span class="sherif-product_content_current-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                    </div>
-                                    <div class="sherif-product-buttons">
-                                        <a href="#" class="sherif-btn btn-sherif-product"><span></span><i class="fas fa-shopping-cart"></i><strong>В корзину</strong></a>
-                                        <div class="sherif-product_other">
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-phone-volume fa-lg"></i><strong></strong></a>
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-heart fa-lg"></i><strong></strong></a>
-                                        </div>      
-                                    </div>
-                                </div>
-                                <div class="sherif-product">
-                                    <div class="sherif-product_content">
-                                        <div class="sherif-product_content-img_box">
-                                            <img class="sherif-product_content_img" src="img/recommended/icon1.png" alt="">
-                                        </div>
-                                        <a href="#" class="sherif-product_content_link">Сумка-рюкзак Arm-tec тк. Cordura Digital ВСУ, 70л</a><br />
-                                        <span class="sherif-product_content_vendor-code">Артикул: 30700А</span><br />
-                                        <span class="sherif-product_content_prev-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                        <span class="sherif-product_content_current-price">Цена: <span class="price">870.00 грн</span></span><br />
-                                    </div>
-                                    <div class="sherif-product-buttons">
-                                        <a href="#" class="sherif-btn btn-sherif-product"><span></span><i class="fas fa-shopping-cart"></i><strong>В корзину</strong></a>
-                                        <div class="sherif-product_other">
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-phone-volume fa-lg"></i><strong></strong></a>
-                                            <a href="#" class="btn-sherif-product"><span></span><i class="fas fa-heart fa-lg"></i><strong></strong></a>
-                                        </div>  
+                                            </li>
+                                            <li>
+                                                <span class="page">Черный</span>
+                                            </li>
+                                            <li>
+                                                <span class="page">Тайвань</span>
+                                            </li>
+                                            <li>
+                                                <span class="page">36 месяцев</span>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
+                            <div id="#video_review" class="tabe-pane"></div>
+                            <div id="#reviews" class="tabe-pane"></div>
                         </div>
                     </div>
-
-                    
-                    <div class="sherif_home_main-mobile_bar">
-                        <div class="color_pick">
-                            <a href="#" style="background-image: url(img/pic/pick_up.jpg);" class="sherif_home_main-box-right_bar-pick_up-pic">
-                                <img src="img/icons/pick_up-icon.png" alt="">
-                                <h4>Подобрать товары по цвету</h4>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-
-
-						<div class="sherif_right_column">
-							<div class="sherif_home_main-box-right_bar">
-								<!-- Air Show -->
-								<div class="sherif_home_main-box-right_bar-advertising">
-									<a href="#" style="background-image:url(img/pic/Air_Show.jpg);" class="sherif_home_main-box-right_bar-advertising-pic"  >
-									</a>
-									<a href="#" style="background-image:url(img/pic/Air_Show.jpg);" class="sherif_home_main-box-right_bar-advertising-pic"  >
-									</a>
-								</div>
-								<!-- Already viewed -->
-								<div class="sherif_home_main-right_bar-viewed">
-									<h3>Вы просматривали</h3>
-									<button class="sherif_home_main-right_bar-viewed-button button_top"></button>
-									<div class="sherif_home_main-right_bar-viewed-trade_item">
-										<div class="sherif_home_main-right_bar-viewed-trade_item-pic">
-											<img src="img/recommended/icon2.png" alt="" >
-										</div>
-										<div class="sherif_home_main-right_bar-viewed-trade_item-description">
-											<div class="sherif_home_main-right_bar-viewed-trade_item-description-top">
-												<h5>Костюм Полиция нового образца, тип А </h5>
-												<p>Артикул: 30700А</p>
-											</div>
-											<div class="sherif_home_main-right_bar-viewed-trade_item-description_bot">
-												<h5>Цена:870.00 грн</h5>
-												<h4><strong>Цена:870.00 грн</strong></h4>
-											</div>
-										</div>
-									</div>
-									<div class="sherif_home_main-right_bar-viewed-trade_item">
-										<div class="sherif_home_main-right_bar-viewed-trade_item-pic">
-											<img src="img/recommended/icon1.png" alt="" >
-										</div>
-										<div class="sherif_home_main-right_bar-viewed-trade_item-description">
-											<div class="sherif_home_main-right_bar-viewed-trade_item-description-top">
-												<h5>Костюм Полиция нового образца, тип А </h5>
-												<p>Артикул: 30700А</p>
-											</div>
-											<div class="sherif_home_main-right_bar-viewed-trade_item-description_bot">
-												<h5>Цена:870.00 грн</h5>
-												<h4><strong>Цена:870.00 грн</strong></h4>
-											</div>
-										</div>
-									</div>
-									<div class="sherif_home_main-right_bar-viewed-trade_item">
-										<div class="sherif_home_main-right_bar-viewed-trade_item-pic">
-											<img src="img/recommended/icon3.png" alt="" >
-										</div>
-										<div class="sherif_home_main-right_bar-viewed-trade_item-description">
-											<div class="sherif_home_main-right_bar-viewed-trade_item-description-top">
-												<h5>Костюм Полиция нового образца, тип А </h5>
-												<p>Артикул: 30700А</p>
-											</div>
-											<div class="sherif_home_main-right_bar-viewed-trade_item-description_bot">
-												<h5>Цена:870.00 грн</h5>
-												<h4><strong>Цена:870.00 грн</strong></h4>
-											</div>
-										</div>
-									</div>
-									<button class="sherif_home_main-right_bar-viewed-button button_bot"></button>
-								</div>
-								<!-- Pick up goods -->
-								<div class="sherif_home_main-box-right_bar-pick_up">
-									<a href="" style="background-image: url(img/pic/pick_up.jpg);" class="sherif_home_main-box-right_bar-pick_up-pic">
-										<img src="img/icons/pick_up-icon.png" alt="">
-										<h4>Подобрать товары по цвету</h4>
-									</a>
-								</div>
-							</div>
-						</div>
-
-				</div>
-			</div>
-		
-				
-				
-			<div class="sherif_home_main_bottom-info">
-				<div class="sherif_row">
-					<div class="bottom-info_text">
-						Интернет-магазини Шериф. Если вас интересуют товары для военных и охраны, путешествий и туризма, охоты и рыбалки, а также подарки, вы попали по адресу. Именно этими товарами торгует наш интернет-магазин. Кроме указанного, мы предлагаем товары для развлечений, очень активного отдыха и проведения (организации) праздников. Вы можете подобрать сценарий для профессионального фейверка, который проведут наши специалисты на вашем мероприяти, будь то свадьба, новогодний праздник, день рождения, корпоративный вечер или День города. Мы занимаемся этим более 20 лет. Крупными разделами в интернет магазине являются: туристические товары, туристические ножы и оптика. У нас вы так же можете купить надувные лодки, рюкзаки (тактические и туристические) и множество другого полезного снаряжения. Имеется также категория посвященная одежде для охоты и туризма. Военнослужащим и охранным агенствам представляем разделы бронежилеты, шлемы и каски, наколенники и налокотники, ремни и перчатки тактические, защитные очки и маски, чехлы и кобуры. Наши товары мы отправляем по всей территории Украины. Центральный офис находится в Днепропетровске, на ул.Артема (Сечевых Стрельцов), д.9, - магазин Шериф. Для отпраки товаров по Украине мы рекомендуем покупателю оператора доставки "Новая почта", но при этом не ограничиваем выбор службы. Вы можете назвать любую другую компанию (Гюнсел, Автолюкс, ТНТ, Спецсвязь и т.д.) и товар будет отправлен Вам согласно оформленному заказу в любой крупный город и по области (Киев, Херсон, Одесса, Запорожье, Харьков, Львов и т.п.). Если выбранный Вами артикул вы найдете в другом магазине дешевле, сообщите, пожалуйста, нам. Мы постараемся подкорректировать прайс с учетом ваших "находок" в интернете и сделать так, чтобы цена была приемлемой для Вас. На все товары<br />Источник: http://sherif.ua/
-					</div>
-				</div>
-			</div>
-			<div class="sherif_home_main_bottom-alert">
-				<div class="sherif_row">
-					<div class="bottom-alert_text">
-						<p>Внимание! Заказы совершенные с 1 до 3 января будут обработаны и отправлены 4 января. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias doloribus eaque quas eum eos suscipit eius vitae ab odit blanditiis, ad quo accusamus, impedit dolor. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit similique commodi hic illo dolore minima, molestias a beatae non. Iste aperiam assumenda eveniet quisquam! Numquam consequatur accusamus consequuntur distinctio quas, maiores quae neque ad voluptates enim a alias atque est. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore natus rerum ab eveniet quo aperiam consequuntur, dolorem odio commodi voluptatum facere fugit unde neque molestias molestiae tempora placeat? Earum, dolorem.</p>
-					</div>
-				</div>
-			</div>
-		</main>
+            </div>
+	   </div>
 
 @endsection
 		

@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 /*For Left Sidebar*/
 use App\Category;
+use App\Product;
+use App\Session;
 
+use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -76,6 +80,70 @@ class Controller extends BaseController
             'Sub_category' => $Sub_category,
             'status' => $status
         ])->render();
+    }
+
+    public function returnData($data){
+
+        $products = [];
+        $current_price = 0;
+        if(empty($data)){
+            return ['curr_price'=>$current_price, 'products'=>$products];
+        }else{
+            if($data['type'] == 'session'){
+                foreach ($data['data'] as $key => $session) {
+                    foreach ($session as $value) {
+                        $product = Product::where('id', $value['product_id'])->first();
+                        if(!empty($product)){
+                            array_add($product, 'amount', $value['amount']);
+                            $img_small = explode('.', $product->mainimage);
+                            $product->mainimage = $img_small[0] . '-small.' . $img_small[1];
+                            array_push($products, $product);
+                            $current_price += $value['amount'] * $product->price_final;
+                        }
+                        
+                    }
+                }
+            }else{
+                foreach ($data['data'] as $key => $value) {
+                        dd($value);
+                        $product = Product::where('id', $value->id_product)->first();
+                        if(!empty($product)){
+                            array_add($product, 'amount', $value->amount_product);
+                            $img_small = explode('.', $product->mainimage);
+                            $product->mainimage = $img_small[0] . '-small.' . $img_small[1];
+                            array_push($products, $product);
+                            $current_price += $value->amount_product * $product->price_final;
+                        }
+                }
+            }
+            return ['curr_price'=>$current_price, 'products'=>$products];
+        }
+        
+    }
+
+    protected function header(){
+        $ip_user = request()->ip();
+        $is_auth = Auth::user();
+        if(!empty(session('baskets'))){
+            $session = session('baskets');
+            $type = "session";
+        }else{
+             $type = "db";
+            $session = Session::all();
+            if(count($session) != 0){
+                if($is_auth == true && count($session->where('user_id', Auth::user()->id)->get()) != 0){
+                    $session = $session->where('user_id', Auth::user()->id);
+                }else{
+                    $session = $session->where('ip_address', $ip_user);
+                } 
+            }   
+        }
+            return view('layouts.header')->with([
+                'data' => $this->returnData(['data' => $session, 'type' => $type]),
+                'basket' => view('layouts.basket')->with(
+                    $this->returnData(['data' => $session, 'type' => $type])
+                )->render()
+            ])->render(); 
     }
 
 

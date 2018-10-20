@@ -13,11 +13,12 @@ class IndexController extends Controller
     //get exchange rate
     
 
-    public function getIndex(){
+    public function getIndex(Request $request){
         $banner = Banner::with(['bannerImages.bannerLinkPosition'])->first();
         return $this->viewMaker('Clients-page.index')->with([
             'banner' => $banner,
-            'left_side_bar' => $this->left_sidebar("None")
+            'left_side_bar' => $this->left_sidebar("None"),
+            'header' => $this->header()
         ]);
     }
 

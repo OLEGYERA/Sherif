@@ -19,12 +19,14 @@ Route::get('catalog/{slug}/{subslug}', 'ClientsController\CatalogController@getS
 
 
 /*Product Routes*/
+Route::get('get/product/{id}', 'ClientsController\ProductController@getProductNoURL')->name('productNoURL');
 Route::get('catalog/{slug}/{subslug}/{product}', 'ClientsController\ProductController@getProduct')->name('product');
 
 
-
-
 /*Basket Routes*/
+Route::put('basket/add/{id}', 'ClientsController\BasketController@addToBasket');
+Route::put('basket/update/{id}', 'ClientsController\BasketController@updateBasket');
+Route::delete('basket/delete/{id}', 'ClientsController\BasketController@deleteItemBasket');
 
 
 Route::get('/contacts', 'IndexController@getContacts')->name('contacts');

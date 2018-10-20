@@ -16,6 +16,10 @@
 
 @endsection
 
+@section('header')
+    {!!$header!!}
+@endsection
+
 @section('left_sidebar')
     {!!$left_side_bar!!}
 @endsection
