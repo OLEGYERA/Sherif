@@ -926,15 +926,17 @@
     <script>
         //adding characteristics row
         
-        var count = $('#count_row').val();
+        
         
         //var html = '<tr class="chosen_char" id_row="'+count+'"><td><select class="form-control chosen_select" name="select_characteristic" id_row="'+count+'"><option value="">None</option><?php foreach($characteristics as $item): ?><option value="<?php echo $item->id ?>"><?php echo $item->name ?></option><?php endforeach; ?></select></td><td name="characteristic_options option_'+count+'"></td><td><button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
         
         $('#addRow').click(function(){
-            $('#ctbody').append('<tr class="chosen_char" id_row="'+count+'"><td><select class="form-control chosen_select" name="select_characteristic" id_row="'+count+'"><option value="">None</option><?php foreach($characteristics as $item): ?><option value="<?php echo $item->id ?>"><?php echo $item->name ?></option><?php endforeach; ?></select></td><td name="characteristic_options option_'+count+'"></td><td><button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button></td></tr>');
-            count++;
-            console.log(count);
+            var count = $('#count_row').val();
+            var html_string = '<tr class="chosen_char" id_row="'+count+'"><td><select class="form-control chosen_select" name="select_characteristic" id_row="'+count+'"><option value="">None</option><?php foreach($characteristics as $item): ?><option value="<?php echo $item->id ?>"><?php echo $item->name ?></option><?php endforeach; ?></select></td><td name="characteristic_options" id="option_'+count+'"></td><td><button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
+            $('#ctbody').append(html_string);
+            $("#count_row").val(Number($("#count_row").val()) + 1);
         });
+        
         $(document).on('click', '#dltRow', function(){
             $(this).parents('tr').remove();
         });
@@ -944,7 +946,6 @@
         $(document).on('change', "select[name='select_characteristic']", function() {
             var id_row = $(this).attr('id_row');
             if($(this).val() != '') {
-                $('td[name="characteristic_options"]').empty();
                 var data = $(this).val(); 
                 $.ajax({
                     headers: {
@@ -954,14 +955,9 @@
                     method:"POST",
                     data: {data: data},  
                     success: function (data) {
-                        $('.option_'+id_row).empty();
-                        $('.option_'+id_row).append(data);
-                        count++;
+                        $('#option_' + id_row).empty().append(data);
                     }
                 });
-            }
-            if ($(this).val() == '') {
-                $('td[name="characteristic_options"]').empty();
             }
         }); 
                                         
