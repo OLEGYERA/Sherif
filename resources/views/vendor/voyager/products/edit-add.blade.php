@@ -503,8 +503,42 @@
                                                         <th>Управление</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id='ctbody'>
-                                                    
+                                                <tbody id='ctbody'>@php //dd($characteristics_list_objects) @endphp
+                                                @php $count = 0; @endphp
+                                                    @foreach($characteristics_list_objects as $char)
+                                                    <tr class="chosen_char" id_row="'+count+'">
+                                                        <td>
+                                                            <select class="form-control chosen_select" name="select_characteristic[]" id_row="{{$count}}">
+                                                                    <option value="">None</option>
+                                                                    
+                                                                <?php foreach($characteristics as $item): ?>
+                                                                    <option value="{{$item->id}}"{{ $char->id == $item->id ? 'selected' : ''}}>
+                                                                    {{$item->name}}
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+
+                                                                @php
+                                                                    $char_options = DB::table('products_characteristics_pivot')->where('characteristic_id', $char->id)->pluck('option_id')->toArray();//list of related options
+                                                                    $all_char_options = DB::table('Characteristic_options')->where('id_characteristic', $char->id)->get()->toArray();//list of all options of current characteristic   
+                                                                @endphp
+
+                                                                <select multiple class="form-control" name="characteristics_options[]">    
+                                                                @foreach($all_char_options as $char_opt)
+                                                                    <option value="{{$char_opt->id}}" {{ in_array($char_opt->id, $char_options) ? 'selected' : ''}}>
+                                                                    {{$char_opt->value}}
+                                                                    </option>
+                                                                @endforeach
+                                                                </select>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button>
+                                                        </td>
+                                                    </tr>
+                                                    @php $count++; @endphp
+                                                    @endforeach
                                                 </tbody>
                                                     <tr>
                                                         <td colspan='3'>
@@ -926,13 +960,9 @@
     <script>
         //adding characteristics row
         
-        
-        
-        //var html = '<tr class="chosen_char" id_row="'+count+'"><td><select class="form-control chosen_select" name="select_characteristic" id_row="'+count+'"><option value="">None</option><?php foreach($characteristics as $item): ?><option value="<?php echo $item->id ?>"><?php echo $item->name ?></option><?php endforeach; ?></select></td><td name="characteristic_options option_'+count+'"></td><td><button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
-        
         $('#addRow').click(function(){
             var count = $('#count_row').val();
-            var html_string = '<tr class="chosen_char" id_row="'+count+'"><td><select class="form-control chosen_select" name="select_characteristic" id_row="'+count+'"><option value="">None</option><?php foreach($characteristics as $item): ?><option value="<?php echo $item->id ?>"><?php echo $item->name ?></option><?php endforeach; ?></select></td><td name="characteristic_options" id="option_'+count+'"></td><td><button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
+            var html_string = '<tr class="chosen_char" id_row="'+count+'"><td><select class="form-control chosen_select" name="select_characteristic[]" id_row="'+count+'"><option value="">None</option><?php foreach($characteristics as $item): ?><option value="<?php echo $item->id ?>"><?php echo $item->name ?></option><?php endforeach; ?></select></td><td name="characteristic_options" id="option_'+count+'"></td><td><button type="button" class="btn btn-danger" id="dltRow"><span class="glyphicon glyphicon-remove"></span></button></td></tr>';
             $('#ctbody').append(html_string);
             $("#count_row").val(Number($("#count_row").val()) + 1);
         });
@@ -942,8 +972,7 @@
         });
 
         
-
-        $(document).on('change', "select[name='select_characteristic']", function() {
+        $(document).on('change', ".chosen_select", function() {
             var id_row = $(this).attr('id_row');
             if($(this).val() != '') {
                 var data = $(this).val(); 
@@ -958,6 +987,8 @@
                         $('#option_' + id_row).empty().append(data);
                     }
                 });
+            } else {
+                $('#option_' + id_row).empty();
             }
         }); 
                                         

@@ -266,13 +266,16 @@ class CharacteristicsController extends VoyagerBaseController
 	
 	public function addCharacteristicOptions(Request $request) {
 		
-		$str = [];
-		$options = CO::where('id_characteristic', $request->data)->select('value')->get()->toArray();
+		$str = '';
+		$options = CO::where('id_characteristic', $request->data)->get()->toArray();
 		
+		$str .= '<select multiple class="form-control" name="characteristics_options[]">';
 		foreach($options as $i) {
-			$str[] = $i['value'];
+			$str .= '<option value="'.$i['id'].'">'. $i['value'] .'</option>';
 		}
+		$str .= '</select>';
+
 		
-		echo implode(', ', $str);
+		echo $str;
 	}
 }

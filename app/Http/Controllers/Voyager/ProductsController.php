@@ -245,9 +245,17 @@ class ProductsController extends VoyagerBaseController
         $edit_info = DB::table('product_edit_info')->where('product_id', $id)->first();
 
         
-        $characteristics = DB::table('characteristics')->get();
+        $characteristics = DB::table('characteristics')->get()->toArray();
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale)->with('edit_info', $edit_info)->with('categories_list', $categories_list)->with('characteristics', $characteristics);
+        $characteristics_list = DB::table('products_characteristics_pivot')->where('product_id', $id)->pluck('characteristic_id')->toArray();//list of all characteristics of the product
+        $characteristics_list = array_unique($characteristics_list, SORT_NUMERIC );//list of characteristics of the product without duplicating
+        
+        $characteristics_list_objects = [];
+        foreach( $characteristics_list as $item) {
+            $characteristics_list_objects[] = DB::table('characteristics')->where('id', $item)->first();//list of objects characteristics of the product without duplicating
+        }
+
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'))->with('categories', $categories)->with('wholesales', $wholesale)->with('edit_info', $edit_info)->with('categories_list', $categories_list)->with('characteristics', $characteristics)->with('characteristics_list_objects', $characteristics_list_objects);
     }
 
     // POST BR(E)AD
@@ -414,6 +422,24 @@ class ProductsController extends VoyagerBaseController
             return response()->json(['errors' => $val->messages()]);
         }
         if (!$request->ajax()) {
+            
+            /*Characteristics adding*/
+            if(DB::table('products_characteristics_pivot')->where('product_id', $id)->first()) {
+                DB::table('products_characteristics_pivot')->where('product_id', $id)->delete();
+            } 
+            if(isset($request->characteristics_options)) {
+                if(is_array($request->characteristics_options)) {
+                    foreach($request->characteristics_options as $option) {
+                        DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('Characteristic_options')->where('id', $option)->first()->id_characteristic, 'option_id' => $option]]);
+                        
+                    }
+                } else {
+                    DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('Characteristic_options')->where('id', $request->characteristics_options)->first()->id_characteristic, 'option_id' => $request->characteristics_options]]);
+                }
+            }
+            
+
+
             //decrementing old categories and incrementing new
             $old_categories = DB::table('product_categories_pivot')->where('product_id', '=', $id)->get();
             foreach($old_categories as $old_category) {
@@ -424,27 +450,25 @@ class ProductsController extends VoyagerBaseController
             }
 
             //Inserting wholesale options of the product
-            if($slug == 'products') {
-                ProductWholesale::where('product_id', '=', $id)->delete();
+            ProductWholesale::where('product_id', '=', $id)->delete();
 
-                $i = 0;
+            $i = 0;
 
-                while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
+            while(isset($request->sale[$i]) && isset($request->quantity[$i]) && isset($request->unit[$i])) {
 
-                    $product_wholesale = new ProductWholesale;
+                $product_wholesale = new ProductWholesale;
 
-                    $product_wholesale->product_id = $data->id;
-                    $product_wholesale->quantity = $request->quantity[$i];
-                    $product_wholesale->unit = $request->unit[$i];;
-                    $product_wholesale->discount = $request->sale[$i];
+                $product_wholesale->product_id = $data->id;
+                $product_wholesale->quantity = $request->quantity[$i];
+                $product_wholesale->unit = $request->unit[$i];;
+                $product_wholesale->discount = $request->sale[$i];
 
-                    $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
-                    $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
+                $new_price = $price_final * (100 - $product_wholesale->discount) / 100;
+                $product_wholesale->price = round($new_price, 2, PHP_ROUND_HALF_UP);
 
-                    $product_wholesale->save();
+                $product_wholesale->save();
 
-                    $i++;
-                }
+                $i++;
             }
 
             $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
@@ -597,6 +621,17 @@ class ProductsController extends VoyagerBaseController
                 }
                 
             }   
+
+            /*Characteristics adding*/
+            if(is_array($request->characteristics_options)) {
+                foreach($request->characteristics_options as $option) {
+                    DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('Characteristic_options')->where('id', $option)->first()->id_characteristic, 'option_id' => $option]]);
+                    
+                }
+            } else {
+                DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('Characteristic_options')->where('id', $request->characteristics_options)->first()->id_characteristic, 'option_id' => $request->characteristics_options]]);
+            }
+
 
             /* Increasing quantity of stock in related categories */
             foreach($request->product_belongstomany_сategory_relationship as $item) {
