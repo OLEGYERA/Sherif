@@ -28,14 +28,15 @@ Route::put('basket/add/{id}', 'ClientsController\BasketController@addToBasket');
 Route::put('basket/update/{id}', 'ClientsController\BasketController@updateBasket');
 Route::delete('basket/delete/{id}', 'ClientsController\BasketController@deleteItemBasket');
 
+/*Ordering*/
+Route::get('/ordering', 'ClientsController\OrderingController@getOrdering')->name('ordering');
+Route::post('/ordering/buy', 'ClientsController\OrderingController@orderBuy');
 
 Route::get('/contacts', 'IndexController@getContacts')->name('contacts');
 Route::get('/blog', 'IndexController@getBLog')->name('blog');
 Route::get('/income', 'ClientsController\IndexController@getIncome')->name('income');
 // Route::get('/section', 'ClientsController\IndexController@getSection')->name('section');
 Route::get('/article', 'ClientsController\IndexController@getArticle')->name('article');
-Route::get('/ordering', 'ClientsController\IndexController@getOrdering')->name('ordering');
-
 Route::get('/stock', 'ClientsController\IndexController@getStock')->name('stock');
 
 

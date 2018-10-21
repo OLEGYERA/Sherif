@@ -4,19 +4,22 @@ $(document).ready(function(){
 
  	/*basket togglers*/
 
-	$('#Basket').on('click', '.product_togglers', function(){
+	$('html').on('click', '.product_togglers', function(){
 		var product_id = $(this).attr('id_product'),
 			togglers = $(this).attr('togglers');
 			switch(togglers) {
 				case 'up':
-					$('#basket_product_amount_' + product_id).val(Number($('#basket_product_amount_' + product_id).val()) + 1 )
+					$('#basket_product_amount_' + product_id).val(Number($('#basket_product_amount_' + product_id).val()) + 1 );
+                    $('#ordering_product_amount_' + product_id).val(Number($('#ordering_product_amount_' + product_id).val()) + 1 );
 					break;
 				case 'down':
 					if($('#basket_product_amount_' + product_id).val() != 1 ){
 						$('#basket_product_amount_' + product_id).val($('#basket_product_amount_' + product_id).val() - 1)
-						break;	
 					}
-					
+                    if($('#ordering_product_amount_' + product_id).val() != 1 ){
+                        $('#ordering_product_amount_' + product_id).val($('#ordering_product_amount_' + product_id).val() - 1)
+                    }
+					break; 
 			}
 
 		$.ajax({
@@ -28,6 +31,7 @@ $(document).ready(function(){
             success: function( data, textStatus, jQxhr ){
             	$("#final_basket").empty().append(data.curr_price);
             	$(".total_basket").empty().append(data.curr_price);
+                $('.final_currencty_price').empty().append(data.curr_price);
             	var basket_item = "";
             	console.log(data);
             	if(data.products.length != 0){
@@ -52,6 +56,7 @@ $(document).ready(function(){
                         basket_item +=  '<a togglers="up" class="sherif-basket_quantity_plus product_togglers" id_product="' + element.id + '">+</a></div>';
                         basket_item +=  '<span class="sherif-basket_sum sum_basket_' + element.id + '">Сумма <span>' + (element.price_final * element.amount) + '</span> грн</span>';    
                     	basket_item += '</div></div>';
+                        $(".itm_currency_product").empty().append(element.price_final * element.amount);
                		});
             	}
             	$('.sherif-basket_content_body').empty().append(basket_item);
@@ -64,16 +69,20 @@ $(document).ready(function(){
 		return false;
 	});
 
-	$('#Basket').on('change', '.product_amount_input', function(){
+	$('html').on('change', '.product_amount_input', function(){
+        
 		var product_id = $(this).attr('id_product'),
 			value = $(this).val();
 			if(value.indexOf('-') == -1);{
 				value = value.replace('-', '');
+                $("#basket_product_amount_" + product_id).val(value);
+                $("#ordering_product_amount_" + product_id).val(value);
 				$(this).val(value);
 			}
 			if(value.indexOf('0') != -1){
 				value = value.replace('0', '1');
-				$(this).val(value);
+				$("#basket_product_amount_" + product_id).val(value);
+                $("#ordering_product_amount_" + product_id).val(value);
 			}
 		$.ajax({
             url: url + 'update/' + product_id,
@@ -108,7 +117,9 @@ $(document).ready(function(){
                         basket_item +=  '<a togglers="up" class="sherif-basket_quantity_plus product_togglers" id_product="' + element.id + '">+</a></div>';
                         basket_item +=  '<span class="sherif-basket_sum sum_basket_' + element.id + '">Сумма <span>' + (element.price_final * element.amount) + '</span> грн</span>';    
                     	basket_item += '</div></div>';
+                        $(".itm_currency_product").empty().append(element.price_final * element.amount);
                		});
+
             	}
             	$('.sherif-basket_content_body').empty().append(basket_item);
 
@@ -147,7 +158,7 @@ $(document).ready(function(){
 			}
 	});
 
-	$("body").on('click', ".product_in_basket", function(){
+	$("html").on('click', ".product_in_basket", function(){
 		var product_id = $(this).attr('id_product');
 		$.ajax({
             url: url + 'add/' + product_id,
@@ -195,8 +206,11 @@ $(document).ready(function(){
 		return false;
 	})
 
-	$("body").on('click', ".delete_from_basket", function(){
+	$("html").on('click', ".delete_from_basket", function(){
 		var product_id = $(this).attr('id_product');
+        if($('input[type="hidden"]').hasClass('count_basket_itm')){
+            $(".count_basket_itm").val($(".count_basket_itm").val() - 1);
+        }
 		$.ajax({
             url: url + 'delete/' + product_id,
             type: 'delete',

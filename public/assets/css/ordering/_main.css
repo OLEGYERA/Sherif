@@ -83,7 +83,7 @@
 					.sherif_home_main-ordering-box-drawing_order-product_block-goods {
 						display: flex;
 						flex-direction: row;
-						justify-content: space-between;
+						justify-content: flex-start;
 						border-top: 1px solid #dedcdd;
 						padding-top: 15px;
 						margin-top: 5px;
@@ -93,7 +93,8 @@
 							border-bottom: 1px solid #dedcdd;
 						}
 						.sherif_home_main-ordering-box-drawing_order-product_block-goods-info {
-							padding-left: 20px;
+							padding-left: 30px;
+    						width: 100%;
 
 						}	
 							.sherif_home_main-ordering-box-drawing_order-product_block-goods-info-top-title  {
@@ -110,7 +111,7 @@
 								flex-direction: row;
 								font-size: 0.635em;
 								justify-content: space-between;
-								width: 70%;
+								width: 40%;
 								
 								color: #cccccc;
     
@@ -120,7 +121,7 @@
 								flex-direction: row;
 								justify-content: space-between;
 								font-size: 1.26em;
-								width: 85%;
+								width: 75%;
 								color: #172c41;
 								line-height: 16px;
 								margin-bottom: -6px;
@@ -130,6 +131,9 @@
 								    justify-content: center;
 								    align-items: flex-start;
 								}
+									.sherif_home_main-ordering-box-drawing_order-product_block-goods-pic img{
+										height: 150px;
+									}
 							.sherif_home_main-ordering-box-drawing_order-product_block-goods-info-top-price {
 								color: #e00000;
 								font-size: 1.15em;

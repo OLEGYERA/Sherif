@@ -1,4 +1,7 @@
 @extends("layouts.app")
+@section('meta-tegs')
+    <link rel="canonical" href="{{url('/')}}">
+@endsection
 @section("css_files")
     loadCSS("{{asset('assets/_header.css')}}");//Header Styles (compress & paste to header after release)
     @if($is_admin)

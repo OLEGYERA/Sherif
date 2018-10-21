@@ -122,6 +122,18 @@ class Controller extends BaseController
     }
 
     protected function header(){
+       $array = $this->getSession();
+            return view('layouts.header')->with([
+                'data' => $this->returnData(['data' => $array['data'], 'type' => $array['type']]),
+                'basket' => view('layouts.basket')->with(
+                    $this->returnData(['data' => $array['data'], 'type' => $array['type']])
+                )->render()
+            ])->render(); 
+    }
+
+
+
+    public function getSession(){
         $ip_user = request()->ip();
         $is_auth = Auth::user();
         if(!empty(session('baskets'))){
@@ -138,14 +150,7 @@ class Controller extends BaseController
                 } 
             }   
         }
-            return view('layouts.header')->with([
-                'data' => $this->returnData(['data' => $session, 'type' => $type]),
-                'basket' => view('layouts.basket')->with(
-                    $this->returnData(['data' => $session, 'type' => $type])
-                )->render()
-            ])->render(); 
+        return ['data' => $session, 'type' => $type];
     }
-
-
 
 }
