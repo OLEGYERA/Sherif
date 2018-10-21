@@ -503,7 +503,7 @@
                                                         <th>Управление</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id='ctbody'>@php //dd($characteristics_list_objects) @endphp
+                                                <tbody id='ctbody'>
                                                 @php $count = 0; @endphp
                                                     @foreach($characteristics_list_objects as $char)
                                                     <tr class="chosen_char" id_row="'+count+'">
@@ -522,7 +522,7 @@
 
                                                                 @php
                                                                     $char_options = DB::table('products_characteristics_pivot')->where('characteristic_id', $char->id)->pluck('option_id')->toArray();//list of related options
-                                                                    $all_char_options = DB::table('Characteristic_options')->where('id_characteristic', $char->id)->get()->toArray();//list of all options of current characteristic   
+                                                                    $all_char_options = DB::table('characteristic_options')->where('id_characteristic', $char->id)->get()->toArray();//list of all options of current characteristic   
                                                                 @endphp
 
                                                                 <select multiple class="form-control" name="characteristics_options[]">    

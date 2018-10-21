@@ -430,11 +430,11 @@ class ProductsController extends VoyagerBaseController
             if(isset($request->characteristics_options)) {
                 if(is_array($request->characteristics_options)) {
                     foreach($request->characteristics_options as $option) {
-                        DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('Characteristic_options')->where('id', $option)->first()->id_characteristic, 'option_id' => $option]]);
+                        DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('characteristic_options')->where('id', $option)->first()->id_characteristic, 'option_id' => $option]]);
                         
                     }
                 } else {
-                    DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('Characteristic_options')->where('id', $request->characteristics_options)->first()->id_characteristic, 'option_id' => $request->characteristics_options]]);
+                    DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('characteristic_options')->where('id', $request->characteristics_options)->first()->id_characteristic, 'option_id' => $request->characteristics_options]]);
                 }
             }
             
@@ -625,11 +625,11 @@ class ProductsController extends VoyagerBaseController
             /*Characteristics adding*/
             if(is_array($request->characteristics_options)) {
                 foreach($request->characteristics_options as $option) {
-                    DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('Characteristic_options')->where('id', $option)->first()->id_characteristic, 'option_id' => $option]]);
+                    DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('characteristic_options')->where('id', $option)->first()->id_characteristic, 'option_id' => $option]]);
                     
                 }
             } else {
-                DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('Characteristic_options')->where('id', $request->characteristics_options)->first()->id_characteristic, 'option_id' => $request->characteristics_options]]);
+                DB::table('products_characteristics_pivot')->insert([['product_id' => $id, 'characteristic_id' => DB::table('characteristic_options')->where('id', $request->characteristics_options)->first()->id_characteristic, 'option_id' => $request->characteristics_options]]);
             }
 
 
