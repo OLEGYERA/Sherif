@@ -13,31 +13,21 @@
     @if($is_admin)
         loadCSS("assets/css/_media_admin.css");               //User Styles: Media
     @endif
-@endsection
-@section('css_js_add')
-    <!-- Load CSS -->
-    <script>
-        function loadCSS(hf) {
-            var ms=document.createElement("link");ms.rel="stylesheet";
-            ms.href=hf;document.getElementsByTagName("head")[0].appendChild(ms);
-        }
-        loadCSS("/assets/libs/toastr/toastr.min.css");
-        loadCSS("/assets/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css");
-        loadCSS("/assets/libs/bootstrap-file-input/css/fileinput.min.css");
-        loadCSS("assets/account.css");
 
-
-    </script>
-    <!-- Load Scripts -->
-    <script>var scr = {"scripts":[
-            {"src" : "/assets/libs/moment/moment-with-locales.min.js", "async" : false},
-            {"src" : "/assets/libs/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js", "async" : false},
-            {"src" : "/assets/libs/bootstrap-file-input/js/fileinput.min.js", "async" : false},
-            {"src" : "/assets/libs/toastr/toastr.min.js", "async" : false},
-            {"src" : "/assets/js/account.js", "async" : false},
-        ]};!function(t,n,r){"use strict";var c=function(t){if("[object Array]"!==Object.prototype.toString.call(t))return!1;for(var r=0;r<t.length;r++){var c=n.createElement("script"),e=t[r];c.src=e.src,c.async=e.async,n.body.appendChild(c)}return!0};t.addEventListener?t.addEventListener("load",function(){c(r.scripts);},!1):t.attachEvent?t.attachEvent("onload",function(){c(r.scripts)}):t.onload=function(){c(r.scripts)}}(window,document,scr);
-    </script>
+    loadCSS("/assets/libs/toastr/toastr.min.css");
+    loadCSS("/assets/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css");
+    loadCSS("/assets/libs/bootstrap-file-input/css/fileinput.min.css");
+    loadCSS("assets/account.css");
 @endsection
+
+@section('header')
+    {!!$header!!}
+@endsection
+
+@section('left_sidebar')
+    {!!$left_side_bar!!}
+@endsection
+
 @section("main_column")
     <!-- Main Sherif-Home-->
 
@@ -582,5 +572,13 @@
         @endcomponent
     </div>
 
+@endsection
+
+@section('compiled_js')
+    {"src" : "/assets/libs/moment/moment-with-locales.min.js", "async" : false},
+    {"src" : "/assets/libs/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js", "async" : false},
+    {"src" : "/assets/libs/bootstrap-file-input/js/fileinput.min.js", "async" : false},
+    {"src" : "/assets/libs/toastr/toastr.min.js", "async" : false},
+    {"src" : "/assets/js/account.js", "async" : false},
 @endsection
 

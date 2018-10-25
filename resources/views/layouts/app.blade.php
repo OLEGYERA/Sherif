@@ -75,6 +75,7 @@
 
 @include("layouts.footer")
 
+@yield("css_js_add")
 <div class="hidden"></div>
 
 <!--[if lt IE 9]>
@@ -114,7 +115,7 @@
         {"src" : "{{asset('assets/libs/fontawesome/js/fontawesome-all.js')}}", "async" : false},
         {"src" : "{{asset('assets/libs/equelHeights/equalheights.js')}}", "async" : false},
         {"src" : "{{asset('assets/js/common.js')}}", "async" : false},
-        @yield('css_js_add')
+        @yield('compiled_js')
         {"src" : "{{asset('assets/js/Clients-scripts/Basket.js')}}", "async" : false},
     ]};!function(t,n,r){"use strict";var c=function(t){if("[object Array]"!==Object.prototype.toString.call(t))return!1;for(var r=0;r<t.length;r++){var c=n.createElement("script"),e=t[r];c.src=e.src,c.async=e.async,n.body.appendChild(c)}return!0};t.addEventListener?t.addEventListener("load",function(){c(r.scripts);},!1):t.attachEvent?t.attachEvent("onload",function(){c(r.scripts)}):t.onload=function(){c(r.scripts)}}(window,document,scr);
 </script>

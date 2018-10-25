@@ -44,7 +44,8 @@ class AccountController extends Controller
             'is_admin' => true,
             'uah_to_eur'=>32,
             'uah_to_usd'=>27,
-
+            'left_side_bar' => $this->left_sidebar("None"),
+            'header' => $this->header()
         ]);
     }
 
