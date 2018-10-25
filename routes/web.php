@@ -84,6 +84,9 @@ Route::group(['prefix' => 'admin'], function () {
    //options for table in product card
    Route::post('characteristics_options', 'Voyager\CharacteristicsController@addCharacteristicOptions')->name('char_opt');
 
+   //night manager
+   Route::post('add_night_manager', 'Voyager\ManagerController@addNightManager')->name('night_manager');
+
    /*In product*/
 
    Route::get('/get/characteristic', 'Voyager\CharacteristicsController@getSelectCharacteristic');

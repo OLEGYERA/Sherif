@@ -238,7 +238,7 @@
                                         @endforeach
                                         <td class="no-sort no-click" id="bread-actions" style="display: flex; flex-direction: row-reverse;">
                                             <a href="#pannel_add" class="btn btn-sm btn-warning edit_field" value="{{ $data->getKey() }}" >Изменить</a>
-                                            <a class="btn btn-sm btn-danger delete_field" value="{{ $data->getKey() }}">Удалить</a>
+                                            @if($data->name != 'Сезонность')<a class="btn btn-sm btn-danger delete_field" value="{{ $data->getKey() }}">Удалить</a>@endif
                                         </td>
                                     </tr>
                                     @endforeach
