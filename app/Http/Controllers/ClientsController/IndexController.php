@@ -23,26 +23,50 @@ class IndexController extends Controller
     }
 
     public function getContacts(){
-        return $this->viewMaker('contacts');
+        return $this->viewMaker('contacts')->with([
+            'banner' => $banner,
+            'left_side_bar' => $this->left_sidebar("None"),
+            'header' => $this->header()
+        ]);
     }
 
     public function getBLog(){
-        return $this->viewMaker('blog');
+        return $this->viewMaker('blog')->with([
+            'banner' => $banner,
+            'left_side_bar' => $this->left_sidebar("None"),
+            'header' => $this->header()
+        ]);
     }
 
     public function getIncome(){
-        return $this->viewMaker('income');
+        return $this->viewMaker('income')->with([
+            'banner' => $banner,
+            'left_side_bar' => $this->left_sidebar("None"),
+            'header' => $this->header()
+        ]);
     }
 
    
     public function getArticle(){
-        return $this->viewMaker('article');
+        return $this->viewMaker('article')->with([
+            'banner' => $banner,
+            'left_side_bar' => $this->left_sidebar("None"),
+            'header' => $this->header()
+        ]);
     }
     public function getOrdering(){
-        return $this->viewMaker('ordering');
+        return $this->viewMaker('ordering')->with([
+            'banner' => $banner,
+            'left_side_bar' => $this->left_sidebar("None"),
+            'header' => $this->header()
+        ]);
     }
     
     public function getStock(){
-        return $this->viewMaker('stock');
+        return $this->viewMaker('stock')->with([
+            'banner' => $banner,
+            'left_side_bar' => $this->left_sidebar("None"),
+            'header' => $this->header()
+        ]);
     }
 }
