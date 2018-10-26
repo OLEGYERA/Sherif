@@ -105,7 +105,7 @@ class Controller extends BaseController
                 }
             }else{
                 foreach ($data['data'] as $key => $value) {
-                        dd($value);
+                        //dd($value);
                         $product = Product::where('id', $value->id_product)->first();
                         if(!empty($product)){
                             array_add($product, 'amount', $value->amount_product);
@@ -142,7 +142,7 @@ class Controller extends BaseController
         }else{
              $type = "db";
             $session = Session::all();
-            dd($session);
+           // dd($session);
             if(count($session) != 0){
                 if($is_auth == true && count($session->where('user_id', Auth::user()->id)->get()) != 0){
                     $session = $session->where('user_id', Auth::user()->id);
