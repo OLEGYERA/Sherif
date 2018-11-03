@@ -130,7 +130,8 @@
                                                         $row->field == 'meta_title' ||
                                                         $row->field == 'meta_description' ||
                                                         $row->field == 'meta_keywords' ||
-                                                        $row->field == 'label_end_date')
+                                                        $row->field == 'label_end_date' ||
+                                                        $row->field == 'product_belongsto_season_relationship')
                                                         <?php continue ?>
                                                     @endif
                                                     <!-- GET THE DISPLAY OPTIONS -->
@@ -494,6 +495,37 @@
                             <div id="tab4" class="tab-pane fade">
                                 <div class="panel panel-bordered col-lg-12">
                                     <div class="panel-body panel-bordered col-lg-12">
+                                                @foreach($dataTypeRows as $row)
+                                                    <tr>
+                                                    @if($row->field == 'product_belongsto_season_relationship')
+                                                        <!-- GET THE DISPLAY OPTIONS -->
+                                                            @php
+                                                                $options = json_decode($row->details);
+                                                                $display_options = isset($options->display) ? $options->display : NULL;
+                                                            @endphp
+                                                            @if ($options && isset($options->legend) && isset($options->legend->text))
+                                                                <legend class="text-{{$options->legend->align or 'center'}}" style="background-color: {{$options->legend->bgcolor or '#f0f0f0'}};padding: 5px;">{{$options->legend->text}}</legend>
+                                                            @endif
+                                                            @if ($options && isset($options->formfields_custom))
+                                                                @include('voyager::formfields.custom.' . $options->formfields_custom)
+                                                            @else
+                                                                {{ $row->slugify }}
+                                                                <td><label for="name">{{ $row->display_name }}</label></td>
+                                                                
+                                                                @include('voyager::multilingual.input-hidden-bread-edit-add')
+                                                                @if($row->type == 'relationship')
+                                                                    <td>@include('voyager::formfields.relationship')</td>
+                                                                @else
+                                                                    <td>{!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}</td>
+                                                                @endif
+                                                                @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
+                                                                    <td>{!! $after->handle($row, $dataType, $dataTypeContent) !!}</td>
+                                                                @endforeach
+                                                            @endif
+                                                        @endif
+                                                    </tr>
+                                                @endforeach
+                                                </br></br>
                                         <div id="table-attr" class="table-editable">
                                             <table id="attribute" class="table table-striped table-bordered table-hover">
                                                 <thead>
@@ -1114,6 +1146,39 @@
             }
         }); 
 
+        //discount calculation
+        $(document).ready(function() {
+            
+            $("#sale_discount").on("keydown keyup", function() {
+                getSalePrice();
+            });
+
+            $("#sale_price").on("keydown keyup", function() {
+                getPercent();
+            });
+
+            function getPercent() {
+                var num1 = document.getElementById('price_final').value;
+                var num3 = document.getElementById('sale_price').value;
+                var result = (parseInt(num1) - parseInt(num3)) / parseInt(num1) * 100;
+                if (!isNaN(result)) {
+                    document.getElementById('sale_discount').value = Math.round(result);
+                }
+            }
+
+            function getSalePrice() {
+                var num1 = document.getElementById('price_final').value;
+                var num2 = document.getElementById('sale_discount').value;
+                var result = (parseInt(num1) / 100) * (100 - parseInt(num2));
+                if (!isNaN(result)) {
+                    document.getElementById('sale_price').value = Math.round(result);
+                }
+            }
+
+        });
+
+        
+
         /*
          $(document).ready(function() {
          var i = 1;
@@ -1161,6 +1226,6 @@
             });
         }); -->
 
-
+    
     </script>
 @stop

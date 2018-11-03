@@ -24,7 +24,10 @@
         @endcan
         @include('voyager::multilingual.language-selector')
         <a href="currency_update" class="btn btn-info">
-            <i class="voyager-refresh"></i> <span>Обновить курс и цены</span>
+            <i class="voyager-refresh"></i> <span>Обновить курс</span>
+        </a>
+        <a href="prices_update" class="btn btn-info">
+            <i class="voyager-refresh"></i> <span>Обновить цены</span>
         </a>
     </div>
 @stop

@@ -31,6 +31,11 @@ class CurrenciesController extends VoyagerBaseController
         Currency::where('name', 'USD')->update(['rate' => $USD]);
         Currency::where('name', 'EUR')->update(['rate' => $EUR]);
 
+        return redirect()->route("voyager.currencies.index");
+    }
+
+    public function pricesUpdate() {
+
         $products = Product::get();
 
         foreach($products as $product) {

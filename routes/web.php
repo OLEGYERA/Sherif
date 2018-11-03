@@ -47,6 +47,8 @@ Route::group(['prefix' => 'admin'], function () {
 
     // Update currency rate
     Route::get('/currency_update', 'Voyager\CurrenciesController@currencyUpdate');
+    // Update prices
+    Route::get('/prices_update', 'Voyager\CurrenciesController@pricesUpdate');
 
     //expand categories as tree
     Route::post('treeajax', 'Voyager\CategoriesController@showsecond');
