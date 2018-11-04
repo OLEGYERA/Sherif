@@ -1,17 +1,17 @@
 @extends("layouts.app")
 @section("css_files")
-    loadCSS("assets/_header.css");//Header Styles (compress & paste to header after release)
+    loadCSS("{{route('index')}}/assets/_header.css");//Header Styles (compress & paste to header after release)
     @if($is_admin)
-        loadCSS("assets/css/_header_admin.css");              //Header Styles (compress & paste to header after release)
+        loadCSS("{{route('index')}}/assets/css/_header_admin.css");              //Header Styles (compress & paste to header after release)
     @endif
-    loadCSS("assets/_main.css");                //User Styles: Main
-    loadCSS("assets/css/blog/_main.css");                //User Styles: Main
+    loadCSS("{{route('index')}}/assets/_main.css");                //User Styles: Main
+    loadCSS("{{route('index')}}/assets/css/blog/_main.css");                //User Styles: Main
     @if($is_admin)
-        loadCSS("assets/css/_main_admin.css");                //User Styles: Main
+        loadCSS("{{route('index')}}/assets/css/_main_admin.css");                //User Styles: Main
     @endif
-    loadCSS("assets/css/blog/_media.css");               //User Styles: Media
+    loadCSS("{{route('index')}}/assets/css/blog/_media.css");               //User Styles: Media
     @if($is_admin)
-        loadCSS("assets/css/_media_admin.css");               //User Styles: Media
+        loadCSS("{{route('index')}}/assets/css/_media_admin.css");               //User Styles: Media
     @endif
 
 @endsection

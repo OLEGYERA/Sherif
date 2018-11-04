@@ -57,7 +57,7 @@
         	@section("left_sidebar")
 			
         	@show
-        	<!--main)column-->
+        	<!--maincolumn-->
             @yield("main_column")
             <!--right_sidebar-->
             @yield("right_side_bar")

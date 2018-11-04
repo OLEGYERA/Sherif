@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\ClientsController;
 
+use App\Article;
+
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Illuminate\Http\Request;
@@ -23,6 +25,8 @@ class IndexController extends Controller
     }
 
     public function getContacts(){
+        $banner = Banner::with(['bannerImages.bannerLinkPosition'])->first();
+
         return $this->viewMaker('contacts')->with([
             'banner' => $banner,
             'left_side_bar' => $this->left_sidebar("None"),
@@ -30,7 +34,9 @@ class IndexController extends Controller
         ]);
     }
 
-    public function getBLog(){
+    public function getBlog(){
+        $banner = Banner::with(['bannerImages.bannerLinkPosition'])->first();
+
         return $this->viewMaker('blog')->with([
             'banner' => $banner,
             'left_side_bar' => $this->left_sidebar("None"),
@@ -39,6 +45,8 @@ class IndexController extends Controller
     }
 
     public function getIncome(){
+        $banner = Banner::with(['bannerImages.bannerLinkPosition'])->first();
+        
         return $this->viewMaker('income')->with([
             'banner' => $banner,
             'left_side_bar' => $this->left_sidebar("None"),
@@ -47,11 +55,16 @@ class IndexController extends Controller
     }
 
    
-    public function getArticle(){
+    public function getArticle($id){
+        $banner = Banner::with(['bannerImages.bannerLinkPosition'])->first();
+
+        $article = Article::where('id', $id)->first();
+
         return $this->viewMaker('article')->with([
             'banner' => $banner,
             'left_side_bar' => $this->left_sidebar("None"),
-            'header' => $this->header()
+            'header' => $this->header(),
+            'article' => $article
         ]);
     }
     public function getOrdering(){
