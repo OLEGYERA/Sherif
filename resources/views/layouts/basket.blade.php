@@ -50,7 +50,7 @@
                                         <span class="sherif-basket_content_footer_total">Общая сумма: <span class="total_basket">0</span> грн.</span>
                                         <div class="sherif-basket_content_footer_btns">
                                             <a class="sherif-basket_content_footer_btns_btn" data-dismiss="modal">ПРОДОЛЖИТЬ ПОКУПКИ</a>
-                                            <a class="sherif-basket_content_footer_btns_btn order_btn basket_content_footer_btns_btn_disabled" data-dismiss="modal">ОФОРМИТЬ ЗАКАЗ</a>
+                                             <a href="{{route('ordering')}}" class="sherif-basket_content_footer_btns_btn order_btn">ОФОРМИТЬ ЗАКАЗ</a>
                                         </div>
                                     </div>
                                 @else
@@ -58,7 +58,7 @@
                                         <span class="sherif-basket_content_footer_total">Общая сумма: <span class="total_basket">{{$curr_price}}</span> грн.</span>
                                         <div class="sherif-basket_content_footer_btns">
                                             <a class="sherif-basket_content_footer_btns_btn" data-dismiss="modal">ПРОДОЛЖИТЬ ПОКУПКИ</a>
-                                            <a class="sherif-basket_content_footer_btns_btn order_btn" data-dismiss="modal">ОФОРМИТЬ ЗАКАЗ</a>
+                                            <a href="{{route('ordering')}}" class="sherif-basket_content_footer_btns_btn order_btn">ОФОРМИТЬ ЗАКАЗ</a>
                                         </div>
                                     </div>
                                 @endif

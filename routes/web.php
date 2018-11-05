@@ -37,7 +37,7 @@ Route::get('/blog', 'ClientsController\IndexController@getBlog')->name('blog');
 Route::get('/income', 'ClientsController\IndexController@getIncome')->name('income');
 //Route::get('/section', 'ClientsController\IndexController@getSection')->name('section');
 //Route::get('/article', 'ClientsController\IndexController@getArticle')->name('article');
-Route::get('/article/{slug}', 'ClientsController\IndexController@getArticle')->name('article');
+// Route::get('/article/{slug}', 'ClientsController\IndexController@getArticle')->name('article');
 Route::get('/stock', 'ClientsController\IndexController@getStock')->name('stock');
 
 

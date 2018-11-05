@@ -16,6 +16,17 @@
     @endif
 
 @endsection
+
+
+@section('header')
+    {!!$header!!}
+@endsection
+
+@section('left_sidebar')
+    {!!$left_side_bar!!}
+@endsection
+
+
 @section("company_text")@endsection
 
 @section("main_column")

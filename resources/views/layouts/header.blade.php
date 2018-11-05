@@ -38,11 +38,11 @@
                 @endif
                 <div class="sherif_home_header-navigation-menu sherif_home_header-navigation-menu_arrange">
                     <a href="#">Оплата и доставка</a>
-                    <a href="#">Контакты</a>
+                    <a href="{{route('contacts')}}">Контакты</a>
                     <a href="#">Гарантии</a>
-                    <a href="#">Новые поступления</a>
+                    <a href="{{route('income')}}">Новые поступления</a>
                     <a href="#">Отзывы</a>
-                    <a href="#">Статьи</a>
+                    <a href="{{route('blog')}}">Статьи</a>
                 </div>
                 <div class="sherif_home_header-navigation-lang_arrange">
                     <div class="sherif_home_header-navigation-lang">

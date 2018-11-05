@@ -21,6 +21,7 @@ class CatalogController extends Controller
    			}
    		}
         return $this->viewMaker('Clients-page.catalog')->with([
+            'header' => $this->header(),
             'left_side_bar' => $this->left_sidebar($slug),
             'data' => $SubCategory,
             'CurrentCategory' => $CurrentCategory
@@ -42,6 +43,7 @@ class CatalogController extends Controller
    			}
    		}
         return $this->viewMaker('Clients-page.subcatalog')->with([
+            'header' => $this->header(),
             'left_side_bar' => $this->left_sidebar($slug),
             'data' => $Products,
             'CurrentCategory' => $CurrentCategory,
